@@ -1,13 +1,20 @@
+import sys
+from pathlib import Path
 from typing import Any
 
-from framework.bootstrap import create_multi_agent_system
-from framework.config import load_settings
-from framework.json_utils import pretty_json
-from memory.chat_log import JsonChatLogger
-from memory.sessions import ConversationSession, MemorySessionManager
 
-from comparison.comparator import build_comparison, print_comparison_report, print_text_result
-from comparison.text_runner import TextModeRunner, build_text_model
+_project_root = str(Path(__file__).resolve().parent.parent)
+if _project_root not in sys.path:
+    sys.path.insert(0, _project_root)
+
+from LangChain.framework.bootstrap import create_multi_agent_system
+from LangChain.framework.config import load_settings
+from LangChain.framework.json_utils import pretty_json
+from LangChain.memory.chat_log import JsonChatLogger
+from LangChain.memory.sessions import ConversationSession, MemorySessionManager
+
+from LangChain.comparison.comparator import build_comparison, print_comparison_report, print_text_result
+from LangChain.comparison.text_runner import TextModeRunner, build_text_model
 
 
 def print_json(title: str, data: Any) -> None:
@@ -120,9 +127,9 @@ def main() -> None:
     print(f"记忆文件: {session.memory_path}")
     print(f"对话日志: {session.chat_path}")
     print(f"记忆模式: {'新对话' if session_mode == 'new' else '导入历史'}")
-    print("协议: SemanticObject v1.0 (Control + Semantic + Precise)")
+    print("协议: SemanticObject v2.0 (Control + Semantic + Precise)")
     print("输入问题后回车执行；输入 exit / quit / q 退出。")
-    print("问题前加 + 号开启对比模式（如: +Python如何实现多线程？）")
+    print("问题前加 + 号开启对比模式")
 
     while True:
         try:
