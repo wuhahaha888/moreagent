@@ -1,0 +1,182 @@
+{
+  "medqa::0900": {
+    "answer": "B",
+    "answer_text": "↓ hemosiderin stores",
+    "source_question_id": "0900",
+    "question_options_sha256": "3f87f5399a497607543f0ea7f94448962b8ffe95a60c9bd193c460fd13bba274"
+  },
+  "medqa::0418": {
+    "answer": "C",
+    "answer_text": "Iron supplementation",
+    "source_question_id": "0418",
+    "question_options_sha256": "4b30c7f4450a21e47a3c685e84df3fd42a41f9c9a0a72aeaa40ded2817c6c7ae"
+  },
+  "medqa::1225": {
+    "answer": "B",
+    "answer_text": "Proper diet and iron supplementation",
+    "source_question_id": "1225",
+    "question_options_sha256": "af8ebbbd1c761b5e5f482fe45e03155e2464f4dc9ae72a7df4893c56de2420f7"
+  },
+  "medqa::0394": {
+    "answer": "C",
+    "answer_text": "Upregulation of hepcidin",
+    "source_question_id": "0394",
+    "question_options_sha256": "54dba409dad25af1aa9ce8e847638bc2789407e2c0d92d29d6fa7d8f1ba29792"
+  },
+  "medqa::1009": {
+    "answer": "C",
+    "answer_text": "Deficient nitrogenous base production",
+    "source_question_id": "1009",
+    "question_options_sha256": "0c918970abc6dd9ed02449fb9fef883a3707d1c95faf607c3c86222bd8fcc074"
+  },
+  "medqa::0409": {
+    "answer": "C",
+    "answer_text": "Parietal cells",
+    "source_question_id": "0409",
+    "question_options_sha256": "8c4557d80e97c22186193fcb2100a9cd4bf59670daece60d5230907d41cee6b4"
+  },
+  "medqa::0476": {
+    "answer": "C",
+    "answer_text": "Spherocytes",
+    "source_question_id": "0476",
+    "question_options_sha256": "747cb654a82938963e58ff1582612d0ae47bb72ab150dea25315625ba51be242"
+  },
+  "medqa::0810": {
+    "answer": "A",
+    "answer_text": "Eosin-5-maleimide binding test",
+    "source_question_id": "0810",
+    "question_options_sha256": "116bf86f7821d2ea28b137d9f60204018e6969fac29084427e6cbc60a51425f4"
+  },
+  "medqa::0673": {
+    "answer": "D",
+    "answer_text": "Folic acid supplementation",
+    "source_question_id": "0673",
+    "question_options_sha256": "ecfe4a0a6a497974d63d4c50084484abb6c8be298fc550550eff7e799bd81123"
+  },
+  "medqa::1205": {
+    "answer": "D",
+    "answer_text": "Iron deficiency",
+    "source_question_id": "1205",
+    "question_options_sha256": "91390de562db267aba00b96e25615f0607dcb1d8c2b2fe1409e7b28ae02acd97"
+  },
+  "medqa::0574": {
+    "answer": "B",
+    "answer_text": "Selective albuminuria",
+    "source_question_id": "0574",
+    "question_options_sha256": "1fbee9f3dc537c903046575112f3e20742061930a3f8466b5b478bdc3c1ba0c2"
+  },
+  "medqa::0145": {
+    "answer": "D",
+    "answer_text": "Normal light microscopy findings",
+    "source_question_id": "0145",
+    "question_options_sha256": "ce9e5fc920a5fc4bfbd253340af9771294dee33518c148d5f8fe3a2aa10ab87c"
+  },
+  "medqa::0169": {
+    "answer": "C",
+    "answer_text": "Antigen-antibody complexes",
+    "source_question_id": "0169",
+    "question_options_sha256": "be50b26245e66368c4656aaad4188fde622079469b233f90c47dd06b82734841"
+  },
+  "medqa::0533": {
+    "answer": "A",
+    "answer_text": "Membrano proliferative glomerulonephritis (MPGN)",
+    "source_question_id": "0533",
+    "question_options_sha256": "46d107bb1ba36aeeb0fc088a4fa871762f076b1ccbab67684191d61ced113b40"
+  },
+  "medqa::0697": {
+    "answer": "D",
+    "answer_text": "Anti-glomerular basement membrane antibodies",
+    "source_question_id": "0697",
+    "question_options_sha256": "b9641d811589e8b358aa64dccef880ccd53fdd7260a30541890fc2510631204d"
+  },
+  "medqa::0162": {
+    "answer": "C",
+    "answer_text": "Linear IgG staining on immunofluorescence",
+    "source_question_id": "0162",
+    "question_options_sha256": "85ea881803edcc68ddb77b5e91a4836e3c74036f810c25411a7b3dc7b55c0f18"
+  },
+  "medqa::0465": {
+    "answer": "C",
+    "answer_text": "Papillary necrosis",
+    "source_question_id": "0465",
+    "question_options_sha256": "3fbeabd605cf7e3255f3d1496702f114d2056970f60a645359caa833e3fa4e36"
+  },
+  "medqa::0216": {
+    "answer": "D",
+    "answer_text": "Vasoconstriction of the medullary vessels",
+    "source_question_id": "0216",
+    "question_options_sha256": "d0556809013fd9ea63ce5ec2a3adfe5750cf7260b2607431cd0ae5ecc798500f"
+  },
+  "medqa::1153": {
+    "answer": "A",
+    "answer_text": "Overflow proteinuria",
+    "source_question_id": "1153",
+    "question_options_sha256": "e81ed2a3c34b18a704cb85c5241d384ef71bb38a7d8ba3bc1a86f58b327082c2"
+  },
+  "medqa::1094": {
+    "answer": "C",
+    "answer_text": "Minimal change disease",
+    "source_question_id": "1094",
+    "question_options_sha256": "6f9ed17a305b215f6b2a46cd34d0e1c7bcbe7a484895219d29afe6aaa87d7da5"
+  },
+  "medqa::0067": {
+    "answer": "B",
+    "answer_text": "Transplacental passage of TSH receptor antibodies",
+    "source_question_id": "0067",
+    "question_options_sha256": "4e65f0ca08c699bee25c513f6a88adad3883d1a1a4372c402a24d831c4aa51bd"
+  },
+  "medqa::0361": {
+    "answer": "A",
+    "answer_text": "Methimazole and propranolol therapy",
+    "source_question_id": "0361",
+    "question_options_sha256": "c62a9b2387d5f4ed7115dad8a634c0140f11e68db7df9a0255239ed8a4c65142"
+  },
+  "medqa::0089": {
+    "answer": "B",
+    "answer_text": "Propylthiouracil",
+    "source_question_id": "0089",
+    "question_options_sha256": "85bb8dad2a6c3c34a66b9e1f1923344c90d852ff7f602aa0b16d8b95a3b288a5"
+  },
+  "medqa::0512": {
+    "answer": "B",
+    "answer_text": "Discontinue methimazole, start propylthiouracil",
+    "source_question_id": "0512",
+    "question_options_sha256": "f1c162f0951eea89f98cdc14dc030d24b06536a6e92ee68c381665cc8879a316"
+  },
+  "medqa::0137": {
+    "answer": "D",
+    "answer_text": "Treatment with radioactive iodine",
+    "source_question_id": "0137",
+    "question_options_sha256": "739002947160c1b466c9918b1a0848a5dd0fdf8a3be03c4a2da49f227fb0233c"
+  },
+  "medqa::1061": {
+    "answer": "D",
+    "answer_text": "Propranolol",
+    "source_question_id": "1061",
+    "question_options_sha256": "dec9d9624821350966c4b32c27a56b3c6e4d6986354e8c4d35e2996e5a310f6b"
+  },
+  "medqa::0103": {
+    "answer": "A",
+    "answer_text": "Myxedema coma",
+    "source_question_id": "0103",
+    "question_options_sha256": "e6753a3ec0211723af5b7e69160903beb4ab80ab63340c4f6af13ae62cb8b8bd"
+  },
+  "medqa::0124": {
+    "answer": "B",
+    "answer_text": "Diarrhea",
+    "source_question_id": "0124",
+    "question_options_sha256": "0f82aad8806c3b327e25477eda2b6504b204d12e293ceb166b00b94fcd2175ea"
+  },
+  "medqa::0229": {
+    "answer": "D",
+    "answer_text": "Treating the underlying illness",
+    "source_question_id": "0229",
+    "question_options_sha256": "32dd153688baea3ffa2af269304944c3dcd22ddb60eeebeee8d3ae630c873ca5"
+  },
+  "medqa::0396": {
+    "answer": "D",
+    "answer_text": "Struma ovarii",
+    "source_question_id": "0396",
+    "question_options_sha256": "f3df3cf578e8fcee59d9bade43bfa7ccc81d805d940b782c3474f915f2bfe185"
+  }
+}

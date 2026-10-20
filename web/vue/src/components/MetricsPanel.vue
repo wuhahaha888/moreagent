@@ -58,6 +58,20 @@
         </div>
       </div>
 
+      <div v-if="metrics.summary?.memory_query_count != null" class="metric-section">
+        <h4 class="section-title">跨任务记忆</h4>
+        <div class="token-breakdown">
+          <div class="breakdown-row"><span>检索命中率</span><span>{{ ((metrics.memory_hit_rate ?? 0) * 100).toFixed(1) }}%</span></div>
+          <div class="breakdown-row"><span>历史记忆返回数</span><span>{{ metrics.summary.cross_task_memory_hits ?? 0 }}</span></div>
+          <div class="breakdown-row"><span>历史记忆引用数</span><span>{{ metrics.summary.cross_task_memory_citations ?? 0 }}</span></div>
+          <div class="breakdown-row"><span>向量编码缓存命中</span><span>{{ metrics.summary.embedding_cache_hits ?? 0 }}</span></div>
+          <div class="breakdown-row"><span>记忆检索向量载荷</span><span>{{ metrics.summary.memory_state_bytes ?? 0 }} B</span></div>
+          <div class="breakdown-row"><span>记忆整理耗时</span><span>{{ formatDuration(metrics.summary.memory_consolidation_seconds) }}</span></div>
+        </div>
+        <p class="metric-label">引用数按模型返回的有效记忆 ID 统计；正确性需另行评测。向量载荷不含传输协议开销。</p>
+        <p v-if="metrics.summary.memory_consolidation_usage_unknown" class="metric-label">记忆整理失败，相关调用的 Token 用量未知。</p>
+      </div>
+
       <!-- 三层协议 -->
       <div v-if="metrics.protocol_metrics" class="metric-section">
         <h4 class="section-title">三层协议</h4>

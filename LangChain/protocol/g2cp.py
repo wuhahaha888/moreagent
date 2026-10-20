@@ -10,11 +10,16 @@ from typing import Any, Literal, TypedDict
 
 # ─── Agent 身份与能力 ───────────────────────────────────────────────
 
-AgentName = Literal["任务分配", "资料搜索", "任务执行", "总结验证"]
+AgentName = Literal["任务分配", "资料搜索", "任务执行", "总结验证", "记忆管理"]
 MessageKind = Literal["request", "result", "broadcast", "error"]
 Priority = Literal[0, 1, 2, 3]  # 0=低 1=普通 2=高 3=紧急
 
 AGENT_CAPABILITIES: dict[AgentName, dict[str, Any]] = {
+    "记忆管理": {
+        "actions": ["retrieve", "read", "consolidate"],
+        "inputs": ["task_vec", "context_vec", "role", "task_outputs"],
+        "outputs": ["memory_hits", "memory_ids", "source_ids"],
+    },
     "任务分配": {
         "actions": ["plan"],
         "inputs": ["question", "memory_hits"],
@@ -84,6 +89,8 @@ class ControlInfo(TypedDict, total=False):
     max_steps: int             # 最大步数
     # 统计指标
     usage: dict[str, Any]      # token/字符/耗时
+    operation_id: str
+    profile: str
 
 
 # ─── 第2层：SemanticVectors（语义层）────────────────────────────────
@@ -102,6 +109,7 @@ class SemanticVectors(TypedDict, total=False):
     model: str                 # embedding 模型标识
     dim: int                   # 向量维度
     created_at: float          # 向量生成时间
+    references: dict[str, Any]
 
 
 # ─── 第3层：PreciseStructure（精确执行层）────────────────────────────
@@ -141,6 +149,11 @@ class PreciseStructure(TypedDict, total=False):
 
     # ── LLM 意图提示（轻量，非路由命令） ──
     need: str                  # "research" | "execute" | "verify" | "end"
+    # 业务字段由配置白名单选择；公共层不解释医学支持或预算规则。
+    question_id: str
+    options: dict[str, str]
+    evidence_pool: list[dict]
+    budget: dict[str, Any]
 
 
 # ─── 复合结构：SemanticObject ────────────────────────────────────────
@@ -170,22 +183,25 @@ def build_control(
     step: int = 0,
     max_steps: int = 6,
     usage: dict[str, Any] | None = None,
+    profile: dict[str, Any] | None = None,
 ) -> ControlInfo:
     """构建控制层对象。"""
+    capabilities = profile["capabilities"] if profile else AGENT_CAPABILITIES
+    routes = profile["routes"] if profile else ALLOWED_NEXT
     return {
         "trace_id": trace_id,
         "timestamp": time.time(),
         "src": src,
         "dst": dst,
         "kind": kind,
-        "action": action or AGENT_CAPABILITIES.get(dst, {}).get("actions", [""])[0],
+        "action": action or capabilities.get(dst, {}).get("actions", [""])[0],
         "priority": priority,
         "cacheable": cacheable,
         "approximable": approximable,
-        "src_caps": AGENT_CAPABILITIES.get(src, {}) if src in AGENT_CAPABILITIES else {},
-        "dst_caps": AGENT_CAPABILITIES.get(dst, {}),
-        "all_caps": AGENT_CAPABILITIES,
-        "allowed_next": ALLOWED_NEXT.get(dst, []),
+        "src_caps": capabilities.get(src, {}),
+        "dst_caps": capabilities.get(dst, {}),
+        "all_caps": capabilities,
+        "allowed_next": routes.get(dst, []),
         "step": step,
         "max_steps": max_steps,
         "usage": usage or {},

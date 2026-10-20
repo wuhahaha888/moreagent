@@ -154,6 +154,11 @@ activemq-data/
 .env
 .envrc
 .venv
+.venv-qwen-local/
+models/
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
 env/
 venv/
 ENV/
@@ -219,3 +224,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Generated results for future official-dataset evaluations.
+experiments/results/
+
+# Local runtime state and generated experiment artifacts
+/LangChain/data/
+/experiments/analysis/
+/experiments/validation/
+/experiments/datasets/*.zip
+node_modules/
+.venv*/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+.DS_Store

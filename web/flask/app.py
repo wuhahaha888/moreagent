@@ -152,6 +152,8 @@ def _serialize_state(final_state: dict[str, Any]) -> dict[str, Any]:
             "summary": _json_safe(summary),
         },
         "memory_hits": _json_safe(final_state.get("memory_hits", [])),
+        "memory_events": _json_safe(metrics.get("memory_events", [])),
+        "memory_consolidation": _json_safe(metrics.get("memory_consolidation", {})),
     }
 
 
@@ -363,7 +365,7 @@ def status():
         }
     return jsonify({
         "initialized": True,
-        "model": _settings.openai_model if _settings else "",
+        "model": _settings.deepseek_model if _settings else "",
         "session": session_info,
         "memory_count": len(_system.memory.items) if _system else 0,
     })

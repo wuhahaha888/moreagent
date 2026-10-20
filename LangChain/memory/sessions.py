@@ -30,11 +30,16 @@ class MemorySessionManager:
         """按最近更新时间倒序列出可导入的记忆会话。"""
         if not self.memory_dir.exists():
             return []
-        files = sorted(
-            self.memory_dir.glob("mem-*.json"),
-            key=lambda path: path.stat().st_mtime,
-            reverse=True,
-        )
+        # 新存储使用共享数据库，按对话日志恢复 session ID；兼容旧 JSON 会话。
+        paths = {p.stem.removeprefix("mem-"): p for p in self.memory_dir.glob("mem-*.json")}
+        for chat_path in self.chat_dir.glob("chat-*.json"):
+            timestamp = chat_path.stem.removeprefix("chat-")
+            paths.setdefault(timestamp, self.memory_dir / f"mem-{timestamp}.json")
+        def updated(path):
+            chat = self.chat_dir / f"chat-{path.stem.removeprefix('mem-')}.json"
+            return max(path.stat().st_mtime if path.exists() else 0,
+                       chat.stat().st_mtime if chat.exists() else 0)
+        files = sorted(paths.values(), key=updated, reverse=True)
         return [
             self._session_from_memory_path(index, path)
             for index, path in enumerate(files, start=1)
@@ -44,7 +49,7 @@ class MemorySessionManager:
         """创建新的记忆/日志路径；文件在首次写入时落盘。"""
         self.memory_dir.mkdir(parents=True, exist_ok=True)
         self.chat_dir.mkdir(parents=True, exist_ok=True)
-        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
         return ConversationSession(
             index=0,
             timestamp=timestamp,
@@ -61,5 +66,5 @@ class MemorySessionManager:
             timestamp=timestamp,
             memory_path=path,
             chat_path=self.chat_dir / f"chat-{timestamp}.json",
-            updated_at=path.stat().st_mtime,
+            updated_at=path.stat().st_mtime if path.exists() else (self.chat_dir / f"chat-{timestamp}.json").stat().st_mtime,
         )

@@ -1,0 +1,125 @@
+{
+  "model_calls_during_analysis": 0,
+  "source_diff_from_experiment": [],
+  "conditions": {
+    "text_on": {
+      "text_chars": 887298,
+      "json_chars": 848224,
+      "calls": 213,
+      "json_longer_calls": 17,
+      "by_role": {
+        "Planner": {
+          "text_chars": 184705,
+          "json_chars": 177376,
+          "calls": 71
+        },
+        "Investigator": {
+          "text_chars": 211407,
+          "json_chars": 196006,
+          "calls": 71
+        },
+        "VerifierReasoner": {
+          "text_chars": 491186,
+          "json_chars": 474842,
+          "calls": 71
+        }
+      },
+      "json_char_reduction": 0.04403706533768814,
+      "matches_recorded_request_chars": true
+    },
+    "structured_off": {
+      "text_chars": 696455,
+      "json_chars": 670848,
+      "calls": 213,
+      "json_longer_calls": 71,
+      "by_role": {
+        "Planner": {
+          "text_chars": 72937,
+          "json_chars": 73150,
+          "calls": 71
+        },
+        "Investigator": {
+          "text_chars": 134302,
+          "json_chars": 125359,
+          "calls": 71
+        },
+        "VerifierReasoner": {
+          "text_chars": 489216,
+          "json_chars": 472339,
+          "calls": 71
+        }
+      },
+      "json_char_reduction": 0.036767630356591585,
+      "matches_recorded_request_chars": true
+    },
+    "structured_on": {
+      "text_chars": 930011,
+      "json_chars": 888958,
+      "calls": 213,
+      "json_longer_calls": 16,
+      "by_role": {
+        "Planner": {
+          "text_chars": 187456,
+          "json_chars": 179942,
+          "calls": 71
+        },
+        "Investigator": {
+          "text_chars": 216307,
+          "json_chars": 199963,
+          "calls": 71
+        },
+        "VerifierReasoner": {
+          "text_chars": 526248,
+          "json_chars": 509053,
+          "calls": 71
+        }
+      },
+      "json_char_reduction": 0.044142488637231136,
+      "matches_recorded_request_chars": true
+    },
+    "text_off": {
+      "text_chars": 695511,
+      "json_chars": 669949,
+      "calls": 213,
+      "json_longer_calls": 71,
+      "by_role": {
+        "Planner": {
+          "text_chars": 72937,
+          "json_chars": 73150,
+          "calls": 71
+        },
+        "Investigator": {
+          "text_chars": 134319,
+          "json_chars": 125410,
+          "calls": 71
+        },
+        "VerifierReasoner": {
+          "text_chars": 488255,
+          "json_chars": 471389,
+          "calls": 71
+        }
+      },
+      "json_char_reduction": 0.03675283352815417,
+      "matches_recorded_request_chars": true
+    }
+  },
+  "example": {
+    "payload": {
+      "action": "search",
+      "queries": [
+        {
+          "query": "iron deficiency anemia",
+          "need_ids": [
+            "K1"
+          ]
+        }
+      ],
+      "memory_ids": [
+        "m1"
+      ]
+    },
+    "structured": "{\"action\":\"search\",\"queries\":[{\"query\":\"iron deficiency anemia\",\"need_ids\":[\"K1\"]}],\"memory_ids\":[\"m1\"]}",
+    "text": "action: \"search\"\nqueries:\n  -\n    query: \"iron deficiency anemia\"\n    need_ids:\n      - \"K1\"\nmemory_ids:\n  - \"m1\""
+  },
+  "note": "每条已记录输入固定内容，用两种现有渲染器各序列化一次。字符差不是模型token差；不生成新答案，无法验证两种格式下的正确率变化。"
+}

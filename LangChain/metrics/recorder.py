@@ -152,6 +152,12 @@ def finalize_metrics(metrics: dict[str, Any]) -> dict[str, Any]:
     semantic_bytes = sum(int(turn.get("semantic_bytes", 0) or 0) for turn in turns)
     semantic_transfers = sum(int(turn.get("semantic_transfers", 0) or 0) for turn in turns)
     control_decisions = sum(int(turn.get("control_decisions", 0) or 0) for turn in turns)
+    memory_events = metrics.get("memory_events", [])
+    queries = sum(e.get("query_count", 0) for e in memory_events)
+    hit_queries = sum(e.get("hit_query", 0) for e in memory_events)
+    if not memory_events:
+        queries = len(turns)
+        hit_queries = sum(bool(t.get("memory_hits")) for t in turns)
 
     summary = {
         "mode": metrics.get("mode", "structured"),
@@ -169,7 +175,20 @@ def finalize_metrics(metrics: dict[str, Any]) -> dict[str, Any]:
             time.time() - float(metrics.get("started_at", time.time())), 4
         ),
         "memory_hits": memory_hits,
-        "memory_hit_rate": round(memory_hits / message_count, 4) if message_count else 0.0,
+        "memory_hit_rate": round(hit_queries / queries, 4) if queries else 0.0,
+        "memory_query_count": queries,
+        "memory_hit_queries": hit_queries,
+        "cross_task_memory_hits": sum(e.get("cross_task_count", 0) for e in memory_events),
+        # 自报引用有显式 ID 校验，但不等于经人工/标准答案核验的正确复用。
+        "cross_task_memory_citations": sum(e.get("cross_task_cited_count", 0) for e in memory_events),
+        "memory_context_chars": sum(e.get("context_chars", 0) for e in memory_events),
+        "memory_state_transfers": sum(e.get("state_transfer_count", 0) for e in memory_events),
+        "memory_state_bytes": sum(e.get("vector_bytes", 0) for e in memory_events),
+        "memory_retrieval_seconds": sum(e.get("duration_seconds", 0) for e in memory_events),
+        "memory_consolidation_seconds": metrics.get("memory_consolidation", {}).get("duration_seconds", 0),
+        "memory_consolidation_usage_unknown": metrics.get("memory_consolidation", {}).get("usage_unknown", False),
+        "embedding_cache_hits": metrics.get("embedding_cache_hits", 0),
+        "embedding_encoded_texts": metrics.get("embedding_encoded_texts", 0),
     }
     metrics["summary"] = summary
     return metrics

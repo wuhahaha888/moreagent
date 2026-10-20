@@ -1,0 +1,26 @@
+{
+  "dataset_name": "medical-related-30-v1",
+  "construction_date": "2026-10-20",
+  "source_path": "/data/wanghc/MedRGAG/benchmark.json",
+  "source_sha256": "0ab94ad8a680028fe3eaea2bcee448045209b1b3291aa8acb5773117839f8daa",
+  "parent_subset": "medical-related-71-v1",
+  "parent_subset_question_count": 71,
+  "selection_manifest_sha256": "1402c00dbac8c4822c4f95eef4b43762311c03e2b5afaf8b03b58a5970559382",
+  "question_count": 30,
+  "group_count": 3,
+  "source_dataset": "medqa",
+  "group_order": [
+    "medqa-anemia",
+    "medqa-renal",
+    "medqa-thyroid"
+  ],
+  "ordering": "user_fixed_no_shuffle",
+  "original_question_options_and_gold_preserved": true,
+  "selection_basis": "exact user supplied IDs and order; no new outcome-based selection",
+  "prior_exposure": "all 30 appeared in the existing 71-question experiments",
+  "evaluation_status": "new curated evaluation subset, not an unseen independent test set",
+  "continuity_type": "knowledge-reuse task streams, not required predecessor dependencies",
+  "runtime_changed": false,
+  "existing_configs_changed": false,
+  "model_calls": 0
+}

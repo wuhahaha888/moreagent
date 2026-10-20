@@ -1,0 +1,17 @@
+{
+  "question_count": 30,
+  "unique_ids": 30,
+  "group_count": 3,
+  "questions_per_group": {
+    "medqa-anemia": 10,
+    "medqa-renal": 10,
+    "medqa-thyroid": 10
+  },
+  "exact_user_ids_and_order_verified": true,
+  "exact_original_question_options_and_answer_verified": true,
+  "public_questions_contain_only_id_question_options": true,
+  "candidate_reuse_edges_point_only_to_earlier_same_group_tasks": true,
+  "source_benchmark_unchanged": true,
+  "runner_sha256": "bf2390d0c1acddf4c43d0e4e4feb1c7f81177b5cb66b381a591c258e7e7b7a1a",
+  "model_calls": 0
+}

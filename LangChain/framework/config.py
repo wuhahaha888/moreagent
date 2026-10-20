@@ -30,6 +30,15 @@ class Settings:
     deepseek_api_key: str
     deepseek_base_url: str
     deepseek_model: str
+    memory_backend: str = "agentic"
+    memory_namespace: str = "default"
+    memory_context_chars: int = 3200
+    memory_ttl_days: int = 30
+    embedding_cache_version: str = "v1"
+    memory_curator_enabled: bool = True
+    memory_retrieval_strategy: str = "hybrid"
+    memory_curation_mode: str = "auto"
+    memory_include_task_local: bool = False
 
 
 def load_env_file(path: Path = ENV_FILE) -> None:
@@ -67,9 +76,9 @@ def load_settings() -> Settings:
     """加载完整运行配置并应用默认值。"""
     load_env_file()
     return Settings(
-        openai_api_key=require_env("OPENAI_API_KEY"),
-        openai_base_url=require_env("OPENAI_BASE_URL"),
-        openai_model=require_env("OPENAI_MODEL"),
+        openai_api_key=os.getenv("OPENAI_API_KEY", ""),
+        openai_base_url=os.getenv("OPENAI_BASE_URL", ""),
+        openai_model=os.getenv("OPENAI_MODEL", ""),
         openai_temperature=float(os.getenv("OPENAI_TEMPERATURE", "0.2")),
         embedding_model_path=os.getenv("EMBEDDING_MODEL_PATH", r"D:\Models\Qwen3-Embedding-0.6B"),
         embedding_batch_size=int(os.getenv("EMBEDDING_BATCH_SIZE", "8")),
@@ -86,4 +95,13 @@ def load_settings() -> Settings:
         deepseek_api_key=require_env("DEEPSEEK_API_KEY"),
         deepseek_base_url=require_env("DEEPSEEK_BASE_URL"),
         deepseek_model=require_env("DEEPSEEK_MODEL"),
+        memory_backend=os.getenv("MEMORY_BACKEND", "agentic"),
+        memory_namespace=os.getenv("MEMORY_NAMESPACE", "default"),
+        memory_context_chars=int(os.getenv("MEMORY_CONTEXT_CHARS", "3200")),
+        memory_ttl_days=int(os.getenv("MEMORY_TTL_DAYS", "30")),
+        embedding_cache_version=os.getenv("EMBEDDING_CACHE_VERSION", "v1"),
+        memory_curator_enabled=parse_bool(os.getenv("MEMORY_CURATOR_ENABLED", "true")),
+        memory_retrieval_strategy=os.getenv("MEMORY_RETRIEVAL_STRATEGY", "hybrid"),
+        memory_curation_mode=os.getenv("MEMORY_CURATION_MODE", "auto"),
+        memory_include_task_local=parse_bool(os.getenv("MEMORY_INCLUDE_TASK_LOCAL", "false")),
     )

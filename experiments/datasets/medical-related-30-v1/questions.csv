@@ -1,0 +1,144 @@
+﻿group_id,round_in_group,question_id,source_question_id,question,A,B,C,D,question_options_sha256
+medqa-anemia,1,medqa::0900,0900,"A 38-year-old man presents with progressive tiredness and shortness of breath on exertion. Past medical history is significant for peptic ulcer disease diagnosed 2 years ago for which he is not compliant with his medications. He reports a 10-pack-year smoking history and occasionally alcohol use. His vital signs include: temperature 37.1°C (98.7°F), blood pressure 142/91 mm Hg, pulse 98/min. Physical examination is unremarkable. Laboratory findings are significant for the following:
+Hemoglobin 9.7 g/dL
+Hematocrit 29.1%
+Red cell count 3.7 million/mm3
+Mean corpuscular volume (MCV) 71 μm3
+Mean corpuscular hemoglobin (MCH) 21.3 pg/cell
+Mean corpuscular hemoglobin concentration (MCHC) 28.4 Hb/cell
+Reticulocyte count 0.2 %
+Red cell distribution width (RDW) 17.8 (ref: 11.5–14.5%)
+White blood cell count 8100/mm3
+Platelet count 420,000/mm3
+Iron studies show:
+Total iron binding capacity (TIBC) 620 μg/dL
+Transferrin saturation 9%
+Which of the following findings would most likely be found on a bone marrow biopsy in this patient?",Hypocellularity with fatty infiltration,↓ hemosiderin stores,Ringed sideroblasts,Myeloblasts with immature precursors,3f87f5399a497607543f0ea7f94448962b8ffe95a60c9bd193c460fd13bba274
+medqa-anemia,2,medqa::0418,0418,"A 16-year-old boy is brought to the physician by his parents for the evaluation of fatigue for several weeks. The parents report that their son quit doing sports at school because of low energy. The patient's academic performance has declined recently. He spends most of his time in the basement playing video games and eating bowls of cereal. He has no history of serious illness. His mother has Hashimoto's thyroiditis and his father has major depressive disorder. The patient does not smoke or drink alcohol. His vital signs are within normal limits. Examination shows conjunctival pallor, inflammation and fissuring of the corners of the mouth, and concavity of the finger nails. The remainder of the examination shows no abnormalities. Laboratory studies show:
+Hemoglobin 11.5 g/dL
+Mean corpuscular volume 76 μm3
+Platelet count 290,000/mm3
+Red cell distribution width 18% (N = 13%–15%)
+Leukocyte count 7,000/mm3
+Which of the following is the most appropriate initial step in treatment?""",Regular blood transfusions,Methylphenidate,Iron supplementation,Allogenic stem cell transplantation,4b30c7f4450a21e47a3c685e84df3fd42a41f9c9a0a72aeaa40ded2817c6c7ae
+medqa-anemia,3,medqa::1225,1225,"A 9-month-old boy is brought to his pediatrician by his mother for a routine health checkup. The boy was born at 39 weeks gestation via spontaneous vaginal delivery. He is up to date on all vaccines and is meeting all developmental milestones. He was breastfed for the first 3 months and then switched to cow’s milk and about two months ago she started giving him fruits and vegetables. Family history is noncontributory. Today, his heart rate is 120/min, respiratory rate is 40/min, blood pressure is 90/50 mm Hg, and temperature of 37.0°C (98.6°F). On examination, he has a heartbeat with a regular rate and rhythm and his lungs are clear to auscultation bilaterally. Generally, the boy looks pale. His weight and height fall within the expected range. A complete blood count (CBC) shows the following:
+Hemoglobin (Hb): 9.1 g/dL
+Mean corpuscular volume (MCV): 65 fL
+Total iron binding capacity (TIBC): 550 μg/dL
+Serum iron: 45 µg/dL
+Serum lead: < 5 µg/dL
+What is the best treatment for this patient?",Iron supplementation only,Proper diet and iron supplementation,Multivitamins,Proper diet only,af8ebbbd1c761b5e5f482fe45e03155e2464f4dc9ae72a7df4893c56de2420f7
+medqa-anemia,4,medqa::0394,0394,"A 54-year-old woman presents with fatigue, malaise, and shortness of breath over the past 5 months. Past medical history is significant for rheumatoid arthritis diagnosed 23 years ago for which she takes naproxen as needed. Her vital signs include: temperature 36.9°C (98.4°F), blood pressure 135/88 mm Hg, pulse 92/min. Physical examination is significant for conjunctival pallor and bilateral ulnar deviation of the metacarpophalangeal joints. Laboratory findings are significant for the following:
+Hemoglobin 9.2 g/dL
+Mean corpuscular volume 76 fL
+Leukocyte count 7,000/mm3
+Platelet count 220,000/mm3
+Serum ferritin 310 ng/mL
+Erythrocyte sedimentation rate 85 mm/h
+Which of the following is a feature of this patient's anemia?",↑ serum transferrin receptors,↑ transferrin saturation,Upregulation of hepcidin,↑ reticulocyte count,54dba409dad25af1aa9ce8e847638bc2789407e2c0d92d29d6fa7d8f1ba29792
+medqa-anemia,5,medqa::1009,1009,"A 45-year-old woman comes to the physician because of a 2-week history of painful ulcers in her mouth. Over the past 2 months, she has had increasing fatigue and difficulties concentrating. She has a history of rheumatoid arthritis and was started on a new medication 4 months ago. Examination shows pallor of the mucosal membranes and three tender ulcerative lesions in her mouth. Her hemoglobin concentration is 8.7 g/dL and mean corpuscular volume is 109 μm3. A blood smear shows hypersegmented neutrophils. Which of the following is the most likely cause of this patient's findings?",Deficient heme synthesis,Deficient erythropoietin secretion,Deficient nitrogenous base production,Deficient β-globin chains,0c918970abc6dd9ed02449fb9fef883a3707d1c95faf607c3c86222bd8fcc074
+medqa-anemia,6,medqa::0409,0409,A 44-year-old woman with hypothyroidism comes to the physician because of a 1-month history of tingling in her feet and poor balance. Her only medication is levothyroxine. Physical examination shows conjunctival pallor and an ataxic gait. Proprioception and sense of vibration are decreased in her toes bilaterally. Laboratory studies show macrocytic anemia and normal thyroid hormone levels. Histological evaluation of tissue samples obtained by esophagogastroduodenoscopy reveals atrophic changes of the gastric body and fundus with normal antral mucosa. Which of the following structures is most likely being targeted by antibodies in this patient?,Islet cell cytoplasm,Deamidated gliadin peptide,Parietal cells,Smooth muscle,8c4557d80e97c22186193fcb2100a9cd4bf59670daece60d5230907d41cee6b4
+medqa-anemia,7,medqa::0476,0476,"A 14-year-old boy presents with right upper quadrant abdominal pain and is found on ultrasound to have a gallstone. Based on clinical suspicion, a CBC, a Coombs test, and a bilirubin panel are obtained to determine the etiology of the gallstone. These tests reveal a mild normocytic anemia with associated reticulocytosis as well as an increased RDW. In addition there is an indirect hyperbilirubinemia and the Coombs test results are negative. To confirm the diagnosis, an osmotic fragility test is performed which shows increased fragility in hypotonic solution. In this patient, what findings would most likely be anticipated if a blood smear were obtained?",Hypersegmented neutrophils,Sideroblasts,Spherocytes,Dacrocytes,747cb654a82938963e58ff1582612d0ae47bb72ab150dea25315625ba51be242
+medqa-anemia,8,medqa::0810,0810,"An otherwise healthy 49-year-old woman has a routine full blood count complete prior her elective cholecystectomy. The lab test results are as follows:
+Laboratory test
+Hemoglobin
+12.1 g/dL
+Mean corpuscular volume (MCV)
+85 μm3
+Mean corpuscular hemoglobin concentration (MCHC)
+47%
+Reticulocyte count
+3.4 %
+White blood cell count
+9700/mm3
+Platelet count
+229,000/mm3
+A peripheral blood smear reveals spherocytes. The Coombs test is negative. The physical examination is remarkable for scleral icterus and moderate splenomegaly. Which of the following is the most appropriate diagnostic test of this patient’s underlying disorder?",Eosin-5-maleimide binding test,Flow cytometry for CD55/CD59,Anti parvovirus B19 antibodies,Liver function tests,116bf86f7821d2ea28b137d9f60204018e6969fac29084427e6cbc60a51425f4
+medqa-anemia,9,medqa::0673,0673,"A 7-year-old boy is brought to the physician because of a 3-week history of burning sensation in his mouth. One year ago, a peripheral blood smear performed during workup of fatigue revealed erythrocytes without central pallor. His father had gallstones, for which he underwent a cholecystectomy at the age of 26 years. Examination shows pallor of the mucosal membranes, mild scleral icterus, a swollen, red tongue, and several mouth ulcers. There is darkening of the skin over the dorsal surfaces of the fingers, toes, and creases of the palms and soles. His spleen is enlarged and palpable 3 cm below the left costal margin. Laboratory studies show a hemoglobin concentration of 9.1 gm/dL, mean corpuscular volume of 104 μm3, and a reticulocyte count of 9%. Which of the following would most likely have prevented this patient's oropharyngeal symptoms?",Red blood cell transfusions,Gluten-free diet,Vitamin B12 injections,Folic acid supplementation,ecfe4a0a6a497974d63d4c50084484abb6c8be298fc550550eff7e799bd81123
+medqa-anemia,10,medqa::1205,1205,"A 78-year-old man comes to the physician because of progressively worsening fatigue and headache for 6 months and occasional abdominal pain. He has not had any changes in his weight. He has a history of hypertension, type 2 diabetes mellitus, and chronic shoulder pain. Current daily medications include hydrochlorothiazide, metformin, and ibuprofen. He does not drink alcohol and does not smoke. His diet has mostly consisted of potatoes and lean meats since his wife passed away 1 year ago. His pulse is 92/min and blood pressure is 135/80 mm Hg. Examination shows conjunctival and mucosal pallor. Abdominal and rectal examination shows no abnormalities. Neurological exam shows mild postural tremor. Peripheral blood smear shows red blood cells with increased zones of central pallor and anisocytosis. Which of the following is the most likely underlying cause of this patient’s symptoms?",Folic acid deficiency,Intravascular hemolysis,Impaired erythropoietin production,Iron deficiency,91390de562db267aba00b96e25615f0607dcb1d8c2b2fe1409e7b28ae02acd97
+medqa-renal,1,medqa::0574,0574,An 11-year-old boy presents to your office with pitting edema and proteinuria exceeding 3.5g in 24 hours. You suspect that this patient has experienced a loss of polyanions in his glomerular basement membranes. Which of the following findings would confirm your diagnosis?,WBC casts in the urine,Selective albuminuria,Negatively birefringent crystals in the urine,Bence-Jones proteinuria,1fbee9f3dc537c903046575112f3e20742061930a3f8466b5b478bdc3c1ba0c2
+medqa-renal,2,medqa::0145,0145,"A 5-year-old boy is brought to the physician because of facial swelling that started 5 days ago. Two weeks ago, he had a sore throat that resolved spontaneously. His temperature is 37°C (98.6°F), pulse is 107/min, and blood pressure is 94/67 mm Hg. Examination shows pitting edema of the upper and lower extremities as well as periorbital edema. The abdomen is mildly distended. Laboratory studies show:
+Hemoglobin 13.1 g/dL
+Serum
+Albumin 2.1 g/dL
+Total cholesterol 270 mg/dL
+Triglycerides 175 mg/dL
+Urine
+Blood negative
+Glucose negative
+Protein 4+
+Leukocyte esterase negative
+A renal biopsy of this patient is most likely to show which of the following findings?""",Mesangial proliferation on light microscopy,Subepithelial dense deposits on electron microscopy,Deposits of IgG and C3 at the glomerular basement membrane on immunofluoresence,Normal light microscopy findings,ce9e5fc920a5fc4bfbd253340af9771294dee33518c148d5f8fe3a2aa10ab87c
+medqa-renal,3,medqa::0169,0169,"An 8-year-old girl comes to the physician because of a 2-day history of hematuria. Two weeks ago, she had a sore throat that resolved without treatment. Physical examination shows 1+ pitting edema of the lower legs and ankles. Urinalysis shows numerous RBCs and 3+ proteinuria. Her antistreptolysin O titer is elevated. Formation of which of the following is most likely involved in the underlying mechanism of this patient's symptoms?",Antigen-specific IgE binding to mast cells,Tissue-specific antibodies,Antigen-antibody complexes,Presensitized CD8+ cytotoxic T-cells,be50b26245e66368c4656aaad4188fde622079469b233f90c47dd06b82734841
+medqa-renal,4,medqa::0533,0533,A 36-year-old woman presents with increased tiredness and lethargy for the past 4 weeks. Investigations show her hemoglobin level to be 8.6 gm/dL and serum creatinine of 4.6 mg/dL. The serum is negative for antinuclear antibodies (ANA) and positive for C3 nephritic factor. Urinalysis shows a 3+ proteinuria. The renal biopsy demonstrates hypercellular glomerulus with electron dense deposits along the glomerular basement membrane. What is the most likely cause?,Membrano proliferative glomerulonephritis (MPGN),Rapidly progressive glomerulonephritis (RPGN),Minimal change disease,Membranous glomerulonephritis (MGN),46d107bb1ba36aeeb0fc088a4fa871762f076b1ccbab67684191d61ced113b40
+medqa-renal,5,medqa::0697,0697,"A 35-year-old male presents to the emergency department for evaluation of hemoptysis. A chest X-ray reveals bilateral focal pulmonary consolidation. On further questioning, he admits having hematuria. Urinalysis shows RBC casts and 400 mL of urine is excreted in 24 hours. What is the most likely cause of hemoptysis and hematuria in this patient?",Anti-Smith antibodies,Anti-neutrophil antibodies,Anti-mitochondrial antibodies,Anti-glomerular basement membrane antibodies,b9641d811589e8b358aa64dccef880ccd53fdd7260a30541890fc2510631204d
+medqa-renal,6,medqa::0162,0162,"A 59-year-old man presents to his primary care provider with fatigue, a progressively worsening cough with flecks of blood, shortness of breath, and dark urine. He reports feeling ill for the past 3 weeks. Past medical history is significant for hypertension and hyperlipidemia. He takes chlorthalidone and atorvastatin. Family history is noncontributory. He has smoked 20–30 cigarettes daily for the past 26 years. Anti-glomerular basement membrane serologies are positive. Which of the following is a specific feature for this patient’s condition?",Granulomatous inflammation and necrotizing vasculitis,Positive cryoglobulins,Linear IgG staining on immunofluorescence,Longitudinal splitting and thickening of the glomerular basement membrane,85ea881803edcc68ddb77b5e91a4836e3c74036f810c25411a7b3dc7b55c0f18
+medqa-renal,7,medqa::0465,0465,"A 45-year-old female presents to the emergency department with gross hematuria and acute, colicky flank pain. She denies any previous episodes of hematuria. She reports taking high doses of acetaminophen and aspirin over several weeks due to persistent upper back pain. The patient’s blood pressure and temperature are normal, but she is found to have proteinuria. Physical examination is negative for palpable flank masses. Which of the following is the most likely diagnosis:",Diffuse cortical necrosis,Chronic pyelonephritis,Papillary necrosis,Acute Nephrolithiasis,3fbeabd605cf7e3255f3d1496702f114d2056970f60a645359caa833e3fa4e36
+medqa-renal,8,medqa::0216,0216,"A 48-year-old woman with chronic tension headaches comes to the physician because of several episodes of bilateral flank pain and reddish urine within the past month. Current medications include aspirin, which she takes almost daily for headaches. Her temperature is 37.4°C (99.3°F) and her blood pressure is 150/90 mm Hg. Physical examination shows costovertebral tenderness to percussion bilaterally. Laboratory studies show a hemoglobin concentration of 10.2 g/dL and serum creatinine concentration of 2.4 mg/dL. Urine studies show:
+Urine
+Protein
+3+
+RBC > 16/hpf
+WBC 2/hpf
+There are no casts or dysmorphic RBCs visualized on microscopic analysis of the urine. Which of the following is the most likely underlying cause of this patient's hematuria?""",Tubular lumen obstruction by protein casts,Necrotizing inflammation of the renal glomeruli,Bacterial infection of the renal parenchyma,Vasoconstriction of the medullary vessels,d0556809013fd9ea63ce5ec2a3adfe5750cf7260b2607431cd0ae5ecc798500f
+medqa-renal,9,medqa::1153,1153,"A 68-year-old man presents to his primary care physician with complaints of increased fatigue and back pain for the past year. His symptoms are progressively getting worse over the past few months despite adequate rest and trial of over the counter analgesics. His back pain is constant and non-radiating in nature. He denies any trauma to his back. His past medical history is insignificant. On examination, there is mild tenderness over the lumbar region in the midline with an absence of paraspinal muscle tenderness. Straight leg raise test is negative. His skin and conjunctiva appear pale. The physician orders basic blood work. His results are provided below.
+Complete blood count
+RBC 4.9 million cells/µL
+Hemoglobin 9.8 g/dL
+Hematocrit 41%
+Total leukocyte count 6,800 cells/µL
+Neutrophils 70%
+Lymphocyte 26%
+Monocytes 3%
+Eosinophil 1%
+Basophils 0%
+Platelets 230,000 cells/µL
+Basic Metabolic Panel
+Sodium 136 mEq/L
+Potassium 5.1 mEq/L
+Chloride 101 mEq/L
+Bicarbonate 24 mEq/L
+Albumin 3.6 mg/ dL
+Urea nitrogen 31 mg/dL
+Creatinine 2.7 mg/dL
+Uric Acid 6.7 mg/dL
+Calcium 12.1 mg/dL
+Glucose 105 mg/dL
+Urinalysis shows proteinuria without any RBCs or pus cells. The patient’s proteinuria best fits in which of the following category?",Overflow proteinuria,Transient (functional) proteinuria,Orthostatic proteinuria,Isolated proteinuria,e81ed2a3c34b18a704cb85c5241d384ef71bb38a7d8ba3bc1a86f58b327082c2
+medqa-renal,10,medqa::1094,1094,"A 25-year-old female with Hodgkin's lymphoma presents with a several day history of edema. Lab studies show:
+
+Serum Na+: 140 mmol/L
+Serum K+: 3.5 mmol/L
+Serum albumin: 1.9 g/dL
+Total serum bilirubin: 1.0 mg/dL
+Serum creatinine: 1.2 mg/dL
+
+Urinalysis shows 4+ proteinuria and fatty casts. What is the most likely diagnosis?",Focal segmental glomerulosclerosis,Membranous nephropathy,Minimal change disease,Amyloidosis,6f9ed17a305b215f6b2a46cd34d0e1c7bcbe7a484895219d29afe6aaa87d7da5
+medqa-thyroid,1,medqa::0067,0067,"A 3-week-old male newborn is brought to the hospital because of poor weight gain since birth. He was born at 38 weeks' gestation via normal vaginal delivery. He weighed 3005 g (6 lb, 10 oz) at birth and currently weighs 2835 g (6 lb, 4 oz). He has been latching on and breastfeeding well since birth. His mother has a history of Graves' disease and underwent near-total thyroidectomy in the second trimester of her pregnancy after her symptoms could not be controlled with antithyroid drugs. She is currently receiving L-thyroxine therapy. The patient's temperature is 38.9°C (102°F), pulse is 176/min, and respirations are 42/min. He appears irritable. Examination shows a diaphoretic infant with a paucity of subcutaneous fat. There is swelling of the neck at the midline. Which of the following is the most likely cause?",Transplacental passage of thyroid peroxidase antibodies,Transplacental passage of TSH receptor antibodies,Transplacental viral infection,Opiate use in the mother,4e65f0ca08c699bee25c513f6a88adad3883d1a1a4372c402a24d831c4aa51bd
+medqa-thyroid,2,medqa::0361,0361,"A 6-day-old male newborn is brought to the physician because he has become increasingly irritable and restless over the past 2 days. During this period, he has had 12 bowel movements. He feeds 10 to 12 times a day. He was born at 38 weeks' gestation and weighed 1800 g (3 lb 15 oz); he currently weighs 1700 g (3 lb 12 oz). His mother has Graves' disease and received propylthiouracil during the last trimester of pregnancy. She has a history of intravenous heroin use. His temperature is 36.9°C (98.4°F), pulse is 180/min, and respirations are 50/min. Examination shows mild diaphoresis and a firm 2-cm midline neck swelling. The lungs are clear to auscultation. Which of the following is the most appropriate next step in management?",Methimazole and propranolol therapy,Potassium iodide therapy,Naloxone therapy,Calcium gluconate therapy,c62a9b2387d5f4ed7115dad8a634c0140f11e68db7df9a0255239ed8a4c65142
+medqa-thyroid,3,medqa::0089,0089,"A 26-year-old G1P0 woman presents to her primary care physician’s office with feelings of anxiety and trouble with sleep. She finds it difficult initiating sleep, occasionally has palpitations, and feels fatigued. She denies having similar symptoms in the past or starting any new medications or illicit drugs. She is currently 10 weeks pregnant and is closely followed by her obstetrician. Her temperature is 98.6°F (37°C), blood pressure is 125/70 mmHg, pulse is 105/min, and respirations are 18/min. On physical exam, the patient is mildly diaphoretic. The skin is warm and the thyroid gland is diffusely enlarged with thyroid bruits. Laboratory studies are significant for a thyroid-stimulating hormone level of 0.01 µU/mL (normal is 0.5-5.0 µU/mL) and an elevated free thyroxine (FT4) that is inappropriate for her pregnancy. Which of the following is the best treatment option for this patient?",Methimazole,Propylthiouracil,Radioiodine therapy,Thyroidectomy,85bb8dad2a6c3c34a66b9e1f1923344c90d852ff7f602aa0b16d8b95a3b288a5
+medqa-thyroid,4,medqa::0512,0512,"A 35-year-old woman presents to her primary care provider concerned that she may be pregnant. She has a history of regular menstruation every 4 weeks that lasts about 4 days with mild to moderate bleeding, but she missed her last period 2 weeks ago. A home pregnancy test was positive. She has a 6-year history of hyperthyroidism that is well-controlled with daily methimazole. She is currently asymptomatic and has no complaints or concerns. A blood specimen is taken and confirms the diagnosis. Additionally, her thyroid-stimulating hormone (TSH) is 2.0 μU/mL. Which of the following is the next best step in the management of this patient?",Continue methimazole,"Discontinue methimazole, start propylthiouracil",Add glucocorticoids,Refer for radioiodine therapy,f1c162f0951eea89f98cdc14dc030d24b06536a6e92ee68c381665cc8879a316
+medqa-thyroid,5,medqa::0137,0137,"A 36-year-old woman comes to the clinic because of tearing and a foreign body sensation in her eyes bilaterally, which has gradually worsened over the last several weeks. She also notes having occasional palpitations, nervousness, sweating, and heat intolerance. Her past medical history is unremarkable. She reports a 20-pack-year smoking history and is currently a daily smoker. Physical examination shows an anxious, trembling woman. She has eyelid retraction bilaterally, with an inability to fully close her eyes. Her extraocular motility is limited on upgaze. There is no thyromegaly, and no thyroid nodules are noted. Laboratory studies reveal a thyroid-stimulating hormone level of 0.1 μU/mL and total T4 of 42 μg/dL. Thyroid-stimulating immunoglobulin is positive. CT scan of the orbits shows proptosis and marked enlargement of the extraocular muscle with sparing of the tendons. Which of the following would most likely transiently worsen this patient’s eye symptoms?",External orbital radiation,Selenium supplementation,Systemic corticosteroids,Treatment with radioactive iodine,739002947160c1b466c9918b1a0848a5dd0fdf8a3be03c4a2da49f227fb0233c
+medqa-thyroid,6,medqa::1061,1061,"A 37-year-old woman presents to the emergency department with confusion, anxiety, sweating, and episodes of vomiting. She is accompanied by her sister who says that her symptoms developed acutely and is unsure about what caused it. She is currently on methimazole, which she last took approximately 1 week ago. Approximately 5 days ago she developed an upper respiratory infection managed with bed rest and ibuprofen. Her temperature is 105°F (40.6°C), blood pressure is 95/68 mmHg, pulse is 145/min, and respirations are 23/min. On physical examination, the patient has altered mentation and is agitated and diaphoretic. The patient also has a goiter, exophthalmos, warm skin, and a hand tremor. She is started on intravenous fluids. Which of the following is the best treatment option for this patient?",Antibiotics,Carotid massage,Clonazepam,Propranolol,dec9d9624821350966c4b32c27a56b3c6e4d6986354e8c4d35e2996e5a310f6b
+medqa-thyroid,7,medqa::0103,0103,"A 75-year-old woman is brought by a patrolman to the emergency department because of altered mental status. She was found wandering next to the highway. The patient was unable to answer questions and collapsed in transit. Her vitals are: temperature, 33.0°C (91.4°F); pulse, 40/min; respirations,12/min; blood pressure, 80/50 mm Hg; and oxygen saturation, 85% on room air. Physical examination shows decorticate posturing, incomprehensible speech, eyes opening to pain, dry hair, coarse and waxy skin, and non-pitting edema around the face and all extremities. Electrocardiogram shows sinus bradycardia. Laboratory studies show:
+Calcium 9.0 mg/dL
+Hematocrit (female) 34%
+Potassium 4.0 mEq/L
+Sodium 120 mEq/L
+TSH 110.0 µU/mL
+Thyroxine (T4) 1.2 µg/dL
+Triiodothyronine (T3) 70 ng/dL
+Which of the following is the most likely diagnosis in this patient?",Myxedema coma,Pheochromocytoma crisis,Septic shock,Tertiary hyperparathyroidism,e6753a3ec0211723af5b7e69160903beb4ab80ab63340c4f6af13ae62cb8b8bd
+medqa-thyroid,8,medqa::0124,0124,"A obstetrician is working in a developing country to help promote maternal health and fetal well being. While there, he delivers a baby who he suspects has congenital hypothyroidism, most likely caused by inadequate maternal iodine intake. Which of the following signs and symptoms would NOT be expected to be observed in this child?",Hypotonia,Diarrhea,Umbilical hernia,Macroglossia,0f82aad8806c3b327e25477eda2b6504b204d12e293ceb166b00b94fcd2175ea
+medqa-thyroid,9,medqa::0229,0229,"Three days after admission to the intensive care unit for septic shock and bacteremia from a urinary tract infection, a 34-year-old woman has persistent hypotension. Her blood cultures are positive for Escherichia coli, for which she has been receiving appropriate antibiotics since admission. She has no history of any serious illness. She does not use illicit drugs. Current medications include norepinephrine, ceftriaxone, and acetaminophen. She appears well. Her temperature is 37.5°C (99.5°F), heart rate is 96/min, and blood pressure is 85/55 mm Hg. Examination of the back shows costovertebral tenderness bilaterally. Examination of the thyroid gland shows no abnormalities. Laboratory studies show:
+  Hospital day 1 Hospital day 3
+Leukocyte count 18,500/mm3 10,300/mm3
+Hemoglobin 14.1 mg/dL 13.4 mg/dL
+Serum
+Creatinine 1.4 mg/dL 0.9 mg/dL
+Fasting glucose 95 mg/dL 100 mg/dL
+TSH   1.8 µU/mL
+T3, free   0.1 ng/dL
+T4, free   0.9 ng/dL
+Repeat blood cultures are negative. A chest X-ray shows no abnormalities. Which of the following is the most appropriate treatment?",Bromocriptine,Levothyroxine,Removing toxic drugs,Treating the underlying illness,32dd153688baea3ffa2af269304944c3dcd22ddb60eeebeee8d3ae630c873ca5
+medqa-thyroid,10,medqa::0396,0396,"A 25-year-old woman comes to the office complaining of pelvic pain and feeling “off” for the past few weeks. She has not had any changes in diet or lifestyle but reports weight loss despite an increase in appetite. In addition, she has been experiencing chest palpitations, increased frequency of diarrhea, and heat intolerance. Physical exam of her thyroid is unremarkable but her TSH was found to be 0.21 mIU/L. A complex structure in her right ovary was detected on ultrasound. Her symptoms can be explained by which of the following?",Meigs syndrome,Jod-Basedow phenomenon,Dermoid cyst,Struma ovarii,f3df3cf578e8fcee59d9bade43bfa7ccc81d805d940b782c3474f915f2bfe185

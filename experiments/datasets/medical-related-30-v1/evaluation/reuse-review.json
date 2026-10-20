@@ -1,0 +1,455 @@
+{
+  "annotation_role": "evaluator_only_do_not_preload_into_agents_or_memory",
+  "relationship_type": "candidate_knowledge_reuse_not_required_task_dependency",
+  "tasks": [
+    {
+      "task_id": "medqa::0900",
+      "group_id": "medqa-anemia",
+      "task_focus": "小细胞性贫血的铁代谢指标",
+      "reuse_from_task_ids": [],
+      "reuse_hypothesis": "建立 MCV、TIBC、转铁蛋白饱和度联合解释框架；后续可复用检索证据及来源。",
+      "conditions_to_recheck": "本题是起始任务；消化道病史需要与检验相结合。",
+      "literal_stem_cues": [
+        "Total iron binding capacity (TIBC) 620",
+        "Mean corpuscular volume (MCV) 71"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0418",
+      "group_id": "medqa-anemia",
+      "task_focus": "青少年的小细胞性贫血与处理",
+      "reuse_from_task_ids": [
+        "medqa::0900"
+      ],
+      "reuse_hypothesis": "复用小细胞性贫血与铁代谢的证据框架。",
+      "conditions_to_recheck": "重新核对年龄、体征和治疗问题；父母病史不能取代患儿证据。",
+      "literal_stem_cues": [
+        "Mean corpuscular volume 76",
+        "concavity of the finger nails"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::1225",
+      "group_id": "medqa-anemia",
+      "task_focus": "婴儿饮食背景下的小细胞性贫血",
+      "reuse_from_task_ids": [
+        "medqa::0900",
+        "medqa::0418"
+      ],
+      "reuse_hypothesis": "复用铁代谢指标解释及相关教材片段。",
+      "conditions_to_recheck": "婴儿年龄、牛奶喂养与成人处理不同；治疗不能直接照搬。",
+      "literal_stem_cues": [
+        "Total iron binding capacity (TIBC): 550",
+        "cow’s milk"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0394",
+      "group_id": "medqa-anemia",
+      "task_focus": "慢性炎症背景下的小细胞性贫血",
+      "reuse_from_task_ids": [
+        "medqa::0900",
+        "medqa::0418",
+        "medqa::1225"
+      ],
+      "reuse_hypothesis": "复用 MCV 和铁指标联合判断方法，保留与前题的差异。",
+      "conditions_to_recheck": "低 MCV 不等于相同病因；核对类风湿病史、铁蛋白与炎症背景。",
+      "literal_stem_cues": [
+        "rheumatoid arthritis",
+        "Serum ferritin 310"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::1009",
+      "group_id": "medqa-anemia",
+      "task_focus": "相同基础疾病背景、不同贫血机制",
+      "reuse_from_task_ids": [
+        "medqa::0394"
+      ],
+      "reuse_hypothesis": "复用贫血分类与药物时间线核对策略。",
+      "conditions_to_recheck": "虽同为类风湿背景，新用药、口腔溃疡、高 MCV 可能改变机制判断。",
+      "literal_stem_cues": [
+        "mean corpuscular volume is 109",
+        "hypersegmented neutrophils"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0409",
+      "group_id": "medqa-anemia",
+      "task_focus": "大细胞性贫血、神经表现与胃部线索",
+      "reuse_from_task_ids": [
+        "medqa::1009"
+      ],
+      "reuse_hypothesis": "复用大细胞性贫血鉴别框架，补充吸收机制和抗体证据。",
+      "conditions_to_recheck": "不能把所有大细胞性贫血归为同一种原因；核对神经表现和胃部位。",
+      "literal_stem_cues": [
+        "macrocytic anemia",
+        "normal thyroid hormone levels"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0476",
+      "group_id": "medqa-anemia",
+      "task_focus": "溶血相关检验与红细胞形态",
+      "reuse_from_task_ids": [],
+      "reuse_hypothesis": "建立 Coombs、渗透脆性、胆红素、网织红细胞联合判断规则，供后题使用。",
+      "conditions_to_recheck": "属于新机制分支；不能声称前面缺铁证据已经回答本题。",
+      "literal_stem_cues": [
+        "osmotic fragility test",
+        "Coombs"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0810",
+      "group_id": "medqa-anemia",
+      "task_focus": "由形态和病史选择诊断检查",
+      "reuse_from_task_ids": [
+        "medqa::0476"
+      ],
+      "reuse_hypothesis": "复用上一题的溶血检查规则与来源；提问方向从形态变为检查。",
+      "conditions_to_recheck": "核对成人病例、球形细胞、Coombs 结果，不能复用选项字母。",
+      "literal_stem_cues": [
+        "spherocytes",
+        "Coombs test is negative"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0673",
+      "group_id": "medqa-anemia",
+      "task_focus": "慢性溶血背景下的营养与口腔表现",
+      "reuse_from_task_ids": [
+        "medqa::0476",
+        "medqa::0810",
+        "medqa::1009",
+        "medqa::0409"
+      ],
+      "reuse_hypothesis": "组合溶血分支和大细胞性贫血分支的信息需求与检索经验。",
+      "conditions_to_recheck": "需考虑网织红细胞比例及家族线索；高 MCV 不能直接复制前题结论。",
+      "literal_stem_cues": [
+        "reticulocyte count of 9%",
+        "mean corpuscular volume of 104"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::1205",
+      "group_id": "medqa-anemia",
+      "task_focus": "间隔多轮后再次识别小细胞/低色素线索",
+      "reuse_from_task_ids": [
+        "medqa::0900",
+        "medqa::0418",
+        "medqa::1225"
+      ],
+      "reuse_hypothesis": "检验早期贫血形态与铁代谢框架能否在中间任务干扰后回读。",
+      "conditions_to_recheck": "重新核对高龄、药物、饮食和出血线索；不把历史病因当作本题事实。",
+      "literal_stem_cues": [
+        "increased zones of central pallor",
+        "anisocytosis"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0574",
+      "group_id": "medqa-renal",
+      "task_focus": "滤过屏障与大量蛋白尿",
+      "reuse_from_task_ids": [],
+      "reuse_hypothesis": "建立蛋白滤过、选择性及尿液表现的证据框架。",
+      "conditions_to_recheck": "起始任务；题干给出的屏障变化不能推广为所有蛋白尿病因。",
+      "literal_stem_cues": [
+        "loss of polyanions",
+        "proteinuria exceeding 3.5g"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0145",
+      "group_id": "medqa-renal",
+      "task_focus": "儿童水肿、蛋白尿与检验组合",
+      "reuse_from_task_ids": [
+        "medqa::0574"
+      ],
+      "reuse_hypothesis": "复用蛋白滤过及尿液表现框架，核对病理信息需求。",
+      "conditions_to_recheck": "咽痛只是背景；必须核对尿潜血阴性、白蛋白和血脂，防止误套诊断。",
+      "literal_stem_cues": [
+        "Albumin 2.1",
+        "Blood negative",
+        "Protein 4+"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0169",
+      "group_id": "medqa-renal",
+      "task_focus": "相似感染背景下、尿检不同的免疫机制问题",
+      "reuse_from_task_ids": [
+        "medqa::0145",
+        "medqa::0574"
+      ],
+      "reuse_hypothesis": "复用前题尿检鉴别方法，形成相似病史下的条件对照。",
+      "conditions_to_recheck": "本题有大量红细胞和 ASO 线索；不能因两题都有咽痛就复制病理结论。",
+      "literal_stem_cues": [
+        "numerous RBCs",
+        "antistreptolysin O titer is elevated"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0533",
+      "group_id": "medqa-renal",
+      "task_focus": "补体线索与肾小球病理",
+      "reuse_from_task_ids": [
+        "medqa::0574",
+        "medqa::0169"
+      ],
+      "reuse_hypothesis": "复用蛋白尿、肾小球免疫机制的检索框架，增加补体机制证据。",
+      "conditions_to_recheck": "C3 因子和沉积物形态是新信息；与感染后病例需区分。",
+      "literal_stem_cues": [
+        "positive for C3 nephritic factor",
+        "electron dense deposits"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0697",
+      "group_id": "medqa-renal",
+      "task_focus": "肺部表现与肾小球血尿的组合",
+      "reuse_from_task_ids": [
+        "medqa::0169"
+      ],
+      "reuse_hypothesis": "复用红细胞及管型定位方法；建立肺肾共同机制的新证据。",
+      "conditions_to_recheck": "血尿不单独决定病因；需要解释肺部表现和少尿。",
+      "literal_stem_cues": [
+        "RBC casts",
+        "hemoptysis"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0162",
+      "group_id": "medqa-renal",
+      "task_focus": "由同类肺肾表现及血清学定位病理",
+      "reuse_from_task_ids": [
+        "medqa::0697"
+      ],
+      "reuse_hypothesis": "复用前题肺肾机制证据，提问方向变为具体病理特征。",
+      "conditions_to_recheck": "核对本题明确的血清学条件；历史病例的诊断仍须本题支持。",
+      "literal_stem_cues": [
+        "Anti-glomerular basement membrane serologies are positive"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0465",
+      "group_id": "medqa-renal",
+      "task_focus": "镇痛药背景下的血尿与腰痛",
+      "reuse_from_task_ids": [
+        "medqa::0169",
+        "medqa::0697"
+      ],
+      "reuse_hypothesis": "复用血尿来源鉴别，新增药物损伤机制检索。",
+      "conditions_to_recheck": "出现药物及绞痛线索；不能把血尿自动归入此前免疫性肾小球病。",
+      "literal_stem_cues": [
+        "acetaminophen and aspirin",
+        "acute, colicky flank pain"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0216",
+      "group_id": "medqa-renal",
+      "task_focus": "镇痛药病例的损伤机制与尿沉渣对照",
+      "reuse_from_task_ids": [
+        "medqa::0465",
+        "medqa::0697"
+      ],
+      "reuse_hypothesis": "复用药物损伤证据，并与红细胞管型分支作比较。",
+      "conditions_to_recheck": "核对无管型、无畸形红细胞的否定条件及用药史。",
+      "literal_stem_cues": [
+        "no casts or dysmorphic RBCs",
+        "aspirin"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::1153",
+      "group_id": "medqa-renal",
+      "task_focus": "系统性表现下的蛋白尿类型",
+      "reuse_from_task_ids": [
+        "medqa::0574",
+        "medqa::0145"
+      ],
+      "reuse_hypothesis": "复用蛋白尿分类框架，识别需要新证据解释的分支。",
+      "conditions_to_recheck": "高钙、骨痛、贫血及无红细胞信息需要联合解释；不能一概套用屏障异常。",
+      "literal_stem_cues": [
+        "proteinuria without any RBCs",
+        "Calcium 12.1"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::1094",
+      "group_id": "medqa-renal",
+      "task_focus": "间隔多轮后再次处理大量蛋白尿与水肿",
+      "reuse_from_task_ids": [
+        "medqa::0574",
+        "medqa::0145"
+      ],
+      "reuse_hypothesis": "检验早期蛋白尿/尿液形态规则的延迟回读，加入新的系统疾病条件。",
+      "conditions_to_recheck": "Hodgkin 病史与脂肪管型需核对；保留病因关联边界。",
+      "literal_stem_cues": [
+        "Hodgkin's lymphoma",
+        "fatty casts"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0067",
+      "group_id": "medqa-thyroid",
+      "task_focus": "母亲甲状腺治疗史与新生儿症状",
+      "reuse_from_task_ids": [],
+      "reuse_hypothesis": "建立母体治疗、抗体与新生儿功能状态分开核对的框架。",
+      "conditions_to_recheck": "母亲术后替代用药不能直接决定婴儿的功能状态。",
+      "literal_stem_cues": [
+        "history of Graves' disease"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0361",
+      "group_id": "medqa-thyroid",
+      "task_focus": "相似母婴背景下选择下一步处理",
+      "reuse_from_task_ids": [
+        "medqa::0067"
+      ],
+      "reuse_hypothesis": "复用母婴机制证据；提问从原因变为处理。",
+      "conditions_to_recheck": "重新核对新生儿日龄、症状和母亲晚孕用药。",
+      "literal_stem_cues": [
+        "propylthiouracil during the last trimester"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0089",
+      "group_id": "medqa-thyroid",
+      "task_focus": "妊娠早期功能异常的治疗选择",
+      "reuse_from_task_ids": [
+        "medqa::0067",
+        "medqa::0361"
+      ],
+      "reuse_hypothesis": "延续母婴用药条件记录，补充孕期治疗证据。",
+      "conditions_to_recheck": "当前患者是孕妇，不能照搬新生儿处理；孕周是关键。",
+      "literal_stem_cues": [
+        "currently 10 weeks pregnant"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0512",
+      "group_id": "medqa-thyroid",
+      "task_focus": "原有治疗稳定但新发现妊娠",
+      "reuse_from_task_ids": [
+        "medqa::0089"
+      ],
+      "reuse_hypothesis": "复用孕期药物适用条件，核对是否需要调整原方案。",
+      "conditions_to_recheck": "本题已有用药且症状稳定；仍需核对妊娠时期和当前指标。",
+      "literal_stem_cues": [
+        "well-controlled with daily methimazole"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0137",
+      "group_id": "medqa-thyroid",
+      "task_focus": "合并眼部表现时比较治疗风险",
+      "reuse_from_task_ids": [
+        "medqa::0089",
+        "medqa::0512"
+      ],
+      "reuse_hypothesis": "复用治疗方式索引，补充眼部表现对应的风险证据。",
+      "conditions_to_recheck": "孕期规则不直接决定本题；眼部表现和吸烟是新条件。",
+      "literal_stem_cues": [
+        "extraocular muscle with sparing of the tendons"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::1061",
+      "group_id": "medqa-thyroid",
+      "task_focus": "停药和感染后出现急性严重症状",
+      "reuse_from_task_ids": [
+        "medqa::0089",
+        "medqa::0137"
+      ],
+      "reuse_hypothesis": "复用功能异常表现与治疗类别；补充急性处理条件。",
+      "conditions_to_recheck": "急性严重程度、停药时间与感染不能丢失，慢性方案不可照搬。",
+      "literal_stem_cues": [
+        "last took approximately 1 week ago"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0103",
+      "group_id": "medqa-thyroid",
+      "task_focus": "低体温、心率及激素组合的鉴别",
+      "reuse_from_task_ids": [],
+      "reuse_hypothesis": "建立低功能指标与严重症状联合解释的独立分支。",
+      "conditions_to_recheck": "不能把所有意识改变都归入前面的高功能分支。",
+      "literal_stem_cues": [
+        "TSH 110.0"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0124",
+      "group_id": "medqa-thyroid",
+      "task_focus": "先天性功能异常的症状排除题",
+      "reuse_from_task_ids": [
+        "medqa::0103",
+        "medqa::0067"
+      ],
+      "reuse_hypothesis": "复用功能状态与症状对应框架，核对年龄和母婴条件。",
+      "conditions_to_recheck": "本题问 NOT；先天情况不等同于老年急症。",
+      "literal_stem_cues": [
+        "would NOT be expected"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0229",
+      "group_id": "medqa-thyroid",
+      "task_focus": "重症病程中异常激素结果如何解释",
+      "reuse_from_task_ids": [
+        "medqa::0103"
+      ],
+      "reuse_hypothesis": "复用 TSH/T3/T4 联合核对方法，检验不适用历史结论的能力。",
+      "conditions_to_recheck": "低激素数值不能单独触发替代治疗；重症和病程是新背景。",
+      "literal_stem_cues": [
+        "intensive care unit for septic shock"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    },
+    {
+      "task_id": "medqa::0396",
+      "group_id": "medqa-thyroid",
+      "task_focus": "有功能异常但甲状腺检查无明显异常",
+      "reuse_from_task_ids": [
+        "medqa::0089",
+        "medqa::0137"
+      ],
+      "reuse_hypothesis": "延迟回读功能指标和症状证据，再调查新病灶来源。",
+      "conditions_to_recheck": "卵巢结构与正常颈部检查需要新证据；不可只按既往病例归因。",
+      "literal_stem_cues": [
+        "complex structure in her right ovary"
+      ],
+      "relation_status": "candidate_hypothesis_not_observed_reuse"
+    }
+  ]
+}

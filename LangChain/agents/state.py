@@ -29,6 +29,7 @@ class AgentState(TypedDict, total=False):
 
     # ── 用户输入 ──
     user_question: str
+    memory_context: dict[str, Any]
 
     # ── 三层协议栈（每轮一个元素）──
     control_stack: list[ControlInfo]

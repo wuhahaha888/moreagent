@@ -7,6 +7,7 @@
 """
 
 import math
+import time
 from dataclasses import dataclass
 from typing import Iterable
 
@@ -24,6 +25,7 @@ class QwenEmbeddingConfig:
     batch_size: int = 8
     normalize_embeddings: bool = True
     show_progress_bar: bool = False
+    cache_version: str = "v1"
 
 
 class QwenEmbeddingService:
@@ -32,6 +34,15 @@ class QwenEmbeddingService:
     def __init__(self, config: QwenEmbeddingConfig) -> None:
         self.config = config
         self._model: SentenceTransformer | None = None
+        self.cache_store = None
+        self.cache_hits = 0
+        self.encoded_texts = 0
+        self.encoded_seconds = 0.
+
+    @property
+    def cache_key(self) -> str:
+        # 模型/归一化/编码策略版本必须全部匹配；更换权重时提升 cache_version。
+        return f"{self.config.model_path}|norm={self.config.normalize_embeddings}|{self.config.cache_version}"
 
     @classmethod
     def from_settings(cls, settings: Settings) -> "QwenEmbeddingService":
@@ -42,6 +53,7 @@ class QwenEmbeddingService:
                 batch_size=settings.embedding_batch_size,
                 normalize_embeddings=settings.embedding_normalize,
                 show_progress_bar=settings.embedding_show_progress,
+                cache_version=settings.embedding_cache_version,
             )
         )
 
@@ -79,13 +91,32 @@ class QwenEmbeddingService:
         text_list = [text or "" for text in texts]
         if not text_list:
             return []
-        embeddings = self.model.encode(
-            text_list,
-            batch_size=self.config.batch_size,
-            normalize_embeddings=self.config.normalize_embeddings,
-            show_progress_bar=self.config.show_progress_bar,
-        )
-        return embeddings.astype(float).tolist()
+        cached = {}
+        missing = []
+        for text in dict.fromkeys(text_list):
+            value = self.cache_store.cache_get(self.cache_key, text) if self.cache_store else None
+            if value is None:
+                missing.append(text)
+            else:
+                cached[text] = value
+                self.cache_hits += text_list.count(text)
+        if missing:
+            encode_started=time.perf_counter()
+            try:
+                embeddings = self.model.encode(
+                    missing,
+                    batch_size=self.config.batch_size,
+                    normalize_embeddings=self.config.normalize_embeddings,
+                    show_progress_bar=self.config.show_progress_bar,
+                ).astype(float).tolist()
+            finally:
+                self.encoded_seconds += time.perf_counter()-encode_started
+            self.encoded_texts += len(missing)
+            for text, values in zip(missing, embeddings):
+                cached[text] = values
+                if self.cache_store:
+                    self.cache_store.cache_put(self.cache_key, text, values)
+        return [list(cached[text]) for text in text_list]
 
     def embed_text(self, text: str) -> list[float]:
         """生成单条文本 embedding。"""

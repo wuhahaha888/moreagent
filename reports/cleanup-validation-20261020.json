@@ -1,0 +1,19 @@
+{
+  "checked_at": "2026-10-20T17:30:44.699298+08:00",
+  "checks": {
+    "medqa_offline_tests_passed": 222,
+    "general_memory_tests_passed": 16,
+    "total_offline_tests_passed": 238,
+    "dataset_rebuild_without_old_71_directory": true,
+    "dataset_question_count": 30,
+    "dataset_runner_sha256": "bf2390d0c1acddf4c43d0e4e4feb1c7f81177b5cb66b381a591c258e7e7b7a1a",
+    "new_api_config_static_audit_passed": true,
+    "active_runtime_sources_unchanged": true,
+    "existing_staged_changes_unchanged": true,
+    "archive_file_hashes_verified": true,
+    "managed_markdown_links_checked": true
+  },
+  "model_requests_for_cleanup_validation": 0,
+  "active_api_experiment": "medical30-api-fourway-20261020-v2",
+  "note": "Offline checks do not establish medical accuracy or efficiency. Current API experiment runs independently."
+}

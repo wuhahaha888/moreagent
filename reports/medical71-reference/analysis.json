@@ -1,0 +1,643 @@
+{
+  "source_results": "/data/wanghc/moreagent/experiments/results/medical71-memory-selection-v1-compare-online-71",
+  "model_calls_during_analysis": 0,
+  "source_file_sha256": {
+    "manifest.json": "2a6514f41dc33e1664e5bdfcc40c3997b8bc41ae9018a486081e33230cb03726",
+    "report.json": "8b90227a580ae4fff90f386834bb7991523b06717be887976fe4138609d10087",
+    "comparison.json": "65ecd9bc86e09e84a60449b9ca2961136a433afabd4dac3f61ada3f65c527c4f",
+    "text_off.jsonl": "777ff190917405af0fb95caaa9d2739ac6f4475e3ac589fef69d95bd516dcd4c",
+    "text_on.jsonl": "5185eed90acf9b8f4a6198b8f571221b239847e601d9b6b882118b2f4618aa21",
+    "structured_off.jsonl": "72a97b58602bed45dd64aa64dedcd4fd80d83a45ee0ece7bd04ae4c6338f8bfa",
+    "structured_on.jsonl": "fc2d4ee853de9920e8d4824806326741dd1aa2d81f0e19ac7fe2184a2eec92df"
+  },
+  "unique_questions": 71,
+  "executions": 284,
+  "total_provider_tokens": 1639844,
+  "development_overlap_from_smoke_ids": [
+    "medmcqa::3102aef1-11c7-48b5-8e62-1b7aefca4de7",
+    "medmcqa::a1a782cf-d0f2-4645-a96d-79ef0cef3516",
+    "medmcqa::a3da135a-a6a2-4e1c-8823-8ab0913f5668"
+  ],
+  "legacy_manifest_development_ids": [
+    "0990"
+  ],
+  "limitations": [
+    "单次固定顺序；同题四条件不是284道独立题。",
+    "题组为人工相关性整理，未保证因果依赖或必须读取前题。",
+    "结构化无记忆有1题JSON输出解析失败。",
+    "四组都使用新版记忆提示；不含71题旧Top-3记忆策略对照。",
+    "引用与策略归因不能证明因果收益；同输入调用仍可能产生不同输出。",
+    "旧manifest开发题标记未覆盖真实三题smoke重合，报告以实际重合ID为准。"
+  ],
+  "conditions": {
+    "text_on": {
+      "questions": 71,
+      "correct": 68,
+      "accuracy": 0.9577464788732394,
+      "total_tokens": 457940,
+      "mean_seconds": 26.178518195124997,
+      "searches": 83,
+      "role_usage": {
+        "Planner": {
+          "prompt_tokens": 92056,
+          "completion_tokens": 43192,
+          "total_tokens": 135248
+        },
+        "Investigator": {
+          "prompt_tokens": 104581,
+          "completion_tokens": 18146,
+          "total_tokens": 122727
+        },
+        "VerifierReasoner": {
+          "prompt_tokens": 172784,
+          "completion_tokens": 27181,
+          "total_tokens": 199965
+        }
+      },
+      "embedding_seconds": 877.03621932026,
+      "memory_funnel": {
+        "recalled": {
+          "evidence": 173,
+          "strategy": 142,
+          "episode": 135
+        },
+        "presented": {
+          "evidence": 173,
+          "strategy": 142,
+          "episode": 135
+        },
+        "planner_accepted": {
+          "evidence": 82,
+          "strategy": 52,
+          "episode": 44
+        },
+        "selected": {
+          "evidence": 44,
+          "strategy": 32,
+          "episode": 27
+        },
+        "resolved": {
+          "evidence": 44,
+          "strategy": 32,
+          "episode": 27
+        },
+        "delivered": {
+          "evidence": 44,
+          "strategy": 32,
+          "episode": 27
+        },
+        "executed": {
+          "evidence": 0,
+          "strategy": 15,
+          "episode": 0
+        },
+        "cited": {
+          "evidence": 19,
+          "strategy": 0,
+          "episode": 0
+        }
+      },
+      "planner_assessment_records": 449,
+      "planner_rejection_records": 318,
+      "runtime_failed_questions": 0,
+      "token_usage_complete": true,
+      "usage_missing_calls": 0,
+      "nondevelopment": {
+        "questions": 68,
+        "correct": 65
+      },
+      "by_group": [
+        {
+          "group": "medmcqa-cholinergic",
+          "questions": 7,
+          "correct": 7,
+          "tokens": 39420
+        },
+        {
+          "group": "medqa-research",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 53360
+        },
+        {
+          "group": "medqa-thyroid",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 71655
+        },
+        {
+          "group": "medqa-acid-base",
+          "questions": 8,
+          "correct": 5,
+          "tokens": 57715
+        },
+        {
+          "group": "medqa-renal",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 70410
+        },
+        {
+          "group": "medqa-anemia",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 70642
+        },
+        {
+          "group": "mmlu-inheritance",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 53829
+        },
+        {
+          "group": "medmcqa-microcytic",
+          "questions": 6,
+          "correct": 6,
+          "tokens": 40909
+        }
+      ]
+    },
+    "structured_off": {
+      "questions": 71,
+      "correct": 70,
+      "accuracy": 0.9859154929577465,
+      "total_tokens": 358295,
+      "mean_seconds": 11.91777146741433,
+      "searches": 94,
+      "role_usage": {
+        "Planner": {
+          "prompt_tokens": 50129,
+          "completion_tokens": 20661,
+          "total_tokens": 70790
+        },
+        "Investigator": {
+          "prompt_tokens": 78367,
+          "completion_tokens": 16722,
+          "total_tokens": 95089
+        },
+        "VerifierReasoner": {
+          "prompt_tokens": 163723,
+          "completion_tokens": 28693,
+          "total_tokens": 192416
+        }
+      },
+      "embedding_seconds": 0.0,
+      "memory_funnel": {
+        "recalled": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        },
+        "presented": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        },
+        "planner_accepted": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        },
+        "selected": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        },
+        "resolved": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        },
+        "delivered": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        },
+        "executed": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        },
+        "cited": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        }
+      },
+      "planner_assessment_records": 0,
+      "planner_rejection_records": 0,
+      "runtime_failed_questions": 1,
+      "token_usage_complete": true,
+      "usage_missing_calls": 0,
+      "nondevelopment": {
+        "questions": 68,
+        "correct": 67
+      },
+      "by_group": [
+        {
+          "group": "medmcqa-cholinergic",
+          "questions": 7,
+          "correct": 7,
+          "tokens": 32619
+        },
+        {
+          "group": "medqa-research",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 50449
+        },
+        {
+          "group": "medqa-thyroid",
+          "questions": 10,
+          "correct": 9,
+          "tokens": 57375
+        },
+        {
+          "group": "medqa-acid-base",
+          "questions": 8,
+          "correct": 8,
+          "tokens": 44479
+        },
+        {
+          "group": "medqa-renal",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 53208
+        },
+        {
+          "group": "medqa-anemia",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 54922
+        },
+        {
+          "group": "mmlu-inheritance",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 38866
+        },
+        {
+          "group": "medmcqa-microcytic",
+          "questions": 6,
+          "correct": 6,
+          "tokens": 26377
+        }
+      ]
+    },
+    "structured_on": {
+      "questions": 71,
+      "correct": 68,
+      "accuracy": 0.9577464788732394,
+      "total_tokens": 451138,
+      "mean_seconds": 26.240540674848244,
+      "searches": 94,
+      "role_usage": {
+        "Planner": {
+          "prompt_tokens": 86468,
+          "completion_tokens": 44622,
+          "total_tokens": 131090
+        },
+        "Investigator": {
+          "prompt_tokens": 99176,
+          "completion_tokens": 18805,
+          "total_tokens": 117981
+        },
+        "VerifierReasoner": {
+          "prompt_tokens": 172145,
+          "completion_tokens": 29922,
+          "total_tokens": 202067
+        }
+      },
+      "embedding_seconds": 893.3989785378799,
+      "memory_funnel": {
+        "recalled": {
+          "evidence": 189,
+          "strategy": 142,
+          "episode": 130
+        },
+        "presented": {
+          "evidence": 189,
+          "strategy": 142,
+          "episode": 130
+        },
+        "planner_accepted": {
+          "evidence": 86,
+          "strategy": 53,
+          "episode": 48
+        },
+        "selected": {
+          "evidence": 48,
+          "strategy": 32,
+          "episode": 28
+        },
+        "resolved": {
+          "evidence": 48,
+          "strategy": 32,
+          "episode": 28
+        },
+        "delivered": {
+          "evidence": 48,
+          "strategy": 32,
+          "episode": 28
+        },
+        "executed": {
+          "evidence": 0,
+          "strategy": 11,
+          "episode": 0
+        },
+        "cited": {
+          "evidence": 17,
+          "strategy": 0,
+          "episode": 0
+        }
+      },
+      "planner_assessment_records": 456,
+      "planner_rejection_records": 323,
+      "runtime_failed_questions": 0,
+      "token_usage_complete": true,
+      "usage_missing_calls": 0,
+      "nondevelopment": {
+        "questions": 68,
+        "correct": 65
+      },
+      "by_group": [
+        {
+          "group": "medmcqa-cholinergic",
+          "questions": 7,
+          "correct": 7,
+          "tokens": 40368
+        },
+        {
+          "group": "medqa-research",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 53855
+        },
+        {
+          "group": "medqa-thyroid",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 68754
+        },
+        {
+          "group": "medqa-acid-base",
+          "questions": 8,
+          "correct": 6,
+          "tokens": 56762
+        },
+        {
+          "group": "medqa-renal",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 69293
+        },
+        {
+          "group": "medqa-anemia",
+          "questions": 10,
+          "correct": 9,
+          "tokens": 71177
+        },
+        {
+          "group": "mmlu-inheritance",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 51823
+        },
+        {
+          "group": "medmcqa-microcytic",
+          "questions": 6,
+          "correct": 6,
+          "tokens": 39106
+        }
+      ]
+    },
+    "text_off": {
+      "questions": 71,
+      "correct": 69,
+      "accuracy": 0.971830985915493,
+      "total_tokens": 372471,
+      "mean_seconds": 11.681772410253089,
+      "searches": 90,
+      "role_usage": {
+        "Planner": {
+          "prompt_tokens": 51267,
+          "completion_tokens": 20575,
+          "total_tokens": 71842
+        },
+        "Investigator": {
+          "prompt_tokens": 83442,
+          "completion_tokens": 16923,
+          "total_tokens": 100365
+        },
+        "VerifierReasoner": {
+          "prompt_tokens": 172513,
+          "completion_tokens": 27751,
+          "total_tokens": 200264
+        }
+      },
+      "embedding_seconds": 0.0,
+      "memory_funnel": {
+        "recalled": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        },
+        "presented": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        },
+        "planner_accepted": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        },
+        "selected": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        },
+        "resolved": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        },
+        "delivered": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        },
+        "executed": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        },
+        "cited": {
+          "evidence": 0,
+          "strategy": 0,
+          "episode": 0
+        }
+      },
+      "planner_assessment_records": 0,
+      "planner_rejection_records": 0,
+      "runtime_failed_questions": 0,
+      "token_usage_complete": true,
+      "usage_missing_calls": 0,
+      "nondevelopment": {
+        "questions": 68,
+        "correct": 66
+      },
+      "by_group": [
+        {
+          "group": "medmcqa-cholinergic",
+          "questions": 7,
+          "correct": 7,
+          "tokens": 34919
+        },
+        {
+          "group": "medqa-research",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 53463
+        },
+        {
+          "group": "medqa-thyroid",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 57663
+        },
+        {
+          "group": "medqa-acid-base",
+          "questions": 8,
+          "correct": 6,
+          "tokens": 46919
+        },
+        {
+          "group": "medqa-renal",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 52985
+        },
+        {
+          "group": "medqa-anemia",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 58587
+        },
+        {
+          "group": "mmlu-inheritance",
+          "questions": 10,
+          "correct": 10,
+          "tokens": 40319
+        },
+        {
+          "group": "medmcqa-microcytic",
+          "questions": 6,
+          "correct": 6,
+          "tokens": 27616
+        }
+      ]
+    }
+  },
+  "memory_contrasts": {
+    "text": {
+      "changed_questions": [
+        {
+          "question_id": "medqa::0227",
+          "off_correct": true,
+          "on_correct": false,
+          "off_answer": "C",
+          "on_answer": "A",
+          "off_status": "answered",
+          "on_status": "answered"
+        },
+        {
+          "question_id": "medqa::0114",
+          "off_correct": true,
+          "on_correct": false,
+          "off_answer": "C",
+          "on_answer": "B",
+          "off_status": "answered",
+          "on_status": "answered"
+        },
+        {
+          "question_id": "medqa::0899",
+          "off_correct": false,
+          "on_correct": true,
+          "off_answer": "B",
+          "on_answer": "C",
+          "off_status": "answered",
+          "on_status": "answered"
+        }
+      ],
+      "correct_to_wrong": 2,
+      "wrong_to_correct": 1,
+      "observed_tokens_increase": 85469,
+      "observed_tokens_increase_ratio": 0.22946484424290747,
+      "role_token_deltas": {
+        "Planner": 63406,
+        "Investigator": 22362,
+        "VerifierReasoner": -299
+      },
+      "search_delta": -7,
+      "model_calls_off": 213,
+      "model_calls_on": 213,
+      "first_planner_input_equal": true,
+      "first_planner_output_equal": false
+    },
+    "structured": {
+      "changed_questions": [
+        {
+          "question_id": "medqa::0137",
+          "off_correct": false,
+          "on_correct": true,
+          "off_answer": null,
+          "on_answer": "D",
+          "off_status": "protocol_error",
+          "on_status": "answered"
+        },
+        {
+          "question_id": "medqa::0114",
+          "off_correct": true,
+          "on_correct": false,
+          "off_answer": "C",
+          "on_answer": "B",
+          "off_status": "answered",
+          "on_status": "answered"
+        },
+        {
+          "question_id": "medqa::0899",
+          "off_correct": true,
+          "on_correct": false,
+          "off_answer": "C",
+          "on_answer": "B",
+          "off_status": "answered",
+          "on_status": "answered"
+        },
+        {
+          "question_id": "medqa::0673",
+          "off_correct": true,
+          "on_correct": false,
+          "off_answer": "D",
+          "on_answer": "C",
+          "off_status": "answered",
+          "on_status": "answered"
+        }
+      ],
+      "correct_to_wrong": 3,
+      "wrong_to_correct": 1,
+      "observed_tokens_increase": 92843,
+      "observed_tokens_increase_ratio": 0.2591244644775952,
+      "role_token_deltas": {
+        "Planner": 60300,
+        "Investigator": 22892,
+        "VerifierReasoner": 9651
+      },
+      "search_delta": 0,
+      "model_calls_off": 213,
+      "model_calls_on": 213,
+      "first_planner_input_equal": true,
+      "first_planner_output_equal": true
+    }
+  }
+}

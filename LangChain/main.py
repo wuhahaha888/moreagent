@@ -110,8 +110,8 @@ def print_semantic_object(title: str, so: dict[str, Any]) -> None:
     print(pretty_json(precise))
 
 
-def main() -> None:
-    """启动多 Agent CLI。"""
+def legacy_main() -> None:
+    """旧通用四角色交互CLI；不作为MedQA三Agent实验入口。"""
     settings = load_settings()
     session_mode, session = choose_memory_session(
         MemorySessionManager(settings.memory_dir, settings.chat_dir)
@@ -215,6 +215,16 @@ def main() -> None:
             break
         except Exception as exc:
             print(f"\n执行失败: {exc}")
+
+
+def main() -> None:
+    """默认使用MedQA三Agent入口；旧交互流程通过legacy显式进入。"""
+    if len(sys.argv) > 1 and sys.argv[1] == "legacy":
+        del sys.argv[1]
+        legacy_main()
+    else:
+        from LangChain.medqa.cli import main as medqa_main
+        medqa_main()
 
 
 if __name__ == "__main__":

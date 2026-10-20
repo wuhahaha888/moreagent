@@ -1,0 +1,15 @@
+{
+  "dataset_sha256": "bf2390d0c1acddf4c43d0e4e4feb1c7f81177b5cb66b381a591c258e7e7b7a1a",
+  "ids": [
+    "medqa::0067",
+    "medqa::0361",
+    "medqa::0089",
+    "medqa::0512",
+    "medqa::0137",
+    "medqa::1061",
+    "medqa::0103",
+    "medqa::0124",
+    "medqa::0229",
+    "medqa::0396"
+  ]
+}
