@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-21",
+  "removed_redundant_files": [
+    {
+      "path": "LangChain/test/test-cuda.py",
+      "sha256": "0c92ab3e6f8f7738a3f8959da56d5077f267ab44d5ea09130656009fd7ea0653",
+      "bytes": 374
+    },
+    {
+      "path": "LangChain/test/test-searx.py",
+      "sha256": "d1371225beb762ec67c7e4001677b74e0f5f7f106353816153b799911b56f5b8",
+      "bytes": 3133
+    },
+    {
+      "path": "scripts/demo_medqa_handoffs.py",
+      "sha256": "26d60dbc90f0cada1eb13fba94ad712f8347b14c2e5604fc2352b69aa1fe1928",
+      "bytes": 4307
+    },
+    {
+      "path": "scripts/numeric_protocol_demo.py",
+      "sha256": "7681e3783835d90e12e6442a2f07afcc28eee12748bca161e9ec07730a2fb516",
+      "bytes": 3438
+    },
+    {
+      "path": "scripts/probe_qwen_local.py",
+      "sha256": "38cda8fe128a743236965fbfbfdcc7e82ce75b2122a83651432fe61d1daadbe3",
+      "bytes": 2652
+    },
+    {
+      "path": "scripts/benchmark_qwen_local.py",
+      "sha256": "ebbad7e83f489ead17effb0d92b561a86830f0463bb1ca757dfa5254d7633135",
+      "bytes": 3384
+    },
+    {
+      "path": "scripts/audit_medqa_numeric_tokens.py",
+      "sha256": "09450044329746599777e31d0c3224a950e0b00fd66b4d6709ba5be4fa0ea466",
+      "bytes": 9775
+    }
+  ],
+  "external_backup": "/data/wanghc/moreagent-cleanup-archive-20261021-102238",
+  "core_regression_tests_preserved": true,
+  "dataset_files_preserved": 38,
+  "dataset_preservation_check": "all SHA256 unchanged",
+  "result_files_deleted": 0,
+  "snapshot_directory": "reports/experiment-snapshots/20261021-1023",
+  "snapshot_batches": 6,
+  "snapshot_artifacts_verified": 65,
+  "sqlite_integrity": "all snapshots passed quick_check",
+  "tests": {
+    "medqa": 294,
+    "general_memory": 16,
+    "recovery": 6,
+    "total": 316,
+    "passed": true
+  },
+  "paid_api_calls_for_cleanup_and_publication": 0,
+  "live_run_untouched": "medical50-api-fourway-need-first-v3",
+  "latest_snapshot_completed_tasks": 79,
+  "latest_snapshot_target_tasks": 200,
+  "latest_snapshot_is_partial": true
+}

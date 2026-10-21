@@ -1,9 +1,19 @@
-# 实验目录
+# 数据集与本机实验
 
-当前主线只保留三组30题及当前API四条件运行。
+- datasets/medical-related-30-v1：原MedQA三组各10题，完整保留。
+- datasets/medical-related-50-v2：原30题不变，追加20道原创MedQA风格题，含评估侧答案、来源与候选连续性注释。
+- results/：本机原始实验、检查点、记忆数据库和轨迹，保持原位并由Git忽略；运行期间不移动、不删除。
+- runlogs/：本机日志与PID记录，不提交Git。
 
-- `datasets/medical-related-30-v1/`：提交Git的固定题目、来源、顺序、评分答案、候选复用注释及重建脚本。
-- `results/medical30-api-fourway-20261020-v2/`：当前结果、调用账本、检查点和独立记忆数据库；不提交Git。
-- `validation/medical30-api-fourway-20261020-v2/`：当前启动记录、冻结源码、日志与只读汇总进程；运行期间保留，不提交Git。
+GitHub可下载的固定结果在[reports/experiment-snapshots](../reports/experiment-snapshots/20261021-1023/README.md)。SQLite在线备份保证每个库单独一致，不保证多数据库同一时刻，不能当成直接续跑包。
 
-过时的smoke、开发题、冻结种子、旧本地模型、旧71题分析和试跑配置已归档至仓库外。正式历史结果的精简版在 `reports/medical71-reference/`，清理范围见 `docs/REPOSITORY.md`。
+只读导出新快照，不调用API、不改动原始运行：
+
+```bash
+bash scripts/run_medqa.sh test
+LD_LIBRARY_PATH=../miniconda3/envs/struckflow/lib \
+  ../miniconda3/envs/struckflow/bin/python -B scripts/export_medqa_results.py \
+  --output reports/experiment-snapshots/一个新目录 --include-databases
+```
+
+当前50题配置见configs/medical-related-50-v2。历史部分结果、未知用量与负结果均保留，不按成绩选删实验。

@@ -227,6 +227,7 @@ __marimo__/
 
 # Generated results for future official-dataset evaluations.
 experiments/results/
+/experiments/runlogs/
 
 # Local runtime state and generated experiment artifacts
 /LangChain/data/

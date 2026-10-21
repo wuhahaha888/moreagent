@@ -82,6 +82,12 @@ class SQLiteMemoryStore:
                     old_id TEXT NOT NULL, new_id TEXT NOT NULL,
                     changed_at REAL NOT NULL, PRIMARY KEY(old_id, new_id)
                 );
+                CREATE TABLE IF NOT EXISTS memory_origin (
+                    memory_id TEXT NOT NULL, trace_id TEXT NOT NULL,
+                    origin_hash TEXT NOT NULL, created_at REAL NOT NULL,
+                    context TEXT NOT NULL,
+                    PRIMARY KEY(memory_id, trace_id, origin_hash)
+                );
             """)
 
     @contextmanager
@@ -96,13 +102,14 @@ class SQLiteMemoryStore:
 
     def put(self, *, role: str, topic: str, summary: str, content: dict,
             embedding, trace_id: str, kind: str = "episode", status: str = "pending",
-            tags=(), source_ids=(), expires_at: float | None = None) -> str:
+            tags=(), source_ids=(), expires_at: float | None = None,
+            identity_content: dict | None = None) -> str:
         if status not in {"pending", "curated", "quarantined"}:
             raise ValueError("未知记忆状态")
         arr = vector(embedding)
         # 原始轨迹按任务保留；整理后的相同内容跨任务去重。
         digest = hashlib.sha256(compact([
-            self.embedding_model, status, kind, content,
+            self.embedding_model, status, kind, content if identity_content is None else identity_content,
             trace_id if status != "curated" else "",
         ]).encode()).hexdigest()
         ident = "mem-" + uuid.uuid4().hex

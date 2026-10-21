@@ -20,7 +20,7 @@ if [[ ${1:-} == test ]]; then
   shift
   exec env LD_LIBRARY_PATH="$ENV_PREFIX/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
     OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
-    "$PYTHON_PATH" -B -m unittest LangChain.test.test_medqa LangChain.test.test_medqa_audit LangChain.test.test_medqa_experiment LangChain.test.test_medqa_answer_policy LangChain.test.test_medqa_checkpoint LangChain.test.test_medqa_v6 LangChain.test.test_medqa_results LangChain.test.test_medqa_bounded_path LangChain.test.test_medqa_handoff LangChain.test.test_medqa_memory_units LangChain.test.test_medqa_memory_selection LangChain.test.test_medqa_local LangChain.test.test_medqa_parallel -v "$@"
+    "$PYTHON_PATH" -B -m unittest LangChain.test.test_medqa LangChain.test.test_medqa_audit LangChain.test.test_medqa_experiment LangChain.test.test_medqa_answer_policy LangChain.test.test_medqa_checkpoint LangChain.test.test_medqa_v6 LangChain.test.test_medqa_results LangChain.test.test_medqa_bounded_path LangChain.test.test_medqa_handoff LangChain.test.test_medqa_memory_units LangChain.test.test_medqa_memory_selection LangChain.test.test_medqa_local LangChain.test.test_medqa_parallel LangChain.test.test_medqa_communication LangChain.test.test_medqa_workspace LangChain.test.test_medqa_need_first LangChain.test.test_medqa_dataset50 -v "$@"
 fi
 exec env LD_LIBRARY_PATH="$ENV_PREFIX/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
   OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \

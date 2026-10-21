@@ -1,0 +1,5 @@
+﻿experiment,condition,tasks,candidate_hit_tasks,recalled_entries,planner_presented_entries,planner_selected_entries,tasks_selected_any,selected_evidence_entries,resolved_and_delivered_evidence_entries,cited_source_memory_entries,tasks_with_final_memory_source_refs,strategy_executed_entries,tasks_with_executed_strategy,reused_without_search_tasks,search_off,search_on,tokens_off,tokens_on,net_token_saving
+ACP-1,text_on,30,26,226,76,34,19,21,21,8,6,3,3,0,39,44,176178,203837,-0.15699463043058715
+ACP-1,structured_on,30,26,227,74,26,15,20,20,12,9,2,2,0,40,40,160210,176643,-0.10257162474252546
+Workspace＋ACP,text_on,30,27,228,74,35,22,25,25,8,6,1,1,0,42,42,178089,201058,-0.12897483842348478
+Workspace＋ACP,structured_on,30,27,224,73,21,12,15,15,8,6,3,3,0,33,38,134798,151409,-0.12322883128829809

@@ -9,7 +9,7 @@ import re
 VERSION = 'needs-memory-v3'
 PLANNER_LIMIT = 3
 PLANNER_PREVIEW_CHARS = 1000
-STAGES = ('recalled','presented','planner_accepted','selected','resolved','delivered','executed','cited')
+STAGES = ('recalled','presented','planner_accepted','selected','resolved','delivered','investigator_accepted','executed','cited')
 KINDS = ('evidence','strategy','episode')
 
 

@@ -18,7 +18,8 @@ def memory_view(role, hits, evidence_ids):
             # 未读摘要不能作为最终事实依据；原文仍可由调查角色按预算回读。
             continue
         if source_ready:
-            result.append({key: deepcopy(hit[key]) for key in ("id", "source_id", "conditions", "status")})
+            result.append({key: deepcopy(hit[key]) for key in
+                           ("id", "source_id", "conditions", "status", "knowledge_task_ids") if key in hit})
         else:
             result.append(deepcopy(hit))
     return result

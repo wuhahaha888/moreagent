@@ -1,0 +1,982 @@
+{
+  "text_off": {
+    "questions_completed": 0,
+    "workflows": [],
+    "communication_versions": [],
+    "workspace_versions": [],
+    "workspace_metrics": {
+      "workspace_views": 0,
+      "workspace_input_bytes_before": 0,
+      "workspace_input_bytes_after": 0,
+      "workspace_brief_views": 0,
+      "workspace_patch_count": 0
+    },
+    "handoff_metrics": {
+      "acp_request_bytes": 0,
+      "acp_result_bytes": 0,
+      "acp_handshake_bytes": 0,
+      "acp_object_registration_bytes": 0,
+      "acp_frames": 0,
+      "acp_operations": 0,
+      "acp_batches": 0,
+      "acp_dispatch_seconds": 0,
+      "acp_overhead_seconds": 0,
+      "acp_handler_seconds": 0,
+      "acp_evidence_ref_reads": 0,
+      "acp_memory_ref_reads": 0,
+      "state_handle_reads": 0,
+      "state_handle_bytes": 0,
+      "natural_handoff_chars": 0,
+      "natural_handoff_rendered": 0
+    },
+    "status_counts": {},
+    "answer_completion_rate": null,
+    "protocol_status_counts": {},
+    "strict_evidence_audit_counts": {},
+    "evidence_verification_counts": {},
+    "support_assessment_counts": {},
+    "source_verified_citations": 0,
+    "reliable_support_citations": 0,
+    "usage_missing_calls": 0,
+    "checkpoint_replayed_calls": 0,
+    "checkpoint_unknown_calls": 0,
+    "checkpoint_request_attempts": 0,
+    "resumed_questions": 0,
+    "token_usage_complete": false,
+    "resolved_models": [],
+    "memory_degraded_questions": 0,
+    "retrieval_error_questions": 0,
+    "retrieval_failed_questions": 0,
+    "retrieval_errors_with_answer": 0,
+    "runtime_failed_questions": 0,
+    "accuracy": null,
+    "answered_questions": 0,
+    "tokens_per_answer": null,
+    "tokens_per_correct": null,
+    "v6_metrics": {
+      "queries_reused": 0,
+      "queries_filtered": 0,
+      "search_progress": 0,
+      "stalled_rounds": 0,
+      "expansions": 0,
+      "deterministic_repairs": 0,
+      "semantic_reviews": 0,
+      "recovered_action_errors": 0,
+      "evidence_raw_chars": 0,
+      "evidence_raw_delivery_chars": 0,
+      "evidence_view_chars": 0,
+      "evidence_exact_duplicates": 0,
+      "evidence_similar_groups": 0,
+      "evidence_processor_seconds": 0,
+      "checkpoint_replayed_operations": 0,
+      "checkpoint_executed_operations": 0,
+      "checkpoint_unknown_recomputations": 0
+    },
+    "supported_rate": null,
+    "evidence_status_counts": {},
+    "answer_basis_counts": {},
+    "evidence_status_downgraded_questions": 0,
+    "accuracy_by_evidence_status": {},
+    "accuracy_on_answered": null,
+    "wrong_supported_questions": 0,
+    "followup_memory_queries": 0,
+    "memory_reference_resolutions": 0,
+    "preserved_answer_questions": 0,
+    "followup_outcomes": {},
+    "followup_new_visible_chars": 0,
+    "followup_new_visible_sources": 0,
+    "memory_candidates_by_kind": {
+      "evidence": 0,
+      "strategy": 0,
+      "episode": 0
+    },
+    "memory_written_by_kind": {
+      "evidence": 0,
+      "strategy": 0,
+      "episode": 0
+    },
+    "memory_experience_reads": 0,
+    "state_vector_transfers": 0,
+    "memory_rpc_requests": 0,
+    "embedding_seconds": 0,
+    "memory_funnel": {
+      "recalled": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "presented": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "planner_accepted": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "selected": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "resolved": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "delivered": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "investigator_accepted": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "executed": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "cited": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      }
+    },
+    "memory_planner_acceptance_rate": null,
+    "memory_selection_rate": null,
+    "memory_investigator_acceptance_rate": null,
+    "memory_need_coverage_rate": null,
+    "memory_need_support_rate": null,
+    "memory_zero_search_supported_rate": null,
+    "memory_evidence_citation_rate": null,
+    "memory_strategy_execution_rate": null,
+    "reused_question_rate": null,
+    "memory_hit_question_rate": null,
+    "reused_without_search_questions": 0,
+    "accuracy_on_reused_questions": null,
+    "memory_source_valid_rate": null,
+    "memory_source_check_coverage": null,
+    "memory_source_check_attempts": 0,
+    "memory_presented": 0,
+    "memory_coarse_candidate_occurrences": 0,
+    "investigation_rounds": 0,
+    "queries_skipped_covered": 0,
+    "memory_only_supported_tasks": 0,
+    "memory_evidence_presented": 0,
+    "memory_covered_needs": 0,
+    "needs_review_errors": 0,
+    "knowledge_needs": 0,
+    "memory_supported_needs": 0,
+    "memory_candidate_sources": 0,
+    "memory_fragment_valid": 0,
+    "memory_source_cache_hits": 0,
+    "mean_seconds": null,
+    "model_calls": 0,
+    "messages": 0,
+    "communication_chars": 0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "request_chars": 0,
+    "response_chars": 0,
+    "memory_read_errors": 0,
+    "memory_write_errors": 0,
+    "cached_prompt_tokens": 0,
+    "reasoning_tokens": 0,
+    "embedding_cache_hits": 0,
+    "embedding_encoded_texts": 0,
+    "state_transfers": 0,
+    "state_bytes": 0,
+    "retrieval_count": 0,
+    "memory_candidates": 0,
+    "memory_used": 0,
+    "search_errors": 0,
+    "memory_queries": 0,
+    "memory_source_valid": 0,
+    "memory_written": 0,
+    "memory_rejected": 0,
+    "document_reads": 0,
+    "followup_rounds": 0,
+    "contract_repairs": 0,
+    "request_bytes": 0,
+    "response_bytes": 0,
+    "system_chars": 0,
+    "system_bytes": 0,
+    "protocol_control_bytes": 0,
+    "role_usage": {
+      "Planner": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "Investigator": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "VerifierReasoner": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      }
+    },
+    "usage_sources": [],
+    "note": "命中/引用不等于正确复用；来源通过率以实际回读为分母，未读候选不算无效；memory_written是成功写入请求数，含幂等去重。检索质量需独立标注。"
+  },
+  "structured_off": {
+    "questions_completed": 29,
+    "workflows": [
+      "need_first"
+    ],
+    "communication_versions": [
+      "moreagent.handoff/1"
+    ],
+    "workspace_versions": [
+      "moreagent.workspace/1"
+    ],
+    "workspace_metrics": {
+      "workspace_views": 79,
+      "workspace_input_bytes_before": 257656,
+      "workspace_input_bytes_after": 201974,
+      "workspace_brief_views": 1,
+      "workspace_patch_count": 79
+    },
+    "handoff_metrics": {
+      "acp_request_bytes": 3140,
+      "acp_result_bytes": 3224,
+      "acp_handshake_bytes": 7540,
+      "acp_object_registration_bytes": 475007,
+      "acp_frames": 538,
+      "acp_operations": 124,
+      "acp_batches": 21,
+      "acp_dispatch_seconds": 266.28748745750636,
+      "acp_overhead_seconds": 0.062121943570673466,
+      "acp_handler_seconds": 266.2253655139357,
+      "acp_evidence_ref_reads": 92,
+      "acp_memory_ref_reads": 0,
+      "state_handle_reads": 0,
+      "state_handle_bytes": 0,
+      "natural_handoff_chars": 0,
+      "natural_handoff_rendered": 0
+    },
+    "status_counts": {
+      "answered": 16,
+      "protocol_error": 11,
+      "no_answer": 2
+    },
+    "answer_completion_rate": 0.5517241379310345,
+    "protocol_status_counts": {
+      "valid": 13,
+      "invalid": 11,
+      "issues": 5
+    },
+    "strict_evidence_audit_counts": {
+      "not_requested": 29
+    },
+    "evidence_verification_counts": {
+      "unverified": 29
+    },
+    "support_assessment_counts": {
+      "partial": 1,
+      "supported": 15,
+      "unknown": 13
+    },
+    "source_verified_citations": 57,
+    "reliable_support_citations": 0,
+    "usage_missing_calls": 0,
+    "checkpoint_replayed_calls": 0,
+    "checkpoint_unknown_calls": 0,
+    "checkpoint_request_attempts": 79,
+    "resumed_questions": 0,
+    "token_usage_complete": true,
+    "resolved_models": [
+      "deepseek-flash"
+    ],
+    "memory_degraded_questions": 0,
+    "retrieval_error_questions": 0,
+    "retrieval_failed_questions": 0,
+    "retrieval_errors_with_answer": 0,
+    "runtime_failed_questions": 13,
+    "accuracy": 0.5517241379310345,
+    "answered_questions": 16,
+    "tokens_per_answer": 7234.125,
+    "tokens_per_correct": 7234.125,
+    "v6_metrics": {
+      "queries_reused": 0,
+      "queries_filtered": 1,
+      "search_progress": 24,
+      "stalled_rounds": 0,
+      "expansions": 0,
+      "deterministic_repairs": 3,
+      "semantic_reviews": 0,
+      "recovered_action_errors": 0,
+      "evidence_raw_chars": 80032,
+      "evidence_raw_delivery_chars": 80032,
+      "evidence_view_chars": 77823,
+      "evidence_exact_duplicates": 0,
+      "evidence_similar_groups": 0,
+      "evidence_processor_seconds": 0.022916045039892197,
+      "checkpoint_replayed_operations": 0,
+      "checkpoint_executed_operations": 103,
+      "checkpoint_unknown_recomputations": 0
+    },
+    "supported_rate": 0.0,
+    "evidence_status_counts": {
+      "unverified": 18,
+      "not_assessed": 11
+    },
+    "answer_basis_counts": {},
+    "evidence_status_downgraded_questions": 0,
+    "accuracy_by_evidence_status": {
+      "not_assessed": 0.0,
+      "unverified": 0.8888888888888888
+    },
+    "accuracy_on_answered": 1.0,
+    "wrong_supported_questions": 0,
+    "followup_memory_queries": 0,
+    "memory_reference_resolutions": 0,
+    "preserved_answer_questions": 0,
+    "followup_outcomes": {
+      "not_requested": 28,
+      "skipped": 1
+    },
+    "followup_new_visible_chars": 0,
+    "followup_new_visible_sources": 0,
+    "memory_candidates_by_kind": {
+      "evidence": 0,
+      "strategy": 0,
+      "episode": 0
+    },
+    "memory_written_by_kind": {
+      "evidence": 0,
+      "strategy": 0,
+      "episode": 0
+    },
+    "memory_experience_reads": 0,
+    "state_vector_transfers": 0,
+    "memory_rpc_requests": 0,
+    "embedding_seconds": 0.0,
+    "memory_funnel": {
+      "recalled": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "presented": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "planner_accepted": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "selected": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "resolved": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "delivered": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "investigator_accepted": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "executed": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "cited": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      }
+    },
+    "memory_planner_acceptance_rate": null,
+    "memory_selection_rate": null,
+    "memory_investigator_acceptance_rate": null,
+    "memory_need_coverage_rate": 0.0,
+    "memory_need_support_rate": 0.0,
+    "memory_zero_search_supported_rate": 0.0,
+    "memory_evidence_citation_rate": null,
+    "memory_strategy_execution_rate": null,
+    "reused_question_rate": 0.0,
+    "memory_hit_question_rate": 0.0,
+    "reused_without_search_questions": 0,
+    "accuracy_on_reused_questions": null,
+    "memory_source_valid_rate": null,
+    "memory_source_check_coverage": null,
+    "memory_source_check_attempts": 0,
+    "memory_presented": 0,
+    "memory_coarse_candidate_occurrences": 0,
+    "investigation_rounds": 29,
+    "queries_skipped_covered": 0,
+    "memory_only_supported_tasks": 0,
+    "memory_evidence_presented": 0,
+    "memory_covered_needs": 0,
+    "needs_review_errors": 4,
+    "knowledge_needs": 67,
+    "memory_supported_needs": 0,
+    "memory_candidate_sources": 0,
+    "memory_fragment_valid": 0,
+    "memory_source_cache_hits": 0,
+    "mean_seconds": 9.813961724461667,
+    "model_calls": 79,
+    "messages": 158,
+    "communication_chars": 271776,
+    "prompt_tokens": 85058,
+    "completion_tokens": 30688,
+    "total_tokens": 115746,
+    "request_chars": 189191,
+    "response_chars": 82585,
+    "memory_read_errors": 0,
+    "memory_write_errors": 0,
+    "cached_prompt_tokens": 22656,
+    "reasoning_tokens": 0,
+    "embedding_cache_hits": 0,
+    "embedding_encoded_texts": 0,
+    "state_transfers": 0,
+    "state_bytes": 0,
+    "retrieval_count": 24,
+    "memory_candidates": 0,
+    "memory_used": 0,
+    "search_errors": 0,
+    "memory_queries": 0,
+    "memory_source_valid": 0,
+    "memory_written": 0,
+    "memory_rejected": 0,
+    "document_reads": 0,
+    "followup_rounds": 0,
+    "contract_repairs": 0,
+    "request_bytes": 201974,
+    "response_bytes": 120934,
+    "system_chars": 79202,
+    "system_bytes": 158106,
+    "protocol_control_bytes": 0,
+    "role_usage": {
+      "Planner": {
+        "prompt_tokens": 16001,
+        "completion_tokens": 9797,
+        "total_tokens": 25798
+      },
+      "Investigator": {
+        "prompt_tokens": 26695,
+        "completion_tokens": 8351,
+        "total_tokens": 35046
+      },
+      "VerifierReasoner": {
+        "prompt_tokens": 42362,
+        "completion_tokens": 12540,
+        "total_tokens": 54902
+      }
+    },
+    "usage_sources": [
+      "model"
+    ],
+    "note": "命中/引用不等于正确复用；来源通过率以实际回读为分母，未读候选不算无效；memory_written是成功写入请求数，含幂等去重。检索质量需独立标注。"
+  },
+  "text_on": {
+    "questions_completed": 50,
+    "workflows": [
+      "need_first"
+    ],
+    "communication_versions": [
+      "moreagent.handoff/1"
+    ],
+    "workspace_versions": [],
+    "workspace_metrics": {
+      "workspace_views": 0,
+      "workspace_input_bytes_before": 0,
+      "workspace_input_bytes_after": 0,
+      "workspace_brief_views": 0,
+      "workspace_patch_count": 0
+    },
+    "handoff_metrics": {
+      "acp_request_bytes": 0,
+      "acp_result_bytes": 0,
+      "acp_handshake_bytes": 0,
+      "acp_object_registration_bytes": 0,
+      "acp_frames": 0,
+      "acp_operations": 0,
+      "acp_batches": 0,
+      "acp_dispatch_seconds": 0,
+      "acp_overhead_seconds": 0,
+      "acp_handler_seconds": 0,
+      "acp_evidence_ref_reads": 0,
+      "acp_memory_ref_reads": 0,
+      "state_handle_reads": 0,
+      "state_handle_bytes": 0,
+      "natural_handoff_chars": 55539,
+      "natural_handoff_rendered": 100
+    },
+    "status_counts": {
+      "answered": 46,
+      "protocol_error": 4
+    },
+    "answer_completion_rate": 0.92,
+    "protocol_status_counts": {
+      "valid": 39,
+      "invalid": 4,
+      "issues": 7
+    },
+    "strict_evidence_audit_counts": {
+      "not_requested": 50
+    },
+    "evidence_verification_counts": {
+      "unverified": 50
+    },
+    "support_assessment_counts": {
+      "partial": 10,
+      "unknown": 4,
+      "supported": 36
+    },
+    "source_verified_citations": 180,
+    "reliable_support_citations": 0,
+    "usage_missing_calls": 0,
+    "checkpoint_replayed_calls": 0,
+    "checkpoint_unknown_calls": 0,
+    "checkpoint_request_attempts": 150,
+    "resumed_questions": 0,
+    "token_usage_complete": true,
+    "resolved_models": [
+      "deepseek-flash"
+    ],
+    "memory_degraded_questions": 0,
+    "retrieval_error_questions": 0,
+    "retrieval_failed_questions": 0,
+    "retrieval_errors_with_answer": 0,
+    "runtime_failed_questions": 4,
+    "accuracy": 0.92,
+    "answered_questions": 46,
+    "tokens_per_answer": 7783.152173913043,
+    "tokens_per_correct": 7783.152173913043,
+    "v6_metrics": {
+      "queries_reused": 0,
+      "queries_filtered": 15,
+      "search_progress": 55,
+      "stalled_rounds": 0,
+      "expansions": 0,
+      "deterministic_repairs": 1,
+      "semantic_reviews": 0,
+      "recovered_action_errors": 0,
+      "evidence_raw_chars": 286331,
+      "evidence_raw_delivery_chars": 330734,
+      "evidence_view_chars": 266729,
+      "evidence_exact_duplicates": 0,
+      "evidence_similar_groups": 0,
+      "evidence_processor_seconds": 0.09181310888379812,
+      "checkpoint_replayed_operations": 0,
+      "checkpoint_executed_operations": 575,
+      "checkpoint_unknown_recomputations": 0
+    },
+    "supported_rate": 0.0,
+    "evidence_status_counts": {
+      "unverified": 45,
+      "not_assessed": 4,
+      "not_provided": 1
+    },
+    "answer_basis_counts": {},
+    "evidence_status_downgraded_questions": 0,
+    "accuracy_by_evidence_status": {
+      "not_assessed": 0.0,
+      "not_provided": 1.0,
+      "unverified": 1.0
+    },
+    "accuracy_on_answered": 1.0,
+    "wrong_supported_questions": 0,
+    "followup_memory_queries": 0,
+    "memory_reference_resolutions": 46,
+    "preserved_answer_questions": 0,
+    "followup_outcomes": {
+      "not_requested": 50
+    },
+    "followup_new_visible_chars": 0,
+    "followup_new_visible_sources": 0,
+    "memory_candidates_by_kind": {
+      "evidence": 483,
+      "strategy": 0,
+      "episode": 0
+    },
+    "memory_written_by_kind": {
+      "evidence": 94,
+      "strategy": 0,
+      "episode": 0
+    },
+    "memory_experience_reads": 0,
+    "state_vector_transfers": 217,
+    "memory_rpc_requests": 263,
+    "embedding_seconds": 278.5658680126071,
+    "memory_funnel": {
+      "recalled": {
+        "evidence": 483,
+        "strategy": 0,
+        "episode": 0
+      },
+      "presented": {
+        "evidence": 178,
+        "strategy": 0,
+        "episode": 0
+      },
+      "planner_accepted": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "selected": {
+        "evidence": 178,
+        "strategy": 0,
+        "episode": 0
+      },
+      "resolved": {
+        "evidence": 178,
+        "strategy": 0,
+        "episode": 0
+      },
+      "delivered": {
+        "evidence": 178,
+        "strategy": 0,
+        "episode": 0
+      },
+      "investigator_accepted": {
+        "evidence": 76,
+        "strategy": 0,
+        "episode": 0
+      },
+      "executed": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "cited": {
+        "evidence": 38,
+        "strategy": 0,
+        "episode": 0
+      }
+    },
+    "memory_planner_acceptance_rate": null,
+    "memory_selection_rate": null,
+    "memory_investigator_acceptance_rate": 0.42696629213483145,
+    "memory_need_coverage_rate": 0.024390243902439025,
+    "memory_need_support_rate": 0.0975609756097561,
+    "memory_zero_search_supported_rate": 0.0,
+    "memory_evidence_citation_rate": 0.21348314606741572,
+    "memory_strategy_execution_rate": null,
+    "reused_question_rate": 0.36,
+    "memory_hit_question_rate": 0.92,
+    "reused_without_search_questions": 0,
+    "accuracy_on_reused_questions": 1.0,
+    "memory_source_valid_rate": 1.0,
+    "memory_source_check_coverage": 0.34025974025974026,
+    "memory_source_check_attempts": 131,
+    "memory_presented": 178,
+    "memory_coarse_candidate_occurrences": 853,
+    "investigation_rounds": 50,
+    "queries_skipped_covered": 0,
+    "memory_only_supported_tasks": 0,
+    "memory_evidence_presented": 178,
+    "memory_covered_needs": 3,
+    "needs_review_errors": 6,
+    "knowledge_needs": 123,
+    "memory_supported_needs": 12,
+    "memory_candidate_sources": 385,
+    "memory_fragment_valid": 178,
+    "memory_source_cache_hits": 47,
+    "mean_seconds": 20.0808964067325,
+    "model_calls": 150,
+    "messages": 300,
+    "communication_chars": 829471,
+    "prompt_tokens": 282903,
+    "completion_tokens": 75122,
+    "total_tokens": 358025,
+    "request_chars": 630338,
+    "response_chars": 199133,
+    "memory_read_errors": 0,
+    "memory_write_errors": 0,
+    "cached_prompt_tokens": 87167,
+    "reasoning_tokens": 0,
+    "embedding_cache_hits": 0,
+    "embedding_encoded_texts": 217,
+    "state_transfers": 263,
+    "state_bytes": 888832,
+    "retrieval_count": 55,
+    "memory_candidates": 483,
+    "memory_used": 38,
+    "search_errors": 0,
+    "memory_queries": 123,
+    "memory_source_valid": 131,
+    "memory_written": 94,
+    "memory_rejected": 0,
+    "document_reads": 131,
+    "followup_rounds": 0,
+    "contract_repairs": 0,
+    "request_bytes": 859437,
+    "response_bytes": 299629,
+    "system_chars": 173050,
+    "system_bytes": 357550,
+    "protocol_control_bytes": 0,
+    "role_usage": {
+      "Planner": {
+        "prompt_tokens": 33096,
+        "completion_tokens": 19417,
+        "total_tokens": 52513
+      },
+      "Investigator": {
+        "prompt_tokens": 94238,
+        "completion_tokens": 18378,
+        "total_tokens": 112616
+      },
+      "VerifierReasoner": {
+        "prompt_tokens": 155569,
+        "completion_tokens": 37327,
+        "total_tokens": 192896
+      }
+    },
+    "usage_sources": [
+      "model"
+    ],
+    "note": "命中/引用不等于正确复用；来源通过率以实际回读为分母，未读候选不算无效；memory_written是成功写入请求数，含幂等去重。检索质量需独立标注。"
+  },
+  "structured_on": {
+    "questions_completed": 0,
+    "workflows": [],
+    "communication_versions": [],
+    "workspace_versions": [],
+    "workspace_metrics": {
+      "workspace_views": 0,
+      "workspace_input_bytes_before": 0,
+      "workspace_input_bytes_after": 0,
+      "workspace_brief_views": 0,
+      "workspace_patch_count": 0
+    },
+    "handoff_metrics": {
+      "acp_request_bytes": 0,
+      "acp_result_bytes": 0,
+      "acp_handshake_bytes": 0,
+      "acp_object_registration_bytes": 0,
+      "acp_frames": 0,
+      "acp_operations": 0,
+      "acp_batches": 0,
+      "acp_dispatch_seconds": 0,
+      "acp_overhead_seconds": 0,
+      "acp_handler_seconds": 0,
+      "acp_evidence_ref_reads": 0,
+      "acp_memory_ref_reads": 0,
+      "state_handle_reads": 0,
+      "state_handle_bytes": 0,
+      "natural_handoff_chars": 0,
+      "natural_handoff_rendered": 0
+    },
+    "status_counts": {},
+    "answer_completion_rate": null,
+    "protocol_status_counts": {},
+    "strict_evidence_audit_counts": {},
+    "evidence_verification_counts": {},
+    "support_assessment_counts": {},
+    "source_verified_citations": 0,
+    "reliable_support_citations": 0,
+    "usage_missing_calls": 0,
+    "checkpoint_replayed_calls": 0,
+    "checkpoint_unknown_calls": 0,
+    "checkpoint_request_attempts": 0,
+    "resumed_questions": 0,
+    "token_usage_complete": false,
+    "resolved_models": [],
+    "memory_degraded_questions": 0,
+    "retrieval_error_questions": 0,
+    "retrieval_failed_questions": 0,
+    "retrieval_errors_with_answer": 0,
+    "runtime_failed_questions": 0,
+    "accuracy": null,
+    "answered_questions": 0,
+    "tokens_per_answer": null,
+    "tokens_per_correct": null,
+    "v6_metrics": {
+      "queries_reused": 0,
+      "queries_filtered": 0,
+      "search_progress": 0,
+      "stalled_rounds": 0,
+      "expansions": 0,
+      "deterministic_repairs": 0,
+      "semantic_reviews": 0,
+      "recovered_action_errors": 0,
+      "evidence_raw_chars": 0,
+      "evidence_raw_delivery_chars": 0,
+      "evidence_view_chars": 0,
+      "evidence_exact_duplicates": 0,
+      "evidence_similar_groups": 0,
+      "evidence_processor_seconds": 0,
+      "checkpoint_replayed_operations": 0,
+      "checkpoint_executed_operations": 0,
+      "checkpoint_unknown_recomputations": 0
+    },
+    "supported_rate": null,
+    "evidence_status_counts": {},
+    "answer_basis_counts": {},
+    "evidence_status_downgraded_questions": 0,
+    "accuracy_by_evidence_status": {},
+    "accuracy_on_answered": null,
+    "wrong_supported_questions": 0,
+    "followup_memory_queries": 0,
+    "memory_reference_resolutions": 0,
+    "preserved_answer_questions": 0,
+    "followup_outcomes": {},
+    "followup_new_visible_chars": 0,
+    "followup_new_visible_sources": 0,
+    "memory_candidates_by_kind": {
+      "evidence": 0,
+      "strategy": 0,
+      "episode": 0
+    },
+    "memory_written_by_kind": {
+      "evidence": 0,
+      "strategy": 0,
+      "episode": 0
+    },
+    "memory_experience_reads": 0,
+    "state_vector_transfers": 0,
+    "memory_rpc_requests": 0,
+    "embedding_seconds": 0,
+    "memory_funnel": {
+      "recalled": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "presented": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "planner_accepted": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "selected": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "resolved": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "delivered": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "investigator_accepted": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "executed": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      },
+      "cited": {
+        "evidence": 0,
+        "strategy": 0,
+        "episode": 0
+      }
+    },
+    "memory_planner_acceptance_rate": null,
+    "memory_selection_rate": null,
+    "memory_investigator_acceptance_rate": null,
+    "memory_need_coverage_rate": null,
+    "memory_need_support_rate": null,
+    "memory_zero_search_supported_rate": null,
+    "memory_evidence_citation_rate": null,
+    "memory_strategy_execution_rate": null,
+    "reused_question_rate": null,
+    "memory_hit_question_rate": null,
+    "reused_without_search_questions": 0,
+    "accuracy_on_reused_questions": null,
+    "memory_source_valid_rate": null,
+    "memory_source_check_coverage": null,
+    "memory_source_check_attempts": 0,
+    "memory_presented": 0,
+    "memory_coarse_candidate_occurrences": 0,
+    "investigation_rounds": 0,
+    "queries_skipped_covered": 0,
+    "memory_only_supported_tasks": 0,
+    "memory_evidence_presented": 0,
+    "memory_covered_needs": 0,
+    "needs_review_errors": 0,
+    "knowledge_needs": 0,
+    "memory_supported_needs": 0,
+    "memory_candidate_sources": 0,
+    "memory_fragment_valid": 0,
+    "memory_source_cache_hits": 0,
+    "mean_seconds": null,
+    "model_calls": 0,
+    "messages": 0,
+    "communication_chars": 0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "request_chars": 0,
+    "response_chars": 0,
+    "memory_read_errors": 0,
+    "memory_write_errors": 0,
+    "cached_prompt_tokens": 0,
+    "reasoning_tokens": 0,
+    "embedding_cache_hits": 0,
+    "embedding_encoded_texts": 0,
+    "state_transfers": 0,
+    "state_bytes": 0,
+    "retrieval_count": 0,
+    "memory_candidates": 0,
+    "memory_used": 0,
+    "search_errors": 0,
+    "memory_queries": 0,
+    "memory_source_valid": 0,
+    "memory_written": 0,
+    "memory_rejected": 0,
+    "document_reads": 0,
+    "followup_rounds": 0,
+    "contract_repairs": 0,
+    "request_bytes": 0,
+    "response_bytes": 0,
+    "system_chars": 0,
+    "system_bytes": 0,
+    "protocol_control_bytes": 0,
+    "role_usage": {
+      "Planner": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "Investigator": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "VerifierReasoner": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      }
+    },
+    "usage_sources": [],
+    "note": "命中/引用不等于正确复用；来源通过率以实际回读为分母，未读候选不算无效；memory_written是成功写入请求数，含幂等去重。检索质量需独立标注。"
+  }
+}

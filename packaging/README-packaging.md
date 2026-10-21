@@ -179,7 +179,7 @@ source .venv/bin/activate
 pip install torch --index-url https://download.pytorch.org/whl/cu121
 
 # 3. 验证
-python LangChain/test/test-cuda.py
+python -c 'import torch; print("CUDA available:", torch.cuda.is_available()); print("GPU count:", torch.cuda.device_count())'
 ```
 
 ---
@@ -218,10 +218,10 @@ python LangChain/test/test-cuda.py
 struckflow-manage test
 
 # 2. CUDA 测试
-/usr/lib/struckflow/venv/bin/python LangChain/test/test-cuda.py
+/usr/lib/struckflow/venv/bin/python -c 'import torch; print(torch.cuda.is_available())'
 
 # 3. SearXNG 搜索测试
-/usr/lib/struckflow/venv/bin/python LangChain/test/test-searx.py
+curl -G --data-urlencode 'q=example' --data-urlencode 'format=json' http://localhost:8082/search
 
 # 4. API 健康检查
 curl http://localhost:5000/api/health

@@ -1,0 +1,18 @@
+{
+  "runner-benchmark.json": "11fd9f547fef5db2dd430f9aa864b14643b85b5fbfcd074be0c0afebfb7e2a92",
+  "order.json": "f2e7202e78f2c65b51c1cd0a5e1d25838d8a77033e7da60cd58f083d7d63d246",
+  "extension.order.json": "2fd22adf9ead6f85aa9be26eb29624a7e31194e51fc5b2a10d05e4e8edd80c1a",
+  "questions.jsonl": "8f5683773db415fe8eaebf6ac71d23faf1158d48f85dea34c8191c71dffeab04",
+  "questions.md": "721021a5c87503a7d29c193029c4f94ed420131e1da1bf25ba5b025b72e980db",
+  "extensions.md": "7f2903037a9e6d8c4e162b728ddc460cdb8cf6eb284e56493f6b0d461c06a726",
+  "evaluation/answers.json": "540690e175011d5aa7776349603bfd215d78c1ce68ea1c2827dda83f90b8e271",
+  "evaluation/reuse-review.json": "e4c128e3d5fd7d9f3c650ba6dcaf413b8310e9ea082f50c5af2aa0f5f2f29346",
+  "evaluation/continuity.md": "cfb0b15fe4b92052c6116cc60fa174a4b4e3aca6485adc6564fc9d7563bd1528",
+  "slices.json": "938619939f975d427c8aa2fcf22c20fa9dcb9fe80f6d426035309128a2315c86",
+  "metadata.json": "d9193a689acb7d79e4f653c5228919ce656a42c4d3650d38c02e0c312e9c36f0",
+  "validation.json": "a9cc4b6d0c00ab31418b33787998676fef17f9e254a821cadbe19a7aac2564d9",
+  "README.md": "c2cc16dea4136eb1123db9eb59004b17a4c3783fcfd3e8d9d8b0dfd2dbddc448",
+  "build.py": "5192be820d51fb798b1daaba9493c8309cc45d94072e99d7793a6de434afbc39",
+  "evaluation/items.py": "c8e4e4e8e1750dc6aaaa3f91c3018f42ac6832f343524fdbc215ab2f75c50c9d",
+  "evaluation/sources.json": "56182eaf6cd54ec1f0995b0f480427d350fc9f5f42ed7ec615753cf9850527a2"
+}

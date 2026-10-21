@@ -1,0 +1,53 @@
+{
+  "matched_complete": true,
+  "token_comparison_valid": true,
+  "observed_cost_complete": true,
+  "latency_comparison_valid": true,
+  "resolved_model_consistent": true,
+  "runtime_healthy": true,
+  "note": "未知/估算 token 不计算 token 节省率；缺失用量不是零成本。",
+  "protocol_memory_off": {
+    "token_reduction": 0.24308632200753555,
+    "search_reduction": 0.2142857142857143,
+    "latency_reduction": 0.07818192146023117,
+    "accuracy_delta": 0.0,
+    "quality_not_worse_on_this_sample": true,
+    "memory_degraded_questions": 0
+  },
+  "protocol_memory_on": {
+    "token_reduction": 0.24693869430711535,
+    "search_reduction": 0.09523809523809523,
+    "latency_reduction": 0.1123358766193927,
+    "accuracy_delta": 0.0,
+    "quality_not_worse_on_this_sample": true,
+    "memory_degraded_questions": 0
+  },
+  "memory_text": {
+    "token_reduction": -0.12897483842348478,
+    "search_reduction": 0.0,
+    "latency_reduction": -1.1673095851932187,
+    "accuracy_delta": 0.0,
+    "quality_not_worse_on_this_sample": true,
+    "memory_degraded_questions": 0
+  },
+  "memory_structured": {
+    "token_reduction": -0.12322883128829809,
+    "search_reduction": -0.1515151515151516,
+    "latency_reduction": -1.0870093653212383,
+    "accuracy_delta": 0.0,
+    "quality_not_worse_on_this_sample": true,
+    "memory_degraded_questions": 0
+  },
+  "factorial_effects": {
+    "accuracy": {
+      "structured_minus_text": 0.0,
+      "memory_on_minus_off": 0.0,
+      "interaction": 0.0
+    },
+    "total_tokens": {
+      "structured_minus_text": -46470.0,
+      "memory_on_minus_off": 19790.0,
+      "interaction": -6358
+    }
+  }
+}

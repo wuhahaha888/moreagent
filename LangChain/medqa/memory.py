@@ -69,7 +69,7 @@ def _worker(connection, path, namespace, model):
                         ordered = first + rest
                     for candidate in ordered:
                         source = ((candidate["content"]["id"], candidate["content"]["sha256"])
-                                  if candidate["kind"] in {"evidence","textbook_extract"}
+                                  if candidate["kind"] in {"evidence","textbook_extract"} and not request.get('preserve_fragments')
                                   else (candidate["kind"],candidate["id"]))
                         if source in seen_sources:
                             continue
@@ -100,11 +100,24 @@ def _worker(connection, path, namespace, model):
                 elif request["action"] == "put_unit":
                     unit = normalize_unit(request["unit"],request["trace"])
                     content = unit["content"]
+                    identity = None
+                    if (unit['kind']=='evidence' and content.get('index_schema')=='need-memory-v1'
+                            and content.get('conditions_role')=='origin_context_only; recheck_for_each_task'):
+                        # Case provenance is not part of the reusable knowledge identity.
+                        # Keep different goals, source versions and excerpts separate.
+                        identity = {k:v for k,v in content.items() if k not in {'origin_question_id','conditions'}}
+                        identity['excerpts'] = sorted(set(content['excerpts']))
                     ident = store.put(role=unit["source_agent"],topic=unit["topic"],summary=unit["summary"],
                         content=content,embedding=values,trace_id=request["trace"],kind=unit["kind"],
                         status="curated",tags=[content["corpus_version"],unit["kind"]],
                         source_ids=[content["id"]] if unit["kind"]=="evidence" else content.get("source_ids",[]),
-                        expires_at=time.time()+30*86400)
+                        expires_at=time.time()+30*86400,identity_content=identity)
+                    if identity is not None:
+                        origin = json.dumps({k:content[k] for k in ('origin_question_id','conditions','need_goal')},
+                                            ensure_ascii=False,sort_keys=True,separators=(',',':'))
+                        with store.connect() as db:
+                            db.execute('INSERT OR IGNORE INTO memory_origin VALUES (?,?,?,?,?)',
+                                (ident,request['trace'],hashlib.sha256(origin.encode()).hexdigest(),time.time(),origin))
                     response = {"memory_id":ident}
                 elif request["action"] == "put":
                     doc = request["document"]
@@ -195,7 +208,8 @@ class SharedMemory:
                 self.close()
                 raise
 
-    def recall(self, values, trace, version, threshold=.65, limit=3, *, task_group=None, kinds=None, diversify=True):
+    def recall(self, values, trace, version, threshold=.65, limit=3, *, task_group=None, kinds=None, diversify=True,
+               preserve_fragments=False):
         if not np.isfinite(threshold) or not -1 <= threshold <= 1 or not 1 <= limit <= 100:
             raise ValueError("记忆召回阈值/条数无效")
         if kinds is not None and (not isinstance(kinds,list) or not kinds or any(k not in KINDS for k in kinds)):
@@ -203,7 +217,7 @@ class SharedMemory:
         self.lookups += 1
         return self._request({"action": "recall", "trace": trace, "version": version,
                               "threshold": threshold, "limit": limit, "task_group": task_group, "kinds":kinds,
-                              "diversify":bool(diversify)}, values)["hits"]
+                              "diversify":bool(diversify),"preserve_fragments":bool(preserve_fragments)}, values)["hits"]
 
     def put_unit(self, unit, values, trace):
         normalize_unit(unit,trace)

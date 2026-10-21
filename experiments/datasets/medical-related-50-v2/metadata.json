@@ -1,0 +1,32 @@
+{
+  "dataset_name": "medical-related-50-v2",
+  "created": "2026-10-21",
+  "question_count": 50,
+  "original_count": 30,
+  "authored_count": 20,
+  "original_runner_sha256": "bf2390d0c1acddf4c43d0e4e4feb1c7f81177b5cb66b381a591c258e7e7b7a1a",
+  "runner_sha256": "11fd9f547fef5db2dd430f9aa864b14643b85b5fbfcd074be0c0afebfb7e2a92",
+  "authored_group_counts": {
+    "anemia": 7,
+    "renal": 7,
+    "thyroid": 6
+  },
+  "order_policy": "original 30 unchanged first; authored A01-A07,R01-R07,T01-T06 appended",
+  "continuity": "cross_task_knowledge_reuse_and_condition_changes; all cases self_contained",
+  "patient_continuity": "different synthetic patients unless explicitly stated; no fabricated shared identity",
+  "evaluation_status": "development challenge set; no empirical difficulty calibration or independent clinical review",
+  "model_calls_during_construction": 0,
+  "outcome_based_selection": false,
+  "web_sources": "supporting factual concepts; not injected into retrieval corpus or memories",
+  "memory_experiment": "same corpus/questions/budgets in all four conditions; independent cold databases; online accumulation",
+  "answer_letter_counts_extension": {
+    "A": 5,
+    "B": 5,
+    "C": 5,
+    "D": 5
+  },
+  "new_question_word_range": [
+    73,
+    119
+  ]
+}

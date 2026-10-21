@@ -1,7 +1,65 @@
 """已知字段布局的无损映射；不生成判断、不修正事实或来源ID。"""
 from copy import deepcopy
+import json
+import math
 import re
 from .grounding import ContractError
+
+
+def parse_agent_output(raw, *, allow_repair=False, truncated=False):
+    """Parse all content; optionally remove one premature root closing brace.
+
+    No suffix is discarded and no value is invented. Duplicate keys, nonfinite
+    numbers, multiple objects, prose and incomplete output remain errors.
+    """
+    if not isinstance(raw, str):
+        return deepcopy(raw), []
+
+    def unique_object(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ContractError("JSON对象包含重复字段", category="integrity")
+            result[key] = value
+        return result
+
+    def reject_constant(_):
+        raise ContractError("JSON不允许非有限数值", category="integrity")
+
+    def finite_float(text):
+        value = float(text)
+        if not math.isfinite(value):
+            raise ContractError("JSON数值超出有限范围", category="integrity")
+        return value
+
+    decoder = json.JSONDecoder(object_pairs_hook=unique_object, parse_constant=reject_constant,
+                               parse_float=finite_float)
+    try:
+        return decoder.decode(raw), []
+    except json.JSONDecodeError as original_error:
+        if not allow_repair or truncated or original_error.msg != "Extra data":
+            raise
+        start = len(raw) - len(raw.lstrip())
+        try:
+            first, end = decoder.raw_decode(raw, start)
+        except json.JSONDecodeError:
+            raise original_error from None
+        if (not isinstance(first, dict) or not first or end <= start
+                or raw[end - 1] != "}" or not raw[end:].lstrip().startswith(",")):
+            raise original_error
+        # Deleting precisely the root close must make the entire string valid.
+        # The strict decoder also rejects duplicate/conflicting tail fields.
+        candidate = raw[:end - 1] + raw[end:]
+        try:
+            parsed = decoder.decode(candidate)
+        except json.JSONDecodeError:
+            raise original_error from None
+        added = sorted(set(parsed) - set(first)) if isinstance(parsed, dict) else []
+        if not added or any(parsed.get(key) != value for key, value in first.items()):
+            raise original_error
+        return parsed, [{"kind": "remove_premature_root_close", "character_offset": end - 1,
+                         "removed_character": "}", "added_top_level_fields": added,
+                         "extra_model_calls": 0}]
 
 
 def normalize_response(role, output, evidence=None):

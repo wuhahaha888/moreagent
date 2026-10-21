@@ -167,7 +167,7 @@ class MedQATest(unittest.TestCase):
         runtime = Runtime(Agents(), books, memory=memory, embedder=Embeddings())
         runtime.run(self.q)
         second = runtime.run(Question("q2", self.q.question, self.q.options))
-        self.assertEqual(second["events"][0]["tool"], "memory_prefetch")
+        self.assertEqual(next(e for e in second['events'] if e.get('tool')!='acp_handshake')['tool'], 'memory_prefetch')
         planner = next(e for e in second["events"] if e.get("agent") == PLANNER)
         self.assertEqual(planner["input"]["memory_hits"][0]["status"], "candidate_needs_source_read")
         self.assertNotIn("text", planner["input"]["memory_hits"][0])

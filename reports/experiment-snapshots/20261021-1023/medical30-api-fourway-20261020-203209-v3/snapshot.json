@@ -1,0 +1,58 @@
+{
+  "run_name": "medical30-api-fourway-20261020-203209-v3",
+  "captured_at": "2026-10-21T10:22:46.733643+08:00",
+  "expected_per_condition": 30,
+  "completed": {
+    "text_off": 30,
+    "structured_off": 30,
+    "text_on": 30,
+    "structured_on": 30
+  },
+  "matched_complete": true,
+  "saved_response_count": 360,
+  "call_states": {
+    "abandoned": 1,
+    "complete": 360
+  },
+  "task_states": [
+    [
+      "structured_off",
+      "complete",
+      30
+    ],
+    [
+      "structured_on",
+      "complete",
+      30
+    ],
+    [
+      "text_off",
+      "complete",
+      30
+    ],
+    [
+      "text_on",
+      "complete",
+      30
+    ]
+  ],
+  "known_saved_response_tokens": 687121,
+  "unknown_request_records": 1,
+  "databases": {
+    "checkpoint.sqlite3": {
+      "sha256_uncompressed": "00d94e7e32b572d6120c39c7eb351456712e5b224e0a0859a86b3d302c8873f9",
+      "captured_at": "2026-10-21T10:22:46.733643+08:00"
+    },
+    "structured_on.sqlite3": {
+      "sha256_uncompressed": "ed6f9d68f82e0912c918752c2d3525e9cedca6f703ae56390da388e3097e77e4",
+      "captured_at": "2026-10-21T10:22:48.977022+08:00"
+    },
+    "text_on.sqlite3": {
+      "sha256_uncompressed": "371bfa5b7f67d7c33b5a067bf8175647fcb678bcaeb0468a57f38e832ce57671",
+      "captured_at": "2026-10-21T10:22:49.884584+08:00"
+    }
+  },
+  "purpose": "audit_snapshot; not a coordinated cross-database resume bundle",
+  "source_run_untouched": true,
+  "api_calls_during_export": 0
+}

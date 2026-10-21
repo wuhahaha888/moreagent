@@ -120,7 +120,9 @@ class DynamicRuntimeTest(unittest.TestCase):
             self.assertTrue(all(not set(s) & {"can_start", "can_complete", "can_close"}
                                 for s in payload.get("task_status", {}).values()))
             event = next(e for e in result["events"] if e.get("agent") == role)
-            self.assertEqual(event["control"]["profile"], "medqa-v6")
+            self.assertEqual(event['handoff_mode'],'ACP-1')
+            self.assertNotIn('control',event)
+        self.assertGreater(result['metrics']['acp_operations'],0)
         self.assertEqual(build_precise_for_agent("任务分配", question="legacy")["question"], "legacy")
         self.assertIn("资料搜索", build_control(trace_id="t", src="system", dst="任务分配")["allowed_next"])
 
@@ -280,14 +282,17 @@ class DynamicRuntimeTest(unittest.TestCase):
         with self.assertRaises(ContractError):
             normalize_response(INVESTIGATOR, raw)
 
-    def test_serialization_uses_identical_payload_in_both_modes(self):
+    def test_modes_keep_business_observations_but_use_different_handoffs(self):
         a, b = Agents(), Agents()
-        Runtime(a, Books(), mode="structured").run(self.q)
-        Runtime(b, Books(), mode="text").run(self.q)
+        structured=Runtime(a, Books(), mode="structured").run(self.q)
+        text=Runtime(b, Books(), mode="text").run(self.q)
         for (ra, pa, _), (rb, pb, _) in zip(a.calls, b.calls):
             self.assertEqual(ra, rb)
-            self.assertEqual(pa, pb)
-            self.assertNotEqual(compact(pa), render_text(pb))
+            self.assertEqual(pa,{k:v for k,v in pb.items() if k!='_natural_handoffs'})
+        self.assertEqual(text['metrics']['acp_frames'],0)
+        self.assertGreater(structured['metrics']['acp_frames'],0)
+        inputs=[e['model_input'] for e in text['events'] if 'model_input' in e]
+        self.assertTrue(all('key_conditions' not in text and 'evidence_pool' not in text for text in inputs))
 
 
 class PolicyAndJournalTest(unittest.TestCase):

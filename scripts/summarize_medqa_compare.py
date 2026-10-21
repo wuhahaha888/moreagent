@@ -53,7 +53,7 @@ def summarize(run):
                   f"{m.get('state_transfers', 0)}/{m.get('state_bytes', 0)}"]
         lines.append('| ' + ' | '.join(map(str, values)) + ' |')
     lines += ['', '¹协作字节为 request_bytes + response_bytes，不等于网络抓包字节；系统提示和协议控制字节另有指标。协议有问题可能涉及引用，不等于 JSON 解析失败。', '',
-              '| 记忆条件 | 进入 Planner 条数² | 实际策略执行条数 | 最终记忆证据引用条数 | 写入请求数³ | 无教材检索的复用题 |',
+              '| 记忆条件 | 实际进入角色输入条数² | 实际策略执行条数 | 最终记忆证据引用条数 | 写入请求数³ | 无教材检索的复用题 |',
               '|---|---:|---:|---:|---:|---:|']
     for c, label in zip(CONDITIONS[2:], LABELS[2:]):
         m = report.get(c, {})
@@ -63,6 +63,37 @@ def summarize(run):
                   m.get('memory_written', 0), m.get('reused_without_search_questions', 0)]
         lines.append('| ' + ' | '.join(map(str, values)) + ' |')
     lines += ['', '²跨题累计事件计数，不代表全局唯一记忆数。³写入请求可包含幂等去重，不等于新增唯一记忆数。候选召回、实际执行、最终引用分别报告；引用也不自动证明复用正确。', '']
+    if manifest.get('workflow') == 'need_first':
+        lines += ['需求驱动流程：先规划，再按需求召回记忆；Investigator判断暂定覆盖，Reasoner核验并可返回调查。两种通信模式使用同一流程。', '',
+                  '| 条件 | 知识需求数 | 首轮记忆暂定覆盖需求 | 最终引用记忆片段的支持需求 | 零检索且引用记忆、需求均获支持的题 | 已覆盖查询拦截 | 需求审核错误 |',
+                  '|---|---:|---:|---:|---:|---:|---:|']
+        for c,label in zip(CONDITIONS,LABELS):
+            m=report.get(c,{})
+            values=[label,*[m.get(k,0) for k in ('knowledge_needs','memory_covered_needs','memory_supported_needs',
+                    'memory_only_supported_tasks','queries_skipped_covered','needs_review_errors')]]
+            lines.append('| '+' | '.join(map(str,values))+' |')
+        lines += ['', '“支持”来自同一Reasoner的需求审核及程序原文/可见性检查，不是独立医学认证；上述计数不证明净Token收益。净收益仍以同流程有/无记忆的完整API usage对照计算。', '']
+    if manifest.get('communication_version')=='moreagent.handoff/1':
+        lines+=['通信路径版本：moreagent.handoff/1。Text 使用自然语言交接，structured 使用 ACP-1 进程内二进制派发。', '',
+            '| 条件 | ACP帧数 | 请求/结果字节 | 握手字节 | 登记内容序列化字节 | 证据引用回读 | 向量句柄消费 | 自然语言交接字符 |',
+            '|---|---:|---:|---:|---:|---:|---:|---:|']
+        for c,label in zip(CONDITIONS,LABELS):
+            h=report.get(c,{}).get('handoff_metrics',{})
+            values=[label,h.get('acp_frames',0),h.get('acp_request_bytes',0)+h.get('acp_result_bytes',0),
+                h.get('acp_handshake_bytes',0),h.get('acp_object_registration_bytes',0),
+                h.get('acp_evidence_ref_reads',0),h.get('state_handle_reads',0),h.get('natural_handoff_chars',0)]
+            lines.append('| '+' | '.join(map(str,values))+' |')
+        lines+=['', 'ACP字节与模型提示正文的UTF-8字节分别统计；引用对象保存在任务内对象表，登记字节是内容序列化大小，不是网络抓包流量。握手和向量句柄不直接折算聊天Token。', '']
+    if manifest.get('workspace_policy') == 'role_views_v1':
+        lines += ['共享状态策略：role_views_v1，仅structured启用；Text保留原基线。比较的是协议与上下文组合方案，不能只归因于数字编码。', '',
+                  '| 条件 | 角色视图次数 | 展开前字节 | 实际视图字节 | 原文条件缩略次数 | 已提交角色变更 |',
+                  '|---|---:|---:|---:|---:|---:|']
+        for c, label in zip(CONDITIONS, LABELS):
+            w = report.get(c, {}).get('workspace_metrics', {})
+            values = [label, *[w.get(k, 0) for k in ('workspace_views', 'workspace_input_bytes_before',
+                      'workspace_input_bytes_after', 'workspace_brief_views', 'workspace_patch_count')]]
+            lines.append('| ' + ' | '.join(map(str, values)) + ' |')
+        lines += ['', '展开前后字节是同一次任务的输入投影视图统计；不能替代实际API token或当作独立质量评测。原题、全部选项及必要证据仍按角色保留。', '']
     if complete:
         for label, base, target in [('无记忆时结构化相对纯文本', 'text_off', 'structured_off'),
                                     ('有记忆时结构化相对纯文本', 'text_on', 'structured_on'),

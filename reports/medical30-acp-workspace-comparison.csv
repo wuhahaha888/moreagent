@@ -1,0 +1,9 @@
+﻿experiment,condition,completed,correct,prompt_tokens,completion_tokens,total_tokens,model_calls,retrieval_count,mean_seconds,memory_hit_question_rate,tasks_with_final_memory_references,reused_without_search_questions,runtime_failed_questions,workspace_brief_views,usage_complete
+ACP-1,text_off,30,30,143842,32336,176178,90,39,11.370263769725959,0.0,0,0,0,0,True
+ACP-1,structured_off,30,30,129064,31146,160210,90,40,11.668342599583168,0.0,0,0,0,0,True
+ACP-1,text_on,30,30,168844,34993,203837,90,44,24.567945627619824,0.8666666666666667,6,0,0,0,True
+ACP-1,structured_on,30,30,144793,31850,176643,90,40,23.52832744978368,0.8666666666666667,9,0,0,0,True
+Workspace＋ACP,text_off,30,30,145445,32644,178089,90,42,11.392780181672425,0.0,0,0,0,0,True
+Workspace＋ACP,structured_off,30,30,105131,29667,134798,90,33,10.502070736295233,0.0,0,0,0,0,True
+Workspace＋ACP,text_on,30,30,166012,35046,201058,90,42,24.691681689737987,0.9,6,0,0,0,True
+Workspace＋ACP,structured_on,30,30,120925,30484,151409,90,38,21.917919981914263,0.9,6,0,0,0,True

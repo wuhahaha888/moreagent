@@ -8,7 +8,52 @@ from ..agents.medqa_prompts import PLANNER, INVESTIGATOR, REASONER
 from ..medqa.data import Question
 from ..medqa.runtime import Runtime
 from ..medqa.results import split_result
+from ..medqa.protocol import parse_agent_output
+from ..medqa.grounding import ContractError
 from ..medqa.cli import summarize
+
+
+class AgentJSONParsingTest(unittest.TestCase):
+    def test_valid_object_and_string_content_are_unchanged(self):
+        value = {"text": 'literal } , "critical_gaps": and \\ escapes', "nested": {"v": 1}}
+        parsed, changes = parse_agent_output(json.dumps(value), allow_repair=True)
+        self.assertEqual(parsed, value)
+        self.assertEqual(changes, [])
+
+    def test_premature_root_close_keeps_all_fields_and_suffix(self):
+        raw = '  {"answer":"A","nested":{"text":"}"}} , "critical_gaps":["retain me"]}  '
+        parsed, changes = parse_agent_output(raw, allow_repair=True)
+        self.assertEqual(parsed, {"answer": "A", "nested": {"text": "}"}, "critical_gaps": ["retain me"]})
+        self.assertEqual(changes[0]["extra_model_calls"], 0)
+        self.assertEqual(changes[0]["added_top_level_fields"], ["critical_gaps"])
+
+    def test_duplicate_fields_are_rejected_in_valid_and_repaired_json(self):
+        for raw in ('{"answer":"A","answer":"B"}',
+                    '{"answer":"A"},"answer":"B"}',
+                    '{"answer":"A","x":{"v":1,"v":2}}'):
+            with self.subTest(raw=raw), self.assertRaises(ContractError):
+                parse_agent_output(raw, allow_repair=True)
+
+    def test_multiple_objects_prose_and_incomplete_suffix_are_not_discarded(self):
+        for raw in ('{"answer":"A"}{"answer":"B"}',
+                    '{"answer":"A"} some explanation',
+                    '{"answer":"A"},"critical_gaps":[',
+                    '{"answer":"A"},"critical_gaps":[],}',
+                    '{"answer":"A"},"critical_gaps":[]} extra',
+                    '{"answer":"A"'):
+            with self.subTest(raw=raw), self.assertRaises(json.JSONDecodeError):
+                parse_agent_output(raw, allow_repair=True)
+
+    def test_truncated_and_disabled_repair_remain_errors(self):
+        raw = '{"answer":"A"},"critical_gaps":[]}'
+        for options in ({"allow_repair": False}, {"allow_repair": True, "truncated": True}):
+            with self.subTest(options=options), self.assertRaises(json.JSONDecodeError):
+                parse_agent_output(raw, **options)
+
+    def test_nonfinite_values_are_rejected(self):
+        for raw in ('{"value":NaN}', '{"value":Infinity}', '{"value":-Infinity}', '{"value":1e999}'):
+            with self.subTest(raw=raw), self.assertRaises(ContractError):
+                parse_agent_output(raw, allow_repair=True)
 
 
 class Memory:
@@ -26,6 +71,41 @@ class ResultProductsTest(unittest.TestCase):
 
     def run_agents(self, agents, **kwargs):
         return Runtime(agents, Books(), output_policy="decoupled", **kwargs).run(self.q)
+
+    def test_premature_root_close_is_audited_without_model_retry_in_both_modes(self):
+        class MalformedAnswer(Agents):
+            def call(self, role, payload, mode):
+                data, usage = super().call(role, payload, mode)
+                if role == REASONER:
+                    gaps = data.pop("critical_gaps")
+                    data = json.dumps(data) + ',"critical_gaps":' + json.dumps(gaps) + '}'
+                return data, usage
+        for mode in ("text", "structured"):
+            with self.subTest(mode=mode):
+                result = self.run_agents(MalformedAnswer(), mode=mode)
+                self.assertEqual(result["answer"], "A")
+                self.assertEqual(result["metrics"]["model_calls"], 3)
+                self.assertEqual(result["protocol_result"]["status"], "issues")
+                self.assertTrue(any(e["tool"] == "json_syntax_repair"
+                                    for e in result["protocol_result"]["repairs"]))
+                event = next(e for e in result["events"] if e.get("agent") == REASONER)
+                with self.assertRaises(json.JSONDecodeError):
+                    json.loads(event["response"])
+                self.assertEqual(event["normalized_output"]["final_answer"]["answer"], "A")
+
+    def test_syntax_repair_cannot_bypass_current_question_identity(self):
+        class WrongQuestion(Agents):
+            def call(self, role, payload, mode):
+                data, usage = super().call(role, payload, mode)
+                if role == REASONER:
+                    data["question_id"] = "another-question"
+                    gaps = data.pop("critical_gaps")
+                    data = json.dumps(data) + ',"critical_gaps":' + json.dumps(gaps) + '}'
+                return data, usage
+        result = self.run_agents(WrongQuestion())
+        self.assertIsNone(result["answer"])
+        self.assertEqual(result["metrics"]["model_calls"], 3)
+        self.assertTrue(result["protocol_result"]["blocks_answer"])
 
     def test_attribution_error_keeps_answer_and_never_retries_or_writes_memory(self):
         class Ambiguous(Agents):
@@ -186,8 +266,10 @@ class ResultProductsTest(unittest.TestCase):
                 self.assertEqual([r for r, _, _ in agents.calls], [PLANNER, INVESTIGATOR, REASONER])
                 self.assertEqual(result["metrics"]["model_calls"], 3)
                 payloads[mode, enabled] = [p for _, p, _ in agents.calls]
-        self.assertEqual(payloads["text", False], payloads["structured", False])
-        self.assertEqual(payloads["text", True], payloads["structured", True])
+        self.assertEqual([{k:v for k,v in p.items() if k!='_natural_handoffs'} for p in payloads['text',False]],
+                         payloads['structured',False])
+        self.assertEqual([{k:v for k,v in p.items() if k!='_natural_handoffs'} for p in payloads['text',True]],
+                         payloads['structured',True])
 
     def test_reporting_separates_completion_protocol_evidence_and_cost(self):
         class BadAudit(Agents):

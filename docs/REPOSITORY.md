@@ -1,37 +1,34 @@
 # 仓库清理与GitHub提交范围
 
-当前主线为三组30题API四条件实验。清理将历史试跑、重复分析、旧实验配置及旧会话数据移出仓库；单元测试、当前运行时及正式历史结果精简版保留。
+## 2026-10-21更新
 
-本机归档目录：`/data/wanghc/moreagent-cleanup-archive-20261020-172500`。归档包含清理前的Git状态、已暂存与未暂存补丁、原README，以及逐文件SHA256清单。
+当前主线为原30题加原创20题的50题四条件实验。此次整理保留所有数据集、原始实验结果与当前运行进程，未移动或删除experiments/results。
 
-本次移出 84 个顶层项目、906 个文件，共 215.51 MiB；其中历史结果目录 49 个。移动后已核对文件哈希。
+清理7个已被正式实现或常规诊断替代的脚本：
 
-这些是从工作仓库移出后的可恢复归档，不是物理磁盘释放量。归档位于仓库外，不随Git推送。只永久删除了可再生成的应用字节码缓存。
+- LangChain/test/test-cuda.py、test-searx.py：旧硬件/搜索手动探针，部署诊断改用直接命令。
+- scripts/numeric_protocol_demo.py、demo_medqa_handoffs.py：独立协议演示和重复fixture smoke，已有正式ACP/交接集成回归。
+- scripts/probe_qwen_local.py、benchmark_qwen_local.py：旧本地模型调试与合成输出测速，当前API主线未使用。
+- scripts/audit_medqa_numeric_tokens.py：探索期字段编号消融，不代表当前通信路径的实际收益。
 
-## 保留并提交
+这些文件的副本和SHA256已保存在本机仓库外：`/data/wanghc/moreagent-cleanup-archive-20261021-102238`，不随Git推送。保留核心协议、工作状态、共享记忆、数据集和恢复回归，以及当前运行/汇总/恢复工具。
 
-- 三角色源码、协议、记忆、检索、评测、检查点及离线测试。
-- `configs/medical-related-30-v1/`：当前API配置。
-- `experiments/datasets/medical-related-30-v1/`：30题、固定顺序、评分文件、来源及重建脚本。
-- `reports/medical71-reference/`：正式历史汇总与负结果，不当作当前30题成绩。
-- 当前README和设计、环境、实验、恢复文档；原通用Web及部署源码。
+## 数据与结果
 
-## 保留本机并忽略
+- 两套数据集共38个文件，清理前后SHA256完全一致。
+- 原始实验目录保留本机，Git忽略results、runlogs、密钥、模型和环境。
+- GitHub新增[6批次固定快照](../reports/experiment-snapshots/20261021-1023/README.md)，包含完整与未完成批次、逐题压缩轨迹、manifest和SQLite审计备份。65项工件校验通过，各数据库完整性检查通过。
+- 当前50题仍在运行；采集时79/200，明确作为部分结果。不同版本、不同批次不拼接成全量收益。
+- 数据库逐个在线备份，不中断原运行，不保证多个库同一时刻，不能直接作为跨库续跑包。
 
-- `.env`、模型权重、虚拟环境、node_modules。
-- 当前 `experiments/results/medical30-api-fourway-20261020-v2/` 和同名validation目录；运行中不可移动或删除。
-- 新产生的运行数据库、聊天和记忆、日志、缓存和原始实验工件。
+## 验证与提交
 
-## 清理与版本控制
+294项MedQA回归、16项通用记忆回归、6项恢复回归通过，共316项；清理、导出、验证没有额外生成API请求。检查提交文件和压缩结果中是否含密钥及超大文件。实时日志/PID不纳入Git，实验快照放在reports显式版本管理。
 
-本次不修改已有暂存内容，不替换Git历史或远程地址，不自动提交或推送。工作区原有的源码改动、LICENSE删除等状态保持原样；当前工作区没有LICENSE文件，发布前需由维护者确认项目授权说明。
+远端使用private指向的wuhahaha888/moreagent；origin仍保留原上游地址。不改写远程历史、不强制推送、不覆盖队友提交。
 
-模型配置与主运行时源码保持不变。数据重建已改为读取本目录selection.json与原始MedQA，无需旧71题目录；runner-benchmark.json指纹保持不变。
+验证记录见[cleanup-validation-20261021.json](../reports/cleanup-validation-20261021.json)。
 
-Git只负责忽略未跟踪文件；曾被跟踪的IDE文件删除会显示在git diff中，需要最终提交时一并处理。
+## 历史归档
 
-完整归档位置与每个原路径见本机归档中的 `move-manifest.json`；恢复时按原相对路径拷回，不要覆盖正在运行的数据库或较新的源码。
-
-## 清理后验证
-
-222项MedQA离线测试及16项通用记忆回归全部通过，共238项。30题可在旧71题目录已移走后重建，加载器指纹保持不变；API配置静态检查通过。现有暂存补丁与当前实验运行时源码逐项校验未变。测试不额外调用生成API。
+2026-10-20清理的历史文件保存在`/data/wanghc/moreagent-cleanup-archive-20261020-172500`，原验证见reports/cleanup-validation-20261020.json。该历史归档继续保留；本次不重复清理数据或实验结果。

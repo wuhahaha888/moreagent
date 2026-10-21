@@ -1,0 +1,3 @@
+*.csv text eol=lf
+# Generated question Markdown intentionally ends with a separator blank line.
+experiments/datasets/medical-related-50-v2/*.md whitespace=-blank-at-eof

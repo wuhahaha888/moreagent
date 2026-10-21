@@ -1,0 +1,33 @@
+{
+  "policy": "Evaluator-only provenance. Online abstracts/search excerpts and available local textbook passages support answer concepts; not an independent clinical review. No source content is preloaded into agents or memory.",
+  "access_date": "2026-10-21",
+  "sources": {
+    "b12_nice": {"title":"NICE NG239: Vitamin B12 deficiency, recommendations", "url":"https://www.nice.org.uk/guidance/ng239/chapter/recommendations", "supports_zh":"不能仅凭无贫血或无大细胞化排除B12缺乏；需结合症状和适当检测。"},
+    "b12_merck": {"title":"Merck Manual: Megaloblastic Macrocytic Anemias", "url":"https://www.merckmanuals.com/professional/hematology/anemias-caused-by-deficient-erythropoiesis/megaloblastic-macrocytic-anemias", "supports_zh":"混合贫血及涂片、无效造血、MMA与叶酸通路鉴别。"},
+    "iron_inflammation": {"title":"Merck Manual: Anemia of Chronic Disease", "url":"https://www.merckmanuals.com/professional/hematology/anemias-caused-by-deficient-erythropoiesis/anemia-of-chronic-disease", "supports_zh":"炎症可影响铁蛋白；综合sTfR相关指标等寻找合并缺铁，不将任一指标当作绝对诊断。"},
+    "iron_merck": {"title":"Merck Manual: Iron Deficiency Anemia", "url":"https://www.merckmanuals.com/professional/hematology/anemias-caused-by-deficient-erythropoiesis/iron-deficiency-anemia", "supports_zh":"铁代谢组合及进行性缺铁性造血的判断。"},
+    "hs_genereviews": {"title":"GeneReviews: EPB42-Related Hereditary Spherocytosis", "url":"https://www.ncbi.nlm.nih.gov/books/NBK190102/", "supports_zh":"非免疫膜病、网织红细胞、叶酸需求及溶血/再障危象的区别；不把EPB42基因型直接当作所有HS的基因型。"},
+    "parvo_primary": {"title":"Human parvovirus infection and aplastic crisis in hereditary spherocytosis", "url":"https://pubmed.ncbi.nlm.nih.gov/6098618/", "supports_zh":"人细小病毒相关红系暂时停滞与球形红细胞病急性再障危象。"},
+    "warm_aiha": {"title":"Warm autoimmune hemolytic anemia and the best treatment strategies", "url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC9821065/", "supports_zh":"IgG、脾巨噬细胞膜移除和继发球形细胞。"},
+    "pseudo_tma": {"title":"CMAJ: Severe vitamin B12 deficiency causing pseudo-thrombotic microangiopathy", "url":"https://www.cmaj.ca/content/195/38/E1300", "supports_zh":"严重B12缺乏可伴裂红细胞、血小板低、极高LDH及不适当低网织红细胞；不建立临床上自动排除TTP的规则。"},
+    "hs_splenectomy": {"title":"Hereditary Spherocytosis", "url":"https://www.ncbi.nlm.nih.gov/books/NBK539797/", "supports_zh":"膜蛋白缺陷和脾清除、脾切除后的形态与临床效应。"},
+    "zinc_nih": {"title":"NIH Office of Dietary Supplements: Zinc, Health Professional Fact Sheet", "url":"https://ods.od.nih.gov/factsheets/Zinc-HealthProfessional/", "supports_zh":"长期锌过量可干扰铜吸收并出现血液和神经异常。"},
+    "copper_marrow": {"title":"Image Diagnosis: Zinc-Induced Copper Deficiency Causing Pancytopenia Recognized on Bone Marrow Examination", "url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC5283791/", "supports_zh":"肠细胞金属硫蛋白机制及前体细胞空泡等形态。"},
+    "nephrotic_thrombosis": {"title":"Thromboembolic complications in the nephrotic syndrome: pathophysiology and clinical management", "url":"https://pubmed.ncbi.nlm.nih.gov/15990160/", "supports_zh":"肾病综合征促凝、抗凝蛋白丢失和肾静脉血栓。"},
+    "c3_consensus": {"title":"C3 glomerulopathy: consensus report", "url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC3842953/", "supports_zh":"持续低C3、典型恢复期以外重新评价、C3肾炎因子和替代途径失调。"},
+    "ptu_vasculitis": {"title":"Propylthiouracil-Induced ANCA-Associated Vasculitis with Renal and Lung Involvement", "url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC9251458/", "supports_zh":"PTU、MPO-ANCA、寡免疫肾炎及肺出血的组合。"},
+    "anti_gbm": {"title":"Anti-Glomerular Basement Membrane Disease", "url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC5498345/", "supports_zh":"抗GBM病常见线状IgG，与其他肺肾病因区分。"},
+    "iga_review": {"title":"IgA Nephropathy", "url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC5383386/", "supports_zh":"同步性血尿与IgA优势系膜沉积。"},
+    "light_chain": {"title":"Bence-Jones Protein", "url":"https://www.ncbi.nlm.nih.gov/books/NBK541035/", "supports_zh":"轻链、溢出性蛋白尿及白蛋白试纸检测的局限。"},
+    "renal_amyloid": {"title":"Pathology and diagnosis of renal non-AL amyloidosis", "url":"https://pubmed.ncbi.nlm.nih.gov/28828707/", "supports_zh":"AL与非AL沉积的病理鉴别；需要染色和沉积物分型而非仅凭单克隆克隆诊断。"},
+    "nsaid_nephrotic": {"title":"NSAIDs and Nephrotic Syndrome", "url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC6730519/", "supports_zh":"NSAID相关间质炎伴微小病变，常缺乏典型全身过敏征。"},
+    "neonatal_endo": {"title":"Endotext: Neonatal Hyperthyroidism", "url":"https://www.ncbi.nlm.nih.gov/books/NBK279019/", "supports_zh":"母体药物与IgG不同持续时间、正常初测不能充分排除风险；持续抗体阴性病例考虑激活性TSHR变异。"},
+    "atd_safety": {"title":"2018 European Thyroid Association Guideline for the Management of Graves' Hyperthyroidism", "url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC6140607/", "supports_zh":"发热/咽炎时血象检查、重大抗甲状腺药不良反应停药及妊娠相关边界。"},
+    "postpartum_primary": {"title":"Differentiation of postpartum Graves' thyrotoxicosis from postpartum destructive thyrotoxicosis using TRAb and thyroid blood flow", "url":"https://pubmed.ncbi.nlm.nih.gov/24400892/", "supports_zh":"TRAb及多普勒血流对产后Graves与破坏性过程的鉴别。"},
+    "postpartum_endo": {"title":"Endotext: Postpartum Thyroiditis", "url":"https://www.ncbi.nlm.nih.gov/books/NBK278999/", "supports_zh":"破坏性激素释放与随后的低功能阶段。"},
+    "myxedema_ata": {"title":"ATA Guidelines for the Treatment of Hypothyroidism", "url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC4267409/", "supports_zh":"严重低功能的静脉甲状腺激素及先行糖皮质激素覆盖。"},
+    "myxedema_endo": {"title":"Endotext: Myxedema and Coma (Severe Hypothyroidism)", "url":"https://www.ncbi.nlm.nih.gov/books/NBK279007/", "supports_zh":"中枢性病例可TSH低或正常，严重病程需识别合并皮质醇不足。"},
+    "struma_endo": {"title":"Endotext: Thyrotoxicosis of other Etiologies", "url":"https://www.ncbi.nlm.nih.gov/books/NBK285562/", "supports_zh":"异位功能性甲状腺组织、低颈部摄取及甲状腺球蛋白的病因鉴别。"},
+    "struma_scan": {"title":"Iodine-131 Uptake Study", "url":"https://www.ncbi.nlm.nih.gov/books/NBK559283/", "supports_zh":"低颈部摄取可见于甲状腺炎、外源激素及异位功能组织，须定位来源。"}
+  }
+}

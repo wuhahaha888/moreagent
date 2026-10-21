@@ -1,4 +1,4 @@
-"""三 Agent 有界协作：程序预取记忆 → 规划 → 工具调查 → 核验回答 → 程序写记忆。"""
+"""三 Agent 有界协作；支持旧流程和先规划、按需求复用记忆的流程。"""
 import json
 import math
 import time
@@ -11,14 +11,15 @@ from ..agents.medqa_prompts import (
 from .usage import normalize_usage
 from .grounding import ContractError, identifiers, validate_plan
 from .answer_audit import validate_answer
-from .protocol import normalize_response
+from .protocol import normalize_response, parse_agent_output
 from .retrieval import digest
 from .memory import memory_embedding_text
-from .memory_units import build_units, embedding_text as unit_embedding_text, POLICY_VERSION as MEMORY_UNIT_POLICY
+from .memory_units import build_units, build_need_units, embedding_text as unit_embedding_text, POLICY_VERSION as MEMORY_UNIT_POLICY
 from .memory_selection import (previews, prefilter, select as select_memories, ReuseTrace,
     VERSION as SELECTION_VERSION, PLANNER_LIMIT, PLANNER_PREVIEW_CHARS)
 from .context import memory_view
-from .g2cp_profile import message
+from .acp import Session as ACPSession, Actor, Opcode, ACPError, COMMUNICATION_VERSION
+from .handoff import model_message, describe_output, prompts_for as handoff_prompts
 from .evidence_processor import EvidenceProcessor, validate_visible_quotes, validate_view
 from .evidence_handoff import build_handoff, visible_delta, VERSION as HANDOFF_VERSION
 from .task_state import TaskStates
@@ -26,6 +27,10 @@ from .budget import SearchBudget
 from .retrieval_policy import choose, query_key
 from .issues import Issue
 from .results import split_result, failure_results
+from .workspace import Workspace, RoleViewBuilder, role_prompts, VERSION as WORKSPACE_VERSION, POLICY as WORKSPACE_POLICY
+from .need_flow import (VERSION as NEED_FLOW_VERSION, need_query, select_sources, investigation_reviews,
+                        apply_investigation_reviews, reasoner_reviews, request_investigation, need_view, compact_memory_view,
+                        source_key, FRAGMENT_LIMIT, fragment_citations)
 
 PROTOCOL = "moreagent.medqa/6"
 ANSWER_POLICY = "best_effort_with_four_checks_v1"
@@ -67,12 +72,15 @@ def render_text(value, indent=0):
 
 class ChatRoles:
     """三个独立角色提示；相同模型设置；不为检索或记忆写入另开模型调用。"""
-    def __init__(self, model, profile="compact", output_policy="strict", memory_selection="legacy"):
+    def __init__(self, model, profile="compact", output_policy="strict", memory_selection="legacy", workspace_policy="legacy",
+                 workflow="legacy"):
         from ..agents.medqa_compact_prompts import COMPACT_ROLE_PROMPTS
         from ..agents.medqa_baseline_prompts import BASELINE_ROLE_PROMPTS
         if profile not in {"compact", "full"}:
             raise ValueError("未知上下文配置")
         self.model = model
+        self.workspace_policy = workspace_policy
+        self.workflow = workflow
         if output_policy == "decoupled":
             from ..agents.medqa_baseline_prompts import FOLLOWUP_RULES
             self.prompts = dict(BASELINE_ROLE_PROMPTS)
@@ -84,20 +92,28 @@ class ChatRoles:
         if memory_selection == "needs":
             from ..agents.medqa_memory_prompts import MEMORY_ROLE_PROMPTS
             self.prompts.update({role:MEMORY_ROLE_PROMPTS[role] for role in (PLANNER,INVESTIGATOR)})
+        if workflow == 'need_first':
+            from ..agents.medqa_need_first_prompts import PROMPTS
+            self.prompts = dict(PROMPTS)
 
     def call(self, role, payload, mode):
         return self.call_with_budget(role, payload, mode)
 
+    def prompts_for(self, mode):
+        prompts = handoff_prompts(self.prompts, mode)
+        return role_prompts(prompts) if mode == 'structured' and self.workspace_policy == WORKSPACE_POLICY else prompts
+
     def call_with_budget(self, role, payload, mode, *, remaining_seconds=None, remaining_tokens=None):
         from langchain_core.messages import HumanMessage, SystemMessage
-        text = compact(payload) if mode == "structured" else render_text(payload)
-        messages = [SystemMessage(content=self.prompts[role]), HumanMessage(content=text)]
+        text = model_message(payload, mode)
+        prompt = self.prompts_for(mode)[role]
+        messages = [SystemMessage(content=prompt), HumanMessage(content=text)]
         if hasattr(self.model, "invoke_bounded"):
             reply = self.model.invoke_bounded(messages, remaining_seconds=remaining_seconds,
                                               remaining_tokens=remaining_tokens)
         else:
             reply = self.model.invoke(messages)
-        usage = normalize_usage(reply, self.prompts[role] + text, reply.content)
+        usage = normalize_usage(reply, prompt + text, reply.content)
         details = getattr(reply, "response_metadata", {})
         usage.update(response_model=details.get("model", "unknown"), response_chars=len(reply.content))
         counts = details.get("token_usage", {})
@@ -115,7 +131,22 @@ class Runtime:
                  deadline_seconds=180, task_group="medqa", memory_write=True,
                  max_searches=6, max_reads=4, max_stalled_rounds=2,
                  evidence_processor=True, evidence_span_chars=1800, journal=None,
-                 output_policy="strict", memory_policy="strict", memory_selection="legacy", memory_recall_limit=10):
+                 output_policy="strict", memory_policy="strict", memory_selection="legacy", memory_recall_limit=10,
+                 workspace_policy="legacy", workflow="legacy", max_investigation_rounds=3):
+        if workflow not in {'legacy','need_first'}:
+            raise ValueError('未知执行流程')
+        if workflow == 'need_first' and (output_policy != 'decoupled' or memory_policy != 'basic' or memory_selection != 'needs'):
+            raise ValueError('先规划流程需要decoupled、basic及needs选择策略')
+        if type(max_investigation_rounds) is not int or not 1 <= max_investigation_rounds <= 3:
+            raise ValueError('调查轮数须为1至3')
+        self.need_first = workflow == 'need_first'
+        self.workflow, self.max_investigation_rounds = workflow, max_investigation_rounds
+        if workspace_policy not in {'legacy', WORKSPACE_POLICY}:
+            raise ValueError('未知共享工作状态策略')
+        if workspace_policy == WORKSPACE_POLICY and output_policy != 'decoupled':
+            raise ValueError('角色工作状态视图需要decoupled输出')
+        self.workspace_policy = workspace_policy
+        self.workspace_active = mode == 'structured' and workspace_policy == WORKSPACE_POLICY
         if output_policy not in {"strict", "decoupled"}:
             raise ValueError("未知输出策略")
         if memory_policy not in {"strict", "basic"}:
@@ -149,6 +180,7 @@ class Runtime:
         self.processor = EvidenceProcessor(enabled=evidence_processor, span_chars=evidence_span_chars,
             max_chars=max_evidence_chars, max_documents=max_evidence)
         self.journal = journal
+        self.communication = None
         self.output_policy = output_policy
         self.protocol, self.answer_policy = protocol_for(output_policy), answer_policy_for(output_policy)
         if output_policy == "decoupled":
@@ -160,24 +192,44 @@ class Runtime:
         if memory_selection=="needs":
             from ..agents.medqa_memory_prompts import MEMORY_ROLE_PROMPTS
             self.default_prompts = MEMORY_ROLE_PROMPTS
+        if self.need_first:
+            from ..agents.medqa_need_first_prompts import PROMPTS
+            self.default_prompts = PROMPTS
 
     def handshake(self):
         return {"protocol": self.protocol, "mode": self.mode, "context_profile": self.context_profile, "answer_policy": self.answer_policy,
+                "workspace": {"enabled":self.workspace_active, "policy":self.workspace_policy,
+                              "version":WORKSPACE_VERSION if self.workspace_active else None},
+                "workflow": {"policy":self.workflow, "version":NEED_FLOW_VERSION if self.need_first else None,
+                             "max_investigation_rounds":self.max_investigation_rounds if self.need_first else None},
+                "communication_version": COMMUNICATION_VERSION,
+                "communication": (self.communication.description() if self.communication else
+                    {"protocol": "natural_language" if self.mode == "text" else "ACP-1",
+                     "ready": [], "negotiation": "not_applicable" if self.mode == "text" else "at_task_start"}),
                 "output_policy": self.output_policy,
-                "agents": [{"id": role, "capabilities": (["plan_queries", "choose_query_conditions"]
+                "agents": [{"id": role, "capabilities": ({
+                    PLANNER:['propose_evidence_requirements'],
+                    INVESTIGATOR:['assess_memory_coverage','plan_queries','choose_query_conditions'],
+                    REASONER:['review_needs','answer','return_to_investigator']}[role] if self.need_first else
+                    ["plan_queries", "choose_query_conditions"]
                     if self.output_policy == "decoupled" and role == INVESTIGATOR else CAPABILITIES[role])} for role in ROLES],
                 "memory_service": {"is_llm_agent": False, "transport": "multiprocessing.Pipe", "state_format": "float32-le",
                                    "write_enabled": self.memory is not None and self.memory_write,
                                    "policy": self.memory_policy, "unit_schema": MEMORY_UNIT_POLICY if self.memory_policy=="basic" else "legacy_textbook_extract"},
-                "memory_selection":{"policy":self.memory_selection,"version":SELECTION_VERSION,
+                "memory_selection":{"policy":self.memory_selection,"version":NEED_FLOW_VERSION if self.need_first else SELECTION_VERSION,
+                    "ranking":"per_need_similarity_then_source_dedup_round_robin" if self.need_first else "legacy_need_rerank",
                     "coarse_limit":self.memory_recall_limit if self.memory_selection=="needs" else self.memory_limit,
                     "read_limit":self.memory_limit,
-                    "planner_limit":min(PLANNER_LIMIT,self.memory_limit) if self.memory_selection=='needs' else self.memory_limit,
-                    "preview_chars":min(PLANNER_PREVIEW_CHARS,self.memory_context_chars) if self.memory_selection=='needs' else self.memory_context_chars,
-                    "weights":[.45,.35,.20]},
+                    **({'source_limit':self.memory_limit,'fragment_limit':FRAGMENT_LIMIT,
+                        'preserve_same_source_fragments':True} if self.need_first else {}),
+                    "planner_limit":0 if self.need_first else min(PLANNER_LIMIT,self.memory_limit) if self.memory_selection=='needs' else self.memory_limit,
+                    "preview_chars":0 if self.need_first else min(PLANNER_PREVIEW_CHARS,self.memory_context_chars) if self.memory_selection=='needs' else self.memory_context_chars,
+                    "weights":None if self.need_first else [.45,.35,.20]},
                 "evidence_processor": {"enabled": self.processor.enabled, "span_chars": self.processor.span_chars},
-                "execution_path": "program_memory_by_id → Planner → program_read → Investigator → tools → Reasoner",
-                "optional_followup_limit": 1 if self.output_policy == "decoupled" else None,
+                "execution_path": ("Planner → need_memory_read → Investigator_coverage → tools → Reasoner_need_review → optional_Investigator"
+                                   if self.need_first else "program_memory_by_id → Planner → program_read → Investigator → tools → Reasoner"),
+                "optional_followup_limit": (self.max_investigation_rounds-1 if self.need_first else
+                                            1 if self.output_policy == "decoupled" else None),
                 "followup_handoff": {"version": HANDOFF_VERSION, "allocation": "gap_and_key_citations",
                                      "requires_new_visible_text": True},
                 "limits": {"model_calls": self.max_calls, "policy": "adaptive",
@@ -194,6 +246,9 @@ class Runtime:
                  "memory_hits": [], "findings": [], "gaps": [], "feedback": {}, "tool_results": {},
                  "phase": "investigation", "attempted_queries": [], "task_status": {}, "conflicts": [],
                  "unmapped_condition_ids": [], "evidence_index": []}
+        workspace = Workspace(question.public(), state) if self.workspace_active else None
+        self.workspace = workspace
+        view_builder = RoleViewBuilder() if workspace else None
         metrics = {key: 0 for key in (
             "model_calls", "messages", "communication_chars", "request_chars", "response_chars",
             "request_bytes", "response_bytes", "system_chars", "system_bytes", "protocol_control_chars", "protocol_control_bytes", "protocol_maps",
@@ -214,9 +269,44 @@ class Runtime:
         metrics["memory_written_by_kind"] = {k:0 for k in ("evidence","strategy","episode")}
         metrics["memory_experience_reads"] = 0
         metrics['memory_source_check_attempts']=0
+        metrics.update(workspace_views=0, workspace_input_bytes_before=0, workspace_input_bytes_after=0,
+                       workspace_brief_views=0, workspace_patch_count=0)
+        metrics.update(investigation_rounds=0, queries_skipped_covered=0, memory_only_supported_tasks=0,
+                       memory_evidence_presented=0, memory_covered_needs=0, needs_review_errors=0,
+                       knowledge_needs=0,memory_supported_needs=0)
+        metrics.update(memory_fragment_valid=0,memory_source_cache_hits=0,memory_candidate_sources=0)
         reuse_trace=ReuseTrace()
         planner_presented=set()
         events, evidence, memory_candidates, memory_sources, visited = [], {}, {}, {}, set()
+        if workspace:
+            evidence = workspace.evidence
+        handoffs = []
+        transport = ACPSession(int(digest(trace)[:8],16) or 1,
+            embedding_model=getattr(self.embedder,'cache_key','fixture'),memory_enabled=self.memory is not None) if self.mode=='structured' else None
+        self.communication = transport
+        if transport:
+            events.append({'tool':'acp_handshake',**transport.description()})
+            def searched(query,top_k):
+                if top_k!=getattr(self.textbooks,'top_k',4):raise ACPError('ACP top_k与冻结工具配置不一致')
+                return self.textbooks.search(query)
+            transport.bind(Actor.TEXTBOOKS,Opcode.SEARCH,searched)
+            transport.bind(Actor.TEXTBOOKS,Opcode.READ_SOURCE,self.textbooks.read)
+            transport.bind(Actor.RUNTIME,Opcode.BATCH,transport.accept_batch)
+            if self.memory is not None:
+                def recalled(values, params):
+                    return self.memory.recall(values,params['trace'],params['version'],params['threshold'],
+                        limit=params['limit'],task_group=params['task_group'],
+                        **({'kinds':params['kinds']} if params.get('kinds') else {}),
+                        **({'diversify':False} if params.get('diversify') is False else {}),
+                        **({'preserve_fragments':True} if params.get('preserve_fragments') else {}))
+                transport.bind(Actor.MEMORY,Opcode.RECALL,recalled)
+                if hasattr(self.memory,'resolve'):
+                    transport.bind(Actor.MEMORY,Opcode.READ_MEMORY,
+                        lambda ids:self.memory.resolve(ids,trace,self.textbooks.version,task_group=self.task_group))
+                if hasattr(self.memory,'put_unit'):
+                    transport.bind(Actor.MEMORY,Opcode.PUT_UNIT,lambda unit,values:self.memory.put_unit(unit,values,trace))
+                transport.bind(Actor.MEMORY,Opcode.PUT_DOCUMENT,
+                    lambda doc,values,metadata:self.memory.put(doc,values,trace,**metadata))
         attempted_reads, history, targets, expanded, protected_quotes = set(), [], {}, set(), {}
         task_states, last_view, repair_fingerprints = TaskStates([]), {}, set()
         processing_cache = {}
@@ -231,15 +321,73 @@ class Runtime:
         final = None
         retained_result, retained_output = None, None
         followup_view, followup_previous_view = None, None
+        pending_investigation, previous_reasoner_view = None, None
+        memory_need_rankings = {}
+        memory_accepted_ids = set()
+        memory_source_cache = {}
 
         def operation(kind, request, callback):
             return self.journal.execute(kind, request, callback) if self.journal else callback()
+
+        def search_tool(query):
+            if transport:
+                return transport.call(Actor.INVESTIGATOR,Actor.TEXTBOOKS,Opcode.SEARCH,
+                    (transport.put('query',query),getattr(self.textbooks,'top_k',4)))
+            return self.textbooks.search(query)
+
+        def read_source(ident):
+            if transport:
+                return transport.call(Actor.RUNTIME,Actor.TEXTBOOKS,Opcode.READ_SOURCE,(transport.put('source',ident),))
+            return self.textbooks.read(ident)
+
+        def recall_memories(values, limit, kinds):
+            if transport:
+                params={'trace':trace,'version':self.textbooks.version,'threshold':self.memory_threshold,
+                    'limit':limit,'task_group':self.task_group,'kinds':kinds,'diversify':self.memory_selection!='needs'}
+                if self.need_first:params['preserve_fragments']=True
+                return transport.call(Actor.RUNTIME,Actor.MEMORY,Opcode.RECALL,
+                    (transport.publish_vector(values),transport.put('recall_parameters',params)))
+            return self.memory.recall(values,trace,self.textbooks.version,self.memory_threshold,
+                limit=limit,task_group=self.task_group,**({'kinds':kinds} if kinds else {}),
+                **({'diversify':False} if self.memory_selection=='needs' else {}),
+                **({'preserve_fragments':True} if self.need_first else {}))
+
+        def resolve_memories(ids):
+            if transport:
+                return transport.call(Actor.RUNTIME,Actor.MEMORY,Opcode.READ_MEMORY,(transport.put('memory_ids',ids),))
+            return self.memory.resolve(ids,trace,self.textbooks.version,task_group=self.task_group)
+
+        def put_document(doc,values,**metadata):
+            if transport:
+                return transport.call(Actor.RUNTIME,Actor.MEMORY,Opcode.PUT_DOCUMENT,
+                    (transport.put('document',doc),transport.publish_vector(values),transport.put('metadata',metadata)))
+            return self.memory.put(doc,values,trace,**metadata)
+
+        def put_unit(unit,values):
+            if transport:
+                return transport.call(Actor.RUNTIME,Actor.MEMORY,Opcode.PUT_UNIT,
+                    (transport.put('memory_unit',unit),transport.publish_vector(values)))
+            return self.memory.put_unit(unit,values,trace)
+
+        def record_prose(role,output):
+            if self.mode!='text':return
+            prose,rendered=describe_output(role,output)
+            handoffs[:]=[h for h in handoffs if h['role']!=role]
+            handoffs.append({'role':role,'text':prose})
+            events.append({'tool':'natural_language_handoff','from_agent':role,'text':prose,
+                           'model_authored':not rendered,'template_rendered':rendered})
 
         def persist_state(trigger):
             if self.journal:
                 self.journal.snapshot(trigger, {"state": state, "task_states": task_states.items,
                     "transitions": task_states.transitions, "history": history, "seen_sources": sorted(evidence),
                     "targets": targets, "expanded": sorted(expanded), "repair_fingerprints": sorted(repair_fingerprints),
+                    "natural_handoffs": deepcopy(handoffs),
+                    **({'need_flow':{'version':NEED_FLOW_VERSION,'pending_investigation':pending_investigation,
+                         'accepted_memory_ids':sorted(memory_accepted_ids),'rounds':metrics['investigation_rounds'],
+                         'source_cache_keys':[list(k) for k in sorted(memory_source_cache)]}}
+                       if self.need_first else {}),
+                    **({'workspace':workspace.snapshot()} if workspace else {}),
                     "resources": {k: metrics[k] for k in ("model_calls", "total_tokens", "retrieval_count", "document_reads", "stalled_rounds")}})
 
         def stop(status, reason):
@@ -294,8 +442,9 @@ class Runtime:
             return {"model_calls_remaining": self.max_calls - metrics["model_calls"],
                     "search_calls_remaining": self.limits.max_searches - metrics["retrieval_count"],
                     "document_reads_remaining": self.limits.max_reads - metrics["document_reads"],
-                    "can_investigate": (self.max_calls - metrics["model_calls"] >= (2 if self.output_policy == "decoupled" else 3)
-                        and (self.output_policy != "decoupled" or metrics["followup_rounds"] < 1)
+                    "can_investigate": (self.max_calls - metrics["model_calls"] >= (3 if self.need_first else 2 if self.output_policy == "decoupled" else 3)
+                        and (metrics['investigation_rounds'] < self.max_investigation_rounds if self.need_first
+                             else self.output_policy != "decoupled" or metrics["followup_rounds"] < 1)
                         and ((metrics["retrieval_count"] < self.limits.max_searches
                               and metrics["stalled_rounds"] < self.limits.max_stalled_rounds)
                              or (self.output_policy == "decoupled" and self.memory is not None
@@ -326,7 +475,17 @@ class Runtime:
                 relevant = set(state["feedback"].get("evidence_ids", [])) | set(protected)
                 if self.output_policy == "decoupled":
                     relevant |= set(memory_sources.values())
+                if self.need_first and pending_investigation:
+                    relevant |= {source for need_id in pending_investigation['need_ids']
+                                 for source in task_states.items[need_id].get('evidence_ids', [])}
                 docs = {i: d for i, d in evidence.items() if i in relevant}
+            elif self.need_first and role == REASONER:
+                accepted_sources = {memory_sources[i] for i in memory_accepted_ids}
+                searched_sources = {i for h in history for i in h.get('evidence_ids', [])}
+                anchors = ({c['evidence_id'] for c in retained_result['evidence_result']['citations']
+                            if c.get('source_verified') and c.get('visible')} if followup_view is not None and retained_result else set())
+                docs = {i:d for i,d in evidence.items() if i not in memory_sources.values()
+                        or i in accepted_sources or i in searched_sources or i in anchors}
             short_memory_view = self.output_policy == "decoupled" and role == INVESTIGATOR
             request = {"documents": docs, "query": question.question + " " + " ".join(t["goal"] for t in state["knowledge_tasks"]),
                        "targets": targets, "protected": protected, "expanded": sorted(expanded),
@@ -334,6 +493,10 @@ class Runtime:
                        "max_chars": self.processor.max_chars, "max_documents": self.processor.max_documents}
             if short_memory_view:
                 request.update(span_chars=min(600, self.processor.span_chars), max_chars=min(2400, self.processor.max_chars))
+            if self.need_first and self.processor.enabled and role != PLANNER:
+                searched = {i for h in history for i in h.get('evidence_ids',[])}
+                request['excerpt_only'] = {source:protected_quotes.get(source,[]) for source in memory_sources.values()
+                                          if source in docs and source not in searched and source not in expanded}
             cache_key = digest(compact(request))
             if role == REASONER and followup_view is not None:
                 last_view = deepcopy(followup_view)
@@ -341,11 +504,19 @@ class Runtime:
                 processor = EvidenceProcessor(enabled=request["enabled"], span_chars=request["span_chars"],
                     max_chars=request["max_chars"], max_documents=request["max_documents"])
                 processing_cache[cache_key] = operation("evidence_view", request, lambda: processor.process(docs,
-                    query=request["query"], targets=targets, protected=protected, expanded=expanded))
+                    query=request["query"], targets=targets, protected=protected, expanded=expanded,
+                    excerpt_only=request.get('excerpt_only')))
                 metrics["evidence_processor_seconds"] += processing_cache[cache_key]["cpu_seconds"]
                 last_view = deepcopy(processing_cache[cache_key])
             else:
                 last_view = deepcopy(processing_cache[cache_key])
+            if self.need_first and self.processor.enabled and role != PLANNER:
+                searched = {i for h in history for i in h.get('evidence_ids',[])}
+                excerpts = {source:protected_quotes.get(source,[]) for source in memory_sources.values()
+                            if source in docs and source not in searched and source not in expanded}
+                if excerpts:
+                    last_view = operation('need_memory_view',{'view':last_view,'documents':docs,'excerpts':excerpts},
+                                          lambda:compact_memory_view(last_view,docs,excerpts))
             validate_view(last_view, docs)
             state["evidence_pool"] = last_view["views"]
             state["evidence_deferred"] = last_view["omitted"]
@@ -360,14 +531,14 @@ class Runtime:
                 state["evidence_index"] = [d for d in state["evidence_index"] if d["id"] not in last_view["visible"]]
             payload = {key: deepcopy(state[key]) for key in MEDQA_INPUT_FIELDS[role]}
             payload["memory_hits"] = memory_view(role, state["memory_hits"], evidence)
-            if role==PLANNER and self.memory_selection=="needs":
+            if role==PLANNER and self.memory_selection=="needs" and not self.need_first:
                 payload["memory_hits"],ranking=planner_memories()
                 events.append({'tool':'memory_prefilter','version':SELECTION_VERSION,
                     'coarse_ids':sorted(memory_candidates),'ranking':ranking,
                     'presented_ids':[h['id'] for h in payload['memory_hits']],
                     'scope':'literal_metadata_and_weak_intent; not_clinical_verification'})
             if self.output_policy == "decoupled" and role != PLANNER:
-                payload["memory_hits"] = [({k: h[k] for k in ("id", "source_id", "status")}
+                payload["memory_hits"] = [({k: h[k] for k in ("id", "source_id", "status", "knowledge_task_ids") if k in h}
                     if h["status"] == "source_checked_not_semantically_verified" else h)
                     for h in payload["memory_hits"] if h["status"] in {"source_checked_not_semantically_verified","experience_observation"}]
                 # Preserve the question/options and actual evidence; omit execution-only maps/history.
@@ -381,28 +552,33 @@ class Runtime:
                 payload["feedback"] = {k: v for k, v in payload["feedback"].items()
                                        if k not in {"contract_error", "contract_agent", "previous_output", "instruction"}}
             # 新结构不重复传candidate与审核原文；所有角色保留其真实需要的材料。
+            if self.mode=='text':
+                payload['_natural_handoffs']=deepcopy(handoffs)
+            if self.need_first and role != PLANNER:
+                payload['need_status'] = need_view(task_states)
+                payload['active_need_ids'] = (pending_investigation['need_ids'] if pending_investigation
+                                              else list(task_states.items))
             return payload
 
-        def prefetch(*, focus=None):
+        def prefetch(*, focus=None, need=None):
             if self.memory is None:
                 return []
             metrics["memory_queries"] += 1
-            memory_question = focus or question.question
-            if self.memory_policy=="basic" and not focus:
+            memory_question = need_query(need,state['key_conditions']) if need else focus or question.question
+            if self.memory_policy=="basic" and not focus and not need:
                 # Short stems often place the useful clinical concepts in the options.
                 # Include all options equally; the grading answer is never available here.
                 memory_question += "\nOptions:\n" + "\n".join(f"{k}: {v}" for k,v in question.options.items())
             try:
                 values = self.embedder.embed_text(self.task_group + "\n" + memory_question)
-                kinds = (["evidence"] if focus else ["evidence","strategy","episode"]) if self.memory_policy=="basic" else None
+                kinds = (["evidence"] if focus or need else ["evidence","strategy","episode"]) if self.memory_policy=="basic" else None
                 recall_limit=self.memory_recall_limit if self.memory_selection=="needs" and not focus else self.memory_limit
                 hits = operation("memory_prefetch", {"trace": trace, "corpus": self.textbooks.version,
                     "threshold": self.memory_threshold, "limit": recall_limit, "task_group": self.task_group,
                     "question": memory_question, "embedding": getattr(self.embedder, "cache_key", "fixture"), "kinds":kinds,
-                    "diversify":self.memory_selection!='needs'},
-                    lambda: self.memory.recall(values, trace, self.textbooks.version, self.memory_threshold,
-                                              limit=recall_limit, task_group=self.task_group, **({"kinds":kinds} if kinds else {}),
-                                              **({'diversify':False} if self.memory_selection=='needs' else {})))
+                    "diversify":self.memory_selection!='needs',
+                    **({'preserve_fragments':True} if self.need_first else {}), **({'need_id':need['id']} if need else {})},
+                    lambda: recall_memories(values,recall_limit,kinds))
             except Exception as exc:
                 if self.journal and self.journal.fatal_error:
                     raise
@@ -413,10 +589,15 @@ class Runtime:
             for hit in hits:
                 content = hit.get("content", {})
                 experience = self.memory_policy=="basic" and hit.get("kind") in {"strategy","episode"}
+                if need and experience:
+                    continue
                 if (not isinstance(hit.get("id"), str) or content.get("corpus_version") != self.textbooks.version
                         or (not experience and not isinstance(content.get("id"), str))):
                     continue
                 if hit["id"] in memory_candidates:
+                    if need:
+                        candidate = next(c for c in state['memory_hits'] if c['id']==hit['id'])
+                        candidate['knowledge_task_ids'] = sorted(set(candidate.get('knowledge_task_ids',[])) | {need['id']})
                     selected.append(hit["id"])
                     continue
                 candidate = {"id": hit["id"], "summary": str(hit.get("summary", ""))[:240 if self.memory_policy=="basic" else 600],
@@ -428,6 +609,8 @@ class Runtime:
                              "retrieval_queries": content.get("retrieval_queries", [])[:2],
                              "execution_feedback": content.get("execution_feedback", [])[:2]}
                 if self.memory_selection=="needs":candidate['task_topic']=str(hit.get('task_topic',''))[:240]
+                if need:
+                    candidate['knowledge_task_ids'] = [need['id']]
                 if self.memory_selection=="legacy" and focus is None and len(compact([*state["memory_hits"], candidate])) > self.memory_context_chars:
                     continue
                 memory_candidates[hit["id"]] = deepcopy(hit)
@@ -435,13 +618,41 @@ class Runtime:
                 state["memory_hits"].append(candidate)
                 selected.append(hit["id"])
             metrics["memory_candidates"] = len(memory_candidates)
+            if self.need_first:
+                metrics['memory_candidate_sources'] = len({source_key(h) for h in memory_candidates.values()})
             metrics["memory_candidates_by_kind"] = {k:sum(("evidence" if h.get("kind","textbook_extract")=="textbook_extract" else h.get("kind"))==k
                 for h in memory_candidates.values()) for k in ("evidence","strategy","episode")}
-            events.append({"tool": "memory_prefetch", "before_agent": REASONER if focus else PLANNER,
-                           "stage": "followup" if focus else "initial", "candidate_ids": selected,
+            events.append({"tool": "memory_prefetch", "before_agent": INVESTIGATOR if need else REASONER if focus else PLANNER,
+                           "stage": "need" if need else "followup" if focus else "initial", "candidate_ids": selected,
+                           **({'need_id':need['id']} if need else {}),
                            "context_chars": len(compact(planner_memories()[0]
                             if self.memory_selection=='needs' and not focus else state["memory_hits"]))})
             return selected
+
+        def prepare_need_memories(need_ids=None):
+            if self.memory is None:
+                return
+            for need in state['knowledge_tasks']:
+                if need_ids is None or need['id'] in need_ids:
+                    memory_need_rankings[need['id']] = prefetch(need=need)
+            # Distinct-source reads and memory IDs have independent global limits.
+            remaining = max(0, min(self.memory_limit-len(memory_source_cache), self.limits.max_reads - metrics['document_reads']))
+            available = {k:[i for i in ids if i not in attempted_reads] for k,ids in memory_need_rankings.items()
+                         if need_ids is None or k in need_ids}
+            selected = select_sources(available, memory_candidates, remaining,known_sources=memory_source_cache,
+                                      fragment_limit=max(0,FRAGMENT_LIMIT-len(attempted_reads)))
+            for ident in selected:
+                mapped = [k for k,ids in memory_need_rankings.items() if ident in ids]
+                state['memory_assessments'] = [a for a in state['memory_assessments'] if a['memory_id'] != ident]
+                state['memory_assessments'].append({'memory_id':ident,'decision':'read',
+                    'reason':'need_index_candidate_for_investigator_review','knowledge_task_ids':mapped})
+            events.append({'tool':'need_memory_selection','need_ids':list(need_ids or task_states.items),
+                           'selected_ids':selected,'semantic_coverage':'not_assessed',
+                           'source_count':len({source_key(memory_candidates[i]) for i in selected}),
+                           'fragment_count':len(selected)})
+            if selected:
+                read_memory({'read_memory':{'memory_ids':selected}}, automatic=True)
+                persist_state('need_memories_prepared')
 
         def reserve_followup(request):
             if not isinstance(request, dict) or not all(isinstance(request.get(k), str) and request[k].strip()
@@ -526,6 +737,18 @@ class Runtime:
                 if not isinstance(item.get("expected_information"), str) or not item["expected_information"].strip():
                     raise ContractError("查询必须给出预期信息")
                 requested = identifiers(item.get("knowledge_task_ids"), task_states.items)
+                if self.need_first and pending_investigation and not requested <= set(pending_investigation['need_ids']):
+                    raise ContractError('返回调查的查询只能针对明确重新打开的需求')
+                if self.need_first and all(task_states.items[i]['support']=='supported'
+                        or task_states.items[i].get('coverage')=='covered' for i in requested):
+                    observation = {'query':query, 'skipped':True, 'decision':'skip_covered',
+                                   'knowledge_task_ids':sorted(requested), 'evidence_ids':[]}
+                    observations[plan_id] = observation
+                    batches.append(observation)
+                    metrics['queries_filtered'] += 1
+                    metrics['queries_skipped_covered'] += 1
+                    events.append({'tool':'query_decision', **observation})
+                    continue
                 strategy_ids=item.get('strategy_memory_ids',[])
                 available_strategies={h['id'] for h in state['memory_hits']
                     if h.get('kind')=='strategy' and h.get('status')=='experience_observation'}
@@ -542,7 +765,8 @@ class Runtime:
                     available_inputs={f["id"] for f in state["findings"]},
                     remaining=self.limits.max_searches - metrics["retrieval_count"],
                     stalled=metrics["stalled_rounds"], limits=self.limits,
-                    reopen=self.output_policy == "decoupled" or any(c["status"] == "unresolved" for c in state["conflicts"]))
+                    reopen=(not self.need_first and (self.output_policy == "decoupled"
+                            or any(c["status"] == "unresolved" for c in state["conflicts"]))))
                 if out_of_budget():
                     action, reason = "stop_resource", "resource_exhausted"
                 if action != "execute":
@@ -569,7 +793,7 @@ class Runtime:
                         "candidates": getattr(self.textbooks, "candidates", None),
                         "top_k": getattr(self.textbooks, "top_k", None),
                         "attempt": sum(query_key(h["query"]) == query_key(query) for h in history)}
-                    documents = operation("search_textbooks", request_key, lambda: self.textbooks.search(query))
+                    documents = operation("search_textbooks", request_key, lambda: search_tool(query))
                     if not documents:
                         metrics["search_empty"] += 1
                     accepted = []
@@ -633,6 +857,8 @@ class Runtime:
             request = output.get("search")
             if isinstance(request, dict) and request.get("queries") == []:
                 return REASONER
+            if transport:
+                output=transport.map_tool_plan(output)
             return search(output)
 
         def expand_evidence(output):
@@ -650,7 +876,93 @@ class Runtime:
             events.append({"tool": "expand_evidence", "evidence_ids": sorted(new)})
             return True
 
+        def read_need_memory(output):
+            """Resolve each memory ID, but fetch/check each source version once."""
+            chosen = identifiers((output.get('read_memory') or {}).get('memory_ids'),memory_candidates)
+            if chosen & attempted_reads or len(chosen)+len(attempted_reads)>FRAGMENT_LIMIT:
+                raise ContractError('记忆片段回读重复或超过片段总预算')
+            results = []
+            resolved = None
+            if chosen and hasattr(self.memory,'resolve'):
+                try:
+                    records = operation('resolve_memory',{'ids':sorted(chosen),'corpus':self.textbooks.version,
+                        'task_group':self.task_group},lambda:resolve_memories(sorted(chosen)))
+                    resolved = {r['id']:r for r in records}
+                    events.append({'tool':'resolve_memory','memory_ids':sorted(chosen),'resolved_ids':sorted(resolved)})
+                except Exception:
+                    if self.journal and self.journal.fatal_error:raise
+                    metrics['memory_read_errors'] += 1
+                    resolved = {}
+            for ident in sorted(chosen):
+                if out_of_budget():break
+                assessment = next(a for a in state['memory_assessments'] if a['memory_id']==ident)
+                attempted_reads.add(ident)
+                hit = memory_candidates[ident]
+                reuse_trace.mark('selected',ident,hit)
+                try:
+                    record = resolved.get(ident) if resolved is not None else hit
+                    if record is None or any(record.get('content',{}).get(k)!=hit['content'].get(k)
+                                             for k in ('id','sha256','corpus_version')):
+                        raise ValueError('memory_reference_unavailable_or_changed')
+                    if hit.get('content_hash') is not None and record.get('content_hash')!=hit['content_hash']:
+                        raise ValueError('memory_content_changed')
+                    key = source_key(record)
+                    used_cache = key in memory_source_cache
+                    if not used_cache:
+                        if len(memory_source_cache)>=self.memory_limit:
+                            raise ValueError('memory_source_budget_exhausted')
+                        try:
+                            metrics['memory_source_check_attempts'] += 1
+                            source = evidence.get(key[0])
+                            if source is None:
+                                if metrics['document_reads']>=self.limits.max_reads:
+                                    raise ValueError('document_read_budget_exhausted')
+                                metrics['document_reads'] += 1
+                                source = operation('read_source',{'id':key[0],'corpus':self.textbooks.version},
+                                                   lambda:read_source(key[0]))
+                            if source['sha256']!=key[1]:raise ValueError('source_changed')
+                            add_document(source)
+                            memory_source_cache[key] = {'document':evidence[key[0]]}
+                        except Exception as exc:
+                            if self.journal and self.journal.fatal_error:raise
+                            metrics['source_read_errors'] += 1
+                            memory_source_cache[key] = {'error':getattr(exc,'tool_error_type',type(exc).__name__)}
+                    cached = memory_source_cache[key]
+                    if 'error' in cached:raise ValueError(cached['error'])
+                    source = cached['document']
+                    quotes = record['content'].get('excerpts',[])
+                    if not isinstance(quotes,list) or any(not isinstance(q,str) or not q or q not in source['text'] for q in quotes):
+                        raise ValueError('memory_excerpt_not_in_source')
+                    if used_cache:metrics['memory_source_cache_hits'] += 1
+                    reuse_trace.mark('resolved',ident,hit)
+                    memory_sources[ident] = source['id']
+                    protected_quotes[source['id']] = list(dict.fromkeys([
+                        *protected_quotes.get(source['id'],[]),*quotes]))
+                    targets[source['id']] = sorted(set(targets.get(source['id'],[])) | set(assessment['knowledge_task_ids']))
+                    links = state.setdefault('memory_fragments',{})
+                    links[ident] = {'source_id':source['id'],'source_sha256':source['sha256'],
+                        'knowledge_task_ids':list(assessment['knowledge_task_ids']),
+                        'spans':[{'start':source['text'].find(q),'end':source['text'].find(q)+len(q)} for q in quotes]}
+                    for candidate in state['memory_hits']:
+                        if candidate['id']==ident:
+                            candidate['status']='source_checked_not_semantically_verified'
+                    results.append({'memory_id':ident,'evidence_id':source['id'],'source_cache_hit':used_cache})
+                except Exception as exc:
+                    if self.journal and self.journal.fatal_error:raise
+                    metrics['memory_read_errors'] += 1
+                    for candidate in state['memory_hits']:
+                        if candidate['id']==ident:candidate['status']='source_unavailable'
+                    results.append({'memory_id':ident,'error':type(exc).__name__})
+            metrics['memory_source_valid'] = len(set(memory_sources.values()))
+            metrics['memory_fragment_valid'] = len(memory_sources)
+            state['tool_results'] = {'memory_reads':results}
+            events.append({'tool':'read_memory','automatic':True,'results':deepcopy(results),
+                           'source_count':metrics['memory_source_valid'],'fragment_count':len(memory_sources)})
+            return REASONER
+
         def read_memory(output, *, automatic=False):
+            if self.need_first:
+                return read_need_memory(output)
             request = output.get("read_memory") or {}
             chosen = identifiers(request.get("memory_ids"), memory_candidates)
             if chosen & attempted_reads:
@@ -668,8 +980,7 @@ class Runtime:
             if automatic and chosen and hasattr(self.memory, "resolve"):
                 try:
                     records = operation("resolve_memory", {"ids": sorted(chosen), "corpus": self.textbooks.version,
-                        "task_group": self.task_group}, lambda: self.memory.resolve(sorted(chosen), trace,
-                            self.textbooks.version, task_group=self.task_group))
+                        "task_group": self.task_group}, lambda: resolve_memories(sorted(chosen)))
                     resolved = {r["id"]: r for r in records}
                     events.append({"tool": "resolve_memory", "memory_ids": sorted(chosen), "resolved_ids": sorted(resolved)})
                 except Exception:
@@ -721,7 +1032,7 @@ class Runtime:
                             raise ValueError("memory_reference_unavailable_or_changed")
                         hit = record
                     source = operation("read_source", {"id": hit["content"]["id"], "corpus": self.textbooks.version},
-                        lambda: self.textbooks.read(hit["content"]["id"]))
+                        lambda: read_source(hit["content"]["id"]))
                     if source["sha256"] != hit["content"]["sha256"]:
                         raise ValueError("source_changed")
                     accepted = add_document(source)
@@ -737,6 +1048,10 @@ class Runtime:
                 if accepted:
                     reuse_trace.mark('resolved',ident,hit)
                     memory_sources[ident] = source["id"]
+                    if self.need_first:
+                        protected_quotes.setdefault(source['id'], [])
+                        protected_quotes[source['id']] = list(dict.fromkeys([
+                            *protected_quotes[source['id']], *hit['content'].get('excerpts', [])]))[:3]
                     targets.setdefault(source["id"], [])
                     targets[source["id"]] = sorted(set(targets[source["id"]]) | set(assessment["knowledge_task_ids"]))
                     for candidate in state["memory_hits"]:
@@ -861,8 +1176,66 @@ class Runtime:
             persist_state("optional_followup_completed")
             return True
 
+        def return_to_investigator(output, usage):
+            nonlocal pending_investigation, previous_reasoner_view, followup_view
+            request = request_investigation(output, task_states.items)
+            if request is None:
+                return False
+            reason = None
+            if retained_result is None:
+                reason = 'missing_current_answer'
+            elif usage.get('source') not in {'model','fixture'} or usage.get('finish_reason') == 'length':
+                reason = 'usage_unknown_or_truncated'
+            elif metrics['investigation_rounds'] >= self.max_investigation_rounds:
+                reason = 'investigation_round_limit'
+            elif self.max_calls - metrics['model_calls'] < 2 or out_of_budget():
+                reason = 'investigator_and_reasoner_budget_unavailable'
+            if reason:
+                events.append({'tool':'followup_decision','decision':'skip','reason':reason})
+                return False
+            previous_reasoner_view = deepcopy(last_view)
+            pending_investigation = request
+            followup_view = None
+            state['feedback'] = {'gap':request['gap'],'expected_information':request['expected_information'],
+                'reopen_need_ids':request['need_ids'],'previous_answer':retained_result['answer'],
+                'instruction':'仅调查明确缺口；既有答案为待复核假设。'}
+            metrics['followup_rounds'] += 1
+            events.append({'tool':'followup_decision','decision':'execute','target_agent':INVESTIGATOR,
+                           'need_ids':request['need_ids'],'gap':request['gap']})
+            prepare_need_memories(request['need_ids'])
+            persist_state('reasoner_returned_to_investigator')
+            return True
+
+        def prepare_return_view(output):
+            nonlocal followup_view, followup_previous_view
+            request = {**pending_investigation,'knowledge_task_ids':pending_investigation['need_ids'],
+                       'evidence_ids':[], 'queries':(output.get('search') or {}).get('queries',[])}
+            accepted_sources = {memory_sources[i] for i in memory_accepted_ids}
+            searched_sources = {i for h in history for i in h.get('evidence_ids',[])}
+            anchors = {c['evidence_id'] for c in retained_result['evidence_result']['citations']
+                       if c.get('source_verified') and c.get('visible')}
+            documents = {i:d for i,d in evidence.items() if i not in memory_sources.values()
+                         or i in accepted_sources or i in searched_sources or i in anchors}
+            handoff = {'documents':documents,'previous':previous_reasoner_view,
+                       'citations':retained_result['evidence_result']['citations'],'request':request,
+                       'question':question.question,'targets':targets,'conflicts':state['conflicts']}
+            prepared = operation('need_followup_handoff',handoff,lambda:build_handoff(self.processor,documents,
+                previous=previous_reasoner_view,citations=handoff['citations'],request=request,
+                question=question.question,targets=targets,conflicts=state['conflicts']))
+            validate_view(prepared,documents)
+            delta = visible_delta(prepared,previous_reasoner_view,evidence)
+            events.append({'tool':'evidence_handoff',**deepcopy(prepared['handoff'])})
+            if not delta['characters']:
+                events.append({'tool':'answer_preserved','reason':'followup_no_new_visible_evidence'})
+                return False
+            followup_view,followup_previous_view = prepared,deepcopy(previous_reasoner_view)
+            state['feedback']['investigation_completed'] = True
+            state['feedback']['new_visible_evidence_ids'] = delta['evidence_ids']
+            return True
+
         try:
-            prefetch()
+            if not self.need_first:
+                prefetch()
             role = PLANNER
             while final is None:
                 exhausted = out_of_budget()
@@ -874,8 +1247,16 @@ class Runtime:
                     final = stop("budget_exhausted", "剩余调用不足以完成调查与核验")
                     break
                 payload = payload_for(role)
-                wire = compact(payload) if self.mode == "structured" else render_text(payload)
-                prompts = getattr(self.agents, "prompts", self.default_prompts)
+                if workspace:
+                    payload, view_audit = view_builder.build(role, payload)
+                    metrics['workspace_views'] += 1
+                    metrics['workspace_input_bytes_before'] += view_audit['original_bytes']
+                    metrics['workspace_input_bytes_after'] += view_audit['view_bytes']
+                    metrics['workspace_brief_views'] += view_audit['task_view'] == 'source_quoted_brief'
+                    events.append({'tool':'workspace_role_view', **view_audit, 'revision':workspace.revision})
+                wire = model_message(payload,self.mode)
+                prompts = (self.agents.prompts_for(self.mode) if hasattr(self.agents,'prompts_for') else
+                           getattr(self.agents, "prompts", self.default_prompts))
                 if len(wire) + len(prompts[role]) > self.max_prompt_chars:
                     final = stop("context_budget_exhausted", "角色输入超过统一字符预算，未静默截断原文")
                     break
@@ -889,26 +1270,23 @@ class Runtime:
                     events.append({"tool": "followup_delivery", "new_visible_ids": delta["evidence_ids"],
                                    "new_visible_chars": delta["characters"]})
                 request_id = trace + ":" + str(metrics["model_calls"] + 1)
-                envelope = {"protocol": self.protocol, "request_id": request_id, "task_id": question.id,
-                            "target": role, "action": "run_role"}
-                semantic_object = message(role, payload, trace=trace, operation_id=request_id,
-                    step=metrics["model_calls"] + 1, max_steps=self.max_calls,
-                    semantic_refs={"memory_ids": [h["id"] for h in state["memory_hits"]],
-                                   "evidence_processor": last_view.get("version")})
-                payload = semantic_object["precise"]
-                control = compact(semantic_object["control"])
-                metrics["protocol_control_chars"] += len(control)
-                metrics["protocol_control_bytes"] += len(control.encode())
                 metrics["model_calls"] += 1
                 if role==PLANNER:
-                    for hit in payload['memory_hits']:
+                    for hit in payload.get('memory_hits', []):
                         planner_presented.add(hit['id'])
                         reuse_trace.mark('presented',hit['id'],memory_candidates[hit['id']])
                 else:
                     visible_sources={d['id'] for d in payload.get('evidence_pool',[])}
-                    for hit in payload['memory_hits']:
+                    visible_hits = payload.get('memory_hits', [])
+                    if workspace and role == REASONER:
+                        visible_hits = [h for h in state['memory_hits'] if h['id'] in memory_sources
+                                        and h.get('source_id') in visible_sources]
+                    for hit in visible_hits:
                         ident=hit['id']
-                        if hit.get('status')=='experience_observation' or hit.get('source_id') in visible_sources:
+                        if hit.get('status')=='experience_observation' or (ident in memory_sources
+                                and hit.get('source_id') in visible_sources):
+                            if self.need_first and role == INVESTIGATOR:
+                                reuse_trace.mark('presented',ident,memory_candidates[ident])
                             reuse_trace.mark('delivered',ident,memory_candidates[ident])
                 metrics["evidence_raw_delivery_chars"] += last_view["raw_chars"]
                 metrics["messages"] += 1
@@ -918,20 +1296,48 @@ class Runtime:
                 visited.add(role)
                 attempt = {"agent": role, "request_id": request_id, "input": deepcopy(payload),
                            "search_count": metrics["retrieval_count"], "system_chars": len(prompts[role]),
-                           "control": semantic_object["control"], "semantic": semantic_object["semantic"]}
+                           "model_input":wire,"handoff_mode":"ACP-1" if transport else "natural_language"}
                 metrics["system_chars"] += len(prompts[role])
                 metrics["system_bytes"] += len(prompts[role].encode())
                 events.append(attempt)
                 model_started = time.monotonic()
                 try:
-                    if hasattr(self.agents, "call_with_budget"):
-                        raw, usage = self.agents.call_with_budget(role, payload, self.mode,
-                            remaining_seconds=max(.01, self.deadline_seconds - (time.monotonic() - started)
-                                                  - getattr(self.agents, "historical_seconds", 0)
-                                                  - getattr(self.journal, "historical_seconds", 0)),
-                            remaining_tokens=max(1, self.max_question_tokens - metrics["total_tokens"]))
+                    def invoke(values):
+                        if hasattr(self.agents, "call_with_budget"):
+                            return self.agents.call_with_budget(role,values,self.mode,
+                                remaining_seconds=max(.01,self.deadline_seconds-(time.monotonic()-started)
+                                    -getattr(self.agents,'historical_seconds',0)-getattr(self.journal,'historical_seconds',0)),
+                                remaining_tokens=max(1,self.max_question_tokens-metrics['total_tokens']))
+                        return self.agents.call(role,values,self.mode)
+                    if transport:
+                        actor,opcode={PLANNER:(Actor.PLANNER,Opcode.PLAN),INVESTIGATOR:(Actor.INVESTIGATOR,Opcode.QUERY_PLAN),
+                                      REASONER:(Actor.REASONER,Opcode.ANSWER)}[role]
+                        task_ref = transport.put('task', question.public())
+                        context=transport.prepare_context(payload)
+                        if workspace:
+                            task_view = {k:deepcopy(payload[k]) for k in ('question_id','question','options')}
+                            kind = 'task' if task_view == question.public() else 'task_projection'
+                            context['task_view_ref'] = task_ref if kind == 'task' else transport.put(kind, task_view)
+                            context['task_view_kind'] = kind
+                        def invoke_role(task, context):
+                            context = deepcopy(context)
+                            selected_task = task
+                            if workspace:
+                                kind = context.pop('task_view_kind')
+                                if kind not in {'task','task_projection'}:
+                                    raise ACPError('工作状态任务视图类型无效')
+                                selected_task = transport.get(context.pop('task_view_ref'), kind)
+                                if selected_task.get('question_id') != task['question_id']:
+                                    raise ACPError('工作状态视图与任务引用不匹配')
+                            resolved = transport.resolve_context(context)
+                            return invoke({**selected_task, **resolved})
+                        transport.bind(actor,opcode,invoke_role)
+                        raw,usage=transport.call(Actor.RUNTIME,actor,opcode,
+                            (task_ref,transport.put('context',context)))
                     else:
-                        raw, usage = self.agents.call(role, payload, self.mode)
+                        raw,usage=invoke(payload)
+                except ACPError:
+                    raise
                 except Exception as exc:
                     attempt["error"] = type(exc).__name__
                     attempt["duration_seconds"] = time.monotonic() - model_started
@@ -955,7 +1361,17 @@ class Runtime:
                     break
                 output = None
                 try:
-                    output = json.loads(raw) if isinstance(raw, str) else raw
+                    output, syntax_repairs = parse_agent_output(
+                        raw, allow_repair=self.output_policy == "decoupled",
+                        truncated=usage.get("finish_reason") == "length")
+                    if syntax_repairs:
+                        metrics["deterministic_repairs"] += len(syntax_repairs)
+                        attempt["normalized_output"] = deepcopy(output)
+                        attempt["json_syntax_repairs"] = deepcopy(syntax_repairs)
+                        events.append({"tool": "json_syntax_repair", "agent_role": role,
+                                       "changes": deepcopy(syntax_repairs), "extra_model_calls": 0})
+                        events.append({"tool": "issue", **Issue("json_syntax", role,
+                            "JSON顶层提前闭合；完整内容经单括号修复后继续协议校验").public()})
                     if not isinstance(output, dict) or output.get("_error"):
                         raise ContractError("角色输出不是有效对象或报告生成错误")
                     if self.output_policy == "decoupled" and "question_id" not in output:
@@ -966,6 +1382,10 @@ class Runtime:
                                        "mappings": ["missing question_id bound to current request"]})
                     if output.get("question_id") != question.id:
                         raise ContractError("角色输出题目ID不匹配", category="identity")
+                    if self.mode=='text' and role in {PLANNER,INVESTIGATOR} and 'handoff_text' in output:
+                        # Validate optional prose before memory reads or tools can
+                        # run, so a bad handoff cannot repeat those side effects.
+                        describe_output(role,output)
                     attempt["output"] = deepcopy(output)
                     if self.output_policy == "decoupled" and role == REASONER:
                         reviewed = deepcopy(output)
@@ -979,7 +1399,33 @@ class Runtime:
                                 "path": "usage", "message": "答案保留，用量未知或输出截断，不写可靠记忆"})
                             final["protocol_result"]["status"] = "issues"
                             final["evidence_result"]["memory_eligible"] = False
-                        if final["evidence_result"]["strict_audit_status"] == "passed":
+                        need_review_valid = True
+                        if self.need_first:
+                            state['need_review_current'] = False
+                            try:
+                                actual_visible = {d['id']:last_view['visible'][d['id']]
+                                                  for d in payload.get('evidence_pool', [])}
+                                expanded_reviews = reasoner_reviews(reviewed,task_states,evidence,actual_visible)
+                                request_investigation(reviewed,task_states.items)
+                                state['need_reviews'] = deepcopy(expanded_reviews)
+                                state['need_status'] = need_view(task_states)
+                                state['need_review_current'] = True
+                                final['evidence_result']['need_review_status'] = 'passed'
+                                final['evidence_result']['need_memory_eligible'] = bool(final.get('answer') in question.options
+                                    and usage.get('source') in {'model','fixture'} and usage.get('finish_reason') != 'length'
+                                    and any(r['verdict']=='supported' for r in expanded_reviews))
+                                events.append({'tool':'reasoner_need_review','states':deepcopy(state['need_status']),
+                                               'verification':'same_agent; source_and_visibility_checked'})
+                            except ContractError as exc:
+                                need_review_valid = False
+                                metrics['needs_review_errors'] += 1
+                                final['protocol_result']['issues'].append({'category':'need_review',
+                                    'code':'invalid_need_review','message':str(exc),'blocks_answer':False})
+                                final['protocol_result']['status'] = 'issues'
+                                final['evidence_result']['memory_eligible'] = False
+                                final['evidence_result']['need_review_status'] = 'invalid'
+                                final['evidence_result']['need_memory_eligible'] = False
+                        elif final["evidence_result"]["strict_audit_status"] == "passed":
                             task_states.review(reviewed)
                         if final.get("answer") in question.options:
                             if retained_result is not None:
@@ -990,7 +1436,10 @@ class Runtime:
                                            "discarded_protocol": deepcopy(final["protocol_result"])})
                             final = deepcopy(retained_result)
                         persist_state("answer_retained_independently")
-                        if optional_followup(reviewed, usage):
+                        if self.need_first:
+                            if need_review_valid and return_to_investigator(reviewed,usage):
+                                final, role = None, INVESTIGATOR
+                        elif optional_followup(reviewed, usage):
                             final, role = None, REASONER
                         continue
                     output, mappings = normalize_response(role, output, evidence)
@@ -1022,8 +1471,12 @@ class Runtime:
                                     'fields':['decision','reason'],'extra_model_calls':0})
                         unmapped = validate_plan(output, planner_presented if self.memory_selection=='needs' else memory_candidates,
                                                  sparse_memories=self.memory_selection=='needs')
-                        for key in ("key_conditions", "knowledge_tasks", "criteria", "memory_assessments"):
-                            state[key] = deepcopy(output[key])
+                        planning_patch = {key: deepcopy(output[key]) for key in
+                                          ("key_conditions", "knowledge_tasks", "criteria", "memory_assessments")}
+                        if workspace:
+                            workspace.apply(PLANNER, planning_patch)
+                        else:
+                            state.update(planning_patch)
                         if self.memory_selection=='needs':
                             assessed={a['memory_id'] for a in state['memory_assessments']}
                             state['memory_assessments'].extend({'memory_id':ident,'decision':'reject',
@@ -1034,12 +1487,47 @@ class Runtime:
                         if state["feedback"].get("contract_agent") == PLANNER:
                             state["feedback"] = {}
                         metrics["memory_rejected"] = sum(a["decision"] == "reject" for a in state["memory_assessments"])
-                        prepare_memories()
+                        if self.need_first:
+                            prepare_need_memories()
+                        else:
+                            prepare_memories()
+                        record_prose(PLANNER,output)
                         role = INVESTIGATOR
                     elif role == INVESTIGATOR:
                         if self.output_policy == "decoupled":
+                            if self.need_first:
+                                state['need_review_current'] = False
+                                metrics['investigation_rounds'] += 1
+                                actual_visible = {d['id']:last_view['visible'][d['id']]
+                                                  for d in payload.get('evidence_pool', [])}
+                                reviews = investigation_reviews(output.get('need_updates'),task_states.items,evidence,actual_visible,
+                                                                memory_sources=memory_sources)
+                                mapped = [{'memory_id':i,'source_id':memory_sources[i]}
+                                    for update in output.get('need_updates',[]) for i in update.get('evidence_ids',[])
+                                    if i in memory_sources and i not in evidence]
+                                if mapped:events.append({'tool':'memory_source_alias_mapping','mappings':mapped})
+                                apply_investigation_reviews(task_states,reviews)
+                                state['need_status'] = need_view(task_states)
+                                accepted_sources = {source for v in reviews.values()
+                                                    if v['coverage'] in {'covered','partial','conflicted'}
+                                                    for source in v['coverage_evidence_ids']}
+                                memory_accepted_ids.clear()
+                                memory_accepted_ids.update(i for i,source in memory_sources.items() if source in accepted_sources)
+                                for ident in memory_accepted_ids:
+                                    reuse_trace.mark('investigator_accepted',ident,memory_candidates[ident])
+                                if metrics['investigation_rounds']==1:
+                                    metrics['memory_covered_needs'] = sum(v['coverage']=='covered'
+                                        and bool(set(v['coverage_evidence_ids']) & set(memory_sources.values())) for v in reviews.values())
+                                events.append({'tool':'investigator_coverage','need_updates':deepcopy(reviews),
+                                               'accepted_memory_ids':sorted(memory_accepted_ids)})
                             role = execute_tool_plan(output)
+                            if workspace:
+                                workspace.apply(INVESTIGATOR, {'investigation_plan':deepcopy(output),
+                                    **({'need_status':need_view(task_states)} if self.need_first else {})})
+                            record_prose(INVESTIGATOR,output)
                             persist_state("investigation_plan_applied")
+                            if self.need_first and pending_investigation and not prepare_return_view(output):
+                                final = deepcopy(retained_result)
                             continue
                         merge_findings(output)
                         merge_conflicts(output)
@@ -1061,6 +1549,7 @@ class Runtime:
                             role = REASONER
                         else:
                             raise ContractError("无效调查动作")
+                        record_prose(INVESTIGATOR,output)
                     else:
                         decision = output.get("decision")
                         merge_findings(output)
@@ -1119,6 +1608,8 @@ class Runtime:
                     issue = Issue(getattr(exc, "category", "agent_output"), role, str(exc))
                     events.append({"tool": "issue", **issue.public()})
                     if self.output_policy == "decoupled":
+                        if self.need_first:
+                            raise
                         if issue.category in {"identity", "integrity"} or role == REASONER:
                             raise
                         events.append({"tool": "baseline_fallback", "agent_role": role,
@@ -1127,6 +1618,7 @@ class Runtime:
                             basic_plan()
                             task_states = TaskStates(state["knowledge_tasks"], resource_snapshot=budget)
                             prepare_memories()
+                            record_prose(PLANNER,state)
                             role = INVESTIGATOR
                         else:
                             if not history:
@@ -1158,7 +1650,13 @@ class Runtime:
                 if self.output_policy == "decoupled" and retained_output is not None:
                     output = retained_output
                 used = set(final["evidence_ids"])
-                final["reused_memory_ids"] = sorted(i for i, source in memory_sources.items() if source in used)
+                final["reused_memory_ids"] = sorted(i for i, source in memory_sources.items() if source in used
+                                                    and (not self.need_first or i in memory_accepted_ids))
+                final['source_level_memory_ids'] = list(final['reused_memory_ids'])
+                if self.need_first:
+                    matched, _ = fragment_citations(state.get('memory_fragments',{}),memory_accepted_ids,
+                                                   final,evidence,state.get('need_reviews',[]))
+                    final['reused_memory_ids'] = sorted(matched)
                 metrics["memory_used"] = len(final["reused_memory_ids"])
                 if (self.memory_policy=="strict" and self.memory and self.memory_write and final["evidence_status"] == "supported"
                         and (self.output_policy == "strict" or final.get("evidence_result", {}).get("memory_eligible"))):
@@ -1170,7 +1668,7 @@ class Runtime:
                                 for q in c["support_quotes"] if q["evidence_id"] == source_id))[:3]
                             conditions = [c["text"] for c in state["key_conditions"]]
                             memory_text = memory_embedding_text(doc, question.question, conditions, self.task_group, excerpts)
-                            self.memory.put(doc, self.embedder.embed_text(memory_text), trace,
+                            put_document(doc, self.embedder.embed_text(memory_text),
                                 topic=question.question, source_agent=REASONER, task_group=self.task_group,
                                 review_policy=self.answer_policy,
                                 conditions=conditions, excerpts=excerpts,
@@ -1192,10 +1690,12 @@ class Runtime:
         if self.memory_policy=="basic" and self.memory and self.memory_write:
             known_usage = len(metrics["usage_sources"])==metrics["model_calls"] and bool(metrics["usage_sources"]) and all(s in {"model","fixture"} for s in metrics["usage_sources"])
             if known_usage:
-                for unit in build_units(question,state,final,evidence,history,metrics,
-                                        actionable_strategy=self.memory_selection=='needs'):
+                units = (build_need_units(question,state,final,evidence,history,metrics)
+                         if self.need_first else build_units(question,state,final,evidence,history,metrics,
+                                                            actionable_strategy=self.memory_selection=='needs'))
+                for unit in units:
                     try:
-                        ident = self.memory.put_unit(unit,self.embedder.embed_text(unit_embedding_text(unit)),trace)
+                        ident = put_unit(unit,self.embedder.embed_text(unit_embedding_text(unit)))
                         metrics["memory_written"] += 1
                         metrics["memory_written_by_kind"][unit["kind"]] += 1
                         events.append({"tool":"memory_put_unit","kind":unit["kind"],"reference":ident,
@@ -1213,7 +1713,7 @@ class Runtime:
             protocol["issues"].extend({"category": "optional_followup", "code": e["reason"], "blocks_answer": False}
                 for e in events if e.get("tool") == "answer_preserved"
                 and e["reason"] in {"runtime_error", "protocol_error", "invalid_followup_answer"})
-            protocol["repairs"].extend(deepcopy(e) for e in events if e.get("tool") in {"baseline_fallback", "protocol_mapping"})
+            protocol["repairs"].extend(deepcopy(e) for e in events if e.get("tool") in {"baseline_fallback", "protocol_mapping", "json_syntax_repair"})
             if protocol["issues"] and protocol["status"] == "valid":
                 protocol["status"] = "issues"
             decisions = [e for e in events if e.get("tool") == "followup_decision"]
@@ -1224,6 +1724,11 @@ class Runtime:
                 "reason": preserved[-1]["reason"] if preserved else decisions[-1].get("reason") if decisions else None}
         task_states.close(final.get("status", "unknown"))
         state["task_status"] = deepcopy(task_states.items)
+        if workspace:
+            if final.get('answer') is not None:
+                workspace.apply(REASONER, {'reasoning_result':deepcopy(final)})
+            else:
+                workspace.apply('Runtime', {'terminal_result':deepcopy(final)})
         persist_state("question_closed")
         for event in events:
             if "input" in event:
@@ -1243,14 +1748,41 @@ class Runtime:
         metrics['state_vector_transfers']=getattr(self.memory,'vector_transfers',0)-base_vectors
         cited_sources={c['evidence_id'] for c in final.get('evidence_result',{}).get('citations',[])
                        if c.get('source_verified') and c.get('visible')}
+        fragment_used, fragment_needs = (fragment_citations(state.get('memory_fragments',{}),memory_accepted_ids,
+            final,evidence,state.get('need_reviews',[])) if self.need_first else (set(),set()))
         for ident,source in memory_sources.items():
-            if source in cited_sources:reuse_trace.mark('cited',ident,memory_candidates[ident])
+            if (ident in fragment_used if self.need_first else source in cited_sources):
+                reuse_trace.mark('cited',ident,memory_candidates[ident])
         metrics['memory_funnel']=reuse_trace.export()
+        if self.need_first:
+            metrics['memory_evidence_presented'] = metrics['memory_funnel']['presented']['evidence']
+            metrics['knowledge_needs'] = len(task_states.items)
+            metrics['memory_supported_needs'] = len(fragment_needs)
+            metrics['memory_only_supported_tasks'] = int(bool(final.get('reused_memory_ids'))
+                and metrics['retrieval_count']==0 and bool(task_states.items)
+                and all(t['support']=='supported' for t in task_states.items.values()))
         events.append({'tool':'memory_reuse_trace','stages':reuse_trace.references(),
                        'note':'进入请求、执行关联或原文引用不等于因果收益；需与关闭记忆对照。'})
         metrics["tool_counts"] = {k: v - base_stats.get(k, 0) for k, v in getattr(self.textbooks, "stats", {}).items()}
         metrics["quality_note"] = "记忆命中/引用不等于正确复用；同一Reasoner自检不等于独立医学审核。"
+        metrics.update(transport.metrics if transport else {key:0 for key in (
+            'acp_request_bytes','acp_result_bytes','acp_handshake_bytes','acp_object_registration_bytes',
+            'acp_frames','acp_operations','acp_batches','acp_dispatch_seconds','acp_overhead_seconds','acp_handler_seconds',
+            'acp_evidence_ref_reads','acp_memory_ref_reads','state_handle_reads','state_handle_bytes')})
+        metrics['natural_handoff_chars']=sum(len(e['text']) for e in events if e.get('tool')=='natural_language_handoff')
+        metrics['natural_handoff_rendered']=sum(e.get('template_rendered',False) for e in events if e.get('tool')=='natural_language_handoff')
+        if workspace:
+            metrics['workspace_patch_count'] = len(workspace.patches)
+            events.append({'tool':'workspace_closed', **workspace.snapshot()})
+        if transport:
+            events.append({'tool':'acp_exchange','frames_hex':[frame.hex() for frame in transport.frames],
+                           'metrics':deepcopy(transport.metrics)})
         return {**final, "trace_id": trace, "protocol": self.protocol, "answer_policy": self.answer_policy,
+                "communication_version":COMMUNICATION_VERSION,
+                "workspace_version":WORKSPACE_VERSION if workspace else None,
+                "workspace_policy":self.workspace_policy if workspace else 'legacy',
+                "workflow":self.workflow,"workflow_version":NEED_FLOW_VERSION if self.need_first else None,
+                **({'memory_fragments':deepcopy(state.get('memory_fragments',{}))} if self.need_first else {}),
                 "output_policy": self.output_policy,
                 "mode": self.mode, "task_group": self.task_group,
                 "metrics": metrics, "tasks": state["knowledge_tasks"], "task_results": state["task_status"], "events": events,

@@ -1,0 +1,610 @@
+{
+  "_metadata": {
+    "dataset_name": "medical-related-50-v2",
+    "original_count": 30,
+    "authored_count": 20,
+    "answer_policy": "grader_only; Question.public exposes id/question/options only"
+  },
+  "medqa": {
+    "medqa::0900": {
+      "question": "A 38-year-old man presents with progressive tiredness and shortness of breath on exertion. Past medical history is significant for peptic ulcer disease diagnosed 2 years ago for which he is not compliant with his medications. He reports a 10-pack-year smoking history and occasionally alcohol use. His vital signs include: temperature 37.1°C (98.7°F), blood pressure 142/91 mm Hg, pulse 98/min. Physical examination is unremarkable. Laboratory findings are significant for the following:\nHemoglobin 9.7 g/dL\nHematocrit 29.1%\nRed cell count 3.7 million/mm3\nMean corpuscular volume (MCV) 71 μm3\nMean corpuscular hemoglobin (MCH) 21.3 pg/cell\nMean corpuscular hemoglobin concentration (MCHC) 28.4 Hb/cell\nReticulocyte count 0.2 %\nRed cell distribution width (RDW) 17.8 (ref: 11.5–14.5%)\nWhite blood cell count 8100/mm3\nPlatelet count 420,000/mm3\nIron studies show:\nTotal iron binding capacity (TIBC) 620 μg/dL\nTransferrin saturation 9%\nWhich of the following findings would most likely be found on a bone marrow biopsy in this patient?",
+      "options": {
+        "A": "Hypocellularity with fatty infiltration",
+        "B": "↓ hemosiderin stores",
+        "C": "Ringed sideroblasts",
+        "D": "Myeloblasts with immature precursors"
+      },
+      "answer": "B",
+      "source_dataset": "medqa",
+      "source_question_id": "0900"
+    },
+    "medqa::0418": {
+      "question": "A 16-year-old boy is brought to the physician by his parents for the evaluation of fatigue for several weeks. The parents report that their son quit doing sports at school because of low energy. The patient's academic performance has declined recently. He spends most of his time in the basement playing video games and eating bowls of cereal. He has no history of serious illness. His mother has Hashimoto's thyroiditis and his father has major depressive disorder. The patient does not smoke or drink alcohol. His vital signs are within normal limits. Examination shows conjunctival pallor, inflammation and fissuring of the corners of the mouth, and concavity of the finger nails. The remainder of the examination shows no abnormalities. Laboratory studies show:\nHemoglobin 11.5 g/dL\nMean corpuscular volume 76 μm3\nPlatelet count 290,000/mm3\nRed cell distribution width 18% (N = 13%–15%)\nLeukocyte count 7,000/mm3\nWhich of the following is the most appropriate initial step in treatment?\"",
+      "options": {
+        "A": "Regular blood transfusions",
+        "B": "Methylphenidate",
+        "C": "Iron supplementation",
+        "D": "Allogenic stem cell transplantation"
+      },
+      "answer": "C",
+      "source_dataset": "medqa",
+      "source_question_id": "0418"
+    },
+    "medqa::1225": {
+      "question": "A 9-month-old boy is brought to his pediatrician by his mother for a routine health checkup. The boy was born at 39 weeks gestation via spontaneous vaginal delivery. He is up to date on all vaccines and is meeting all developmental milestones. He was breastfed for the first 3 months and then switched to cow’s milk and about two months ago she started giving him fruits and vegetables. Family history is noncontributory. Today, his heart rate is 120/min, respiratory rate is 40/min, blood pressure is 90/50 mm Hg, and temperature of 37.0°C (98.6°F). On examination, he has a heartbeat with a regular rate and rhythm and his lungs are clear to auscultation bilaterally. Generally, the boy looks pale. His weight and height fall within the expected range. A complete blood count (CBC) shows the following:\nHemoglobin (Hb): 9.1 g/dL\nMean corpuscular volume (MCV): 65 fL\nTotal iron binding capacity (TIBC): 550 μg/dL\nSerum iron: 45 µg/dL\nSerum lead: < 5 µg/dL\nWhat is the best treatment for this patient?",
+      "options": {
+        "A": "Iron supplementation only",
+        "B": "Proper diet and iron supplementation",
+        "C": "Multivitamins",
+        "D": "Proper diet only"
+      },
+      "answer": "B",
+      "source_dataset": "medqa",
+      "source_question_id": "1225"
+    },
+    "medqa::0394": {
+      "question": "A 54-year-old woman presents with fatigue, malaise, and shortness of breath over the past 5 months. Past medical history is significant for rheumatoid arthritis diagnosed 23 years ago for which she takes naproxen as needed. Her vital signs include: temperature 36.9°C (98.4°F), blood pressure 135/88 mm Hg, pulse 92/min. Physical examination is significant for conjunctival pallor and bilateral ulnar deviation of the metacarpophalangeal joints. Laboratory findings are significant for the following:\nHemoglobin 9.2 g/dL\nMean corpuscular volume 76 fL\nLeukocyte count 7,000/mm3\nPlatelet count 220,000/mm3\nSerum ferritin 310 ng/mL\nErythrocyte sedimentation rate 85 mm/h\nWhich of the following is a feature of this patient's anemia?",
+      "options": {
+        "A": "↑ serum transferrin receptors",
+        "B": "↑ transferrin saturation",
+        "C": "Upregulation of hepcidin",
+        "D": "↑ reticulocyte count"
+      },
+      "answer": "C",
+      "source_dataset": "medqa",
+      "source_question_id": "0394"
+    },
+    "medqa::1009": {
+      "question": "A 45-year-old woman comes to the physician because of a 2-week history of painful ulcers in her mouth. Over the past 2 months, she has had increasing fatigue and difficulties concentrating. She has a history of rheumatoid arthritis and was started on a new medication 4 months ago. Examination shows pallor of the mucosal membranes and three tender ulcerative lesions in her mouth. Her hemoglobin concentration is 8.7 g/dL and mean corpuscular volume is 109 μm3. A blood smear shows hypersegmented neutrophils. Which of the following is the most likely cause of this patient's findings?",
+      "options": {
+        "A": "Deficient heme synthesis",
+        "B": "Deficient erythropoietin secretion",
+        "C": "Deficient nitrogenous base production",
+        "D": "Deficient β-globin chains"
+      },
+      "answer": "C",
+      "source_dataset": "medqa",
+      "source_question_id": "1009"
+    },
+    "medqa::0409": {
+      "question": "A 44-year-old woman with hypothyroidism comes to the physician because of a 1-month history of tingling in her feet and poor balance. Her only medication is levothyroxine. Physical examination shows conjunctival pallor and an ataxic gait. Proprioception and sense of vibration are decreased in her toes bilaterally. Laboratory studies show macrocytic anemia and normal thyroid hormone levels. Histological evaluation of tissue samples obtained by esophagogastroduodenoscopy reveals atrophic changes of the gastric body and fundus with normal antral mucosa. Which of the following structures is most likely being targeted by antibodies in this patient?",
+      "options": {
+        "A": "Islet cell cytoplasm",
+        "B": "Deamidated gliadin peptide",
+        "C": "Parietal cells",
+        "D": "Smooth muscle"
+      },
+      "answer": "C",
+      "source_dataset": "medqa",
+      "source_question_id": "0409"
+    },
+    "medqa::0476": {
+      "question": "A 14-year-old boy presents with right upper quadrant abdominal pain and is found on ultrasound to have a gallstone. Based on clinical suspicion, a CBC, a Coombs test, and a bilirubin panel are obtained to determine the etiology of the gallstone. These tests reveal a mild normocytic anemia with associated reticulocytosis as well as an increased RDW. In addition there is an indirect hyperbilirubinemia and the Coombs test results are negative. To confirm the diagnosis, an osmotic fragility test is performed which shows increased fragility in hypotonic solution. In this patient, what findings would most likely be anticipated if a blood smear were obtained?",
+      "options": {
+        "A": "Hypersegmented neutrophils",
+        "B": "Sideroblasts",
+        "C": "Spherocytes",
+        "D": "Dacrocytes"
+      },
+      "answer": "C",
+      "source_dataset": "medqa",
+      "source_question_id": "0476"
+    },
+    "medqa::0810": {
+      "question": "An otherwise healthy 49-year-old woman has a routine full blood count complete prior her elective cholecystectomy. The lab test results are as follows:\nLaboratory test\nHemoglobin\n12.1 g/dL\nMean corpuscular volume (MCV)\n85 μm3\nMean corpuscular hemoglobin concentration (MCHC)\n47%\nReticulocyte count\n3.4 %\nWhite blood cell count\n9700/mm3\nPlatelet count\n229,000/mm3\nA peripheral blood smear reveals spherocytes. The Coombs test is negative. The physical examination is remarkable for scleral icterus and moderate splenomegaly. Which of the following is the most appropriate diagnostic test of this patient’s underlying disorder?",
+      "options": {
+        "A": "Eosin-5-maleimide binding test",
+        "B": "Flow cytometry for CD55/CD59",
+        "C": "Anti parvovirus B19 antibodies",
+        "D": "Liver function tests"
+      },
+      "answer": "A",
+      "source_dataset": "medqa",
+      "source_question_id": "0810"
+    },
+    "medqa::0673": {
+      "question": "A 7-year-old boy is brought to the physician because of a 3-week history of burning sensation in his mouth. One year ago, a peripheral blood smear performed during workup of fatigue revealed erythrocytes without central pallor. His father had gallstones, for which he underwent a cholecystectomy at the age of 26 years. Examination shows pallor of the mucosal membranes, mild scleral icterus, a swollen, red tongue, and several mouth ulcers. There is darkening of the skin over the dorsal surfaces of the fingers, toes, and creases of the palms and soles. His spleen is enlarged and palpable 3 cm below the left costal margin. Laboratory studies show a hemoglobin concentration of 9.1 gm/dL, mean corpuscular volume of 104 μm3, and a reticulocyte count of 9%. Which of the following would most likely have prevented this patient's oropharyngeal symptoms?",
+      "options": {
+        "A": "Red blood cell transfusions",
+        "B": "Gluten-free diet",
+        "C": "Vitamin B12 injections",
+        "D": "Folic acid supplementation"
+      },
+      "answer": "D",
+      "source_dataset": "medqa",
+      "source_question_id": "0673"
+    },
+    "medqa::1205": {
+      "question": "A 78-year-old man comes to the physician because of progressively worsening fatigue and headache for 6 months and occasional abdominal pain. He has not had any changes in his weight. He has a history of hypertension, type 2 diabetes mellitus, and chronic shoulder pain. Current daily medications include hydrochlorothiazide, metformin, and ibuprofen. He does not drink alcohol and does not smoke. His diet has mostly consisted of potatoes and lean meats since his wife passed away 1 year ago. His pulse is 92/min and blood pressure is 135/80 mm Hg. Examination shows conjunctival and mucosal pallor. Abdominal and rectal examination shows no abnormalities. Neurological exam shows mild postural tremor. Peripheral blood smear shows red blood cells with increased zones of central pallor and anisocytosis. Which of the following is the most likely underlying cause of this patient’s symptoms?",
+      "options": {
+        "A": "Folic acid deficiency",
+        "B": "Intravascular hemolysis",
+        "C": "Impaired erythropoietin production",
+        "D": "Iron deficiency"
+      },
+      "answer": "D",
+      "source_dataset": "medqa",
+      "source_question_id": "1205"
+    },
+    "medqa::0574": {
+      "question": "An 11-year-old boy presents to your office with pitting edema and proteinuria exceeding 3.5g in 24 hours. You suspect that this patient has experienced a loss of polyanions in his glomerular basement membranes. Which of the following findings would confirm your diagnosis?",
+      "options": {
+        "A": "WBC casts in the urine",
+        "B": "Selective albuminuria",
+        "C": "Negatively birefringent crystals in the urine",
+        "D": "Bence-Jones proteinuria"
+      },
+      "answer": "B",
+      "source_dataset": "medqa",
+      "source_question_id": "0574"
+    },
+    "medqa::0145": {
+      "question": "A 5-year-old boy is brought to the physician because of facial swelling that started 5 days ago. Two weeks ago, he had a sore throat that resolved spontaneously. His temperature is 37°C (98.6°F), pulse is 107/min, and blood pressure is 94/67 mm Hg. Examination shows pitting edema of the upper and lower extremities as well as periorbital edema. The abdomen is mildly distended. Laboratory studies show:\nHemoglobin 13.1 g/dL\nSerum\nAlbumin 2.1 g/dL\nTotal cholesterol 270 mg/dL\nTriglycerides 175 mg/dL\nUrine\nBlood negative\nGlucose negative\nProtein 4+\nLeukocyte esterase negative\nA renal biopsy of this patient is most likely to show which of the following findings?\"",
+      "options": {
+        "A": "Mesangial proliferation on light microscopy",
+        "B": "Subepithelial dense deposits on electron microscopy",
+        "C": "Deposits of IgG and C3 at the glomerular basement membrane on immunofluoresence",
+        "D": "Normal light microscopy findings"
+      },
+      "answer": "D",
+      "source_dataset": "medqa",
+      "source_question_id": "0145"
+    },
+    "medqa::0169": {
+      "question": "An 8-year-old girl comes to the physician because of a 2-day history of hematuria. Two weeks ago, she had a sore throat that resolved without treatment. Physical examination shows 1+ pitting edema of the lower legs and ankles. Urinalysis shows numerous RBCs and 3+ proteinuria. Her antistreptolysin O titer is elevated. Formation of which of the following is most likely involved in the underlying mechanism of this patient's symptoms?",
+      "options": {
+        "A": "Antigen-specific IgE binding to mast cells",
+        "B": "Tissue-specific antibodies",
+        "C": "Antigen-antibody complexes",
+        "D": "Presensitized CD8+ cytotoxic T-cells"
+      },
+      "answer": "C",
+      "source_dataset": "medqa",
+      "source_question_id": "0169"
+    },
+    "medqa::0533": {
+      "question": "A 36-year-old woman presents with increased tiredness and lethargy for the past 4 weeks. Investigations show her hemoglobin level to be 8.6 gm/dL and serum creatinine of 4.6 mg/dL. The serum is negative for antinuclear antibodies (ANA) and positive for C3 nephritic factor. Urinalysis shows a 3+ proteinuria. The renal biopsy demonstrates hypercellular glomerulus with electron dense deposits along the glomerular basement membrane. What is the most likely cause?",
+      "options": {
+        "A": "Membrano proliferative glomerulonephritis (MPGN)",
+        "B": "Rapidly progressive glomerulonephritis (RPGN)",
+        "C": "Minimal change disease",
+        "D": "Membranous glomerulonephritis (MGN)"
+      },
+      "answer": "A",
+      "source_dataset": "medqa",
+      "source_question_id": "0533"
+    },
+    "medqa::0697": {
+      "question": "A 35-year-old male presents to the emergency department for evaluation of hemoptysis. A chest X-ray reveals bilateral focal pulmonary consolidation. On further questioning, he admits having hematuria. Urinalysis shows RBC casts and 400 mL of urine is excreted in 24 hours. What is the most likely cause of hemoptysis and hematuria in this patient?",
+      "options": {
+        "A": "Anti-Smith antibodies",
+        "B": "Anti-neutrophil antibodies",
+        "C": "Anti-mitochondrial antibodies",
+        "D": "Anti-glomerular basement membrane antibodies"
+      },
+      "answer": "D",
+      "source_dataset": "medqa",
+      "source_question_id": "0697"
+    },
+    "medqa::0162": {
+      "question": "A 59-year-old man presents to his primary care provider with fatigue, a progressively worsening cough with flecks of blood, shortness of breath, and dark urine. He reports feeling ill for the past 3 weeks. Past medical history is significant for hypertension and hyperlipidemia. He takes chlorthalidone and atorvastatin. Family history is noncontributory. He has smoked 20–30 cigarettes daily for the past 26 years. Anti-glomerular basement membrane serologies are positive. Which of the following is a specific feature for this patient’s condition?",
+      "options": {
+        "A": "Granulomatous inflammation and necrotizing vasculitis",
+        "B": "Positive cryoglobulins",
+        "C": "Linear IgG staining on immunofluorescence",
+        "D": "Longitudinal splitting and thickening of the glomerular basement membrane"
+      },
+      "answer": "C",
+      "source_dataset": "medqa",
+      "source_question_id": "0162"
+    },
+    "medqa::0465": {
+      "question": "A 45-year-old female presents to the emergency department with gross hematuria and acute, colicky flank pain. She denies any previous episodes of hematuria. She reports taking high doses of acetaminophen and aspirin over several weeks due to persistent upper back pain. The patient’s blood pressure and temperature are normal, but she is found to have proteinuria. Physical examination is negative for palpable flank masses. Which of the following is the most likely diagnosis:",
+      "options": {
+        "A": "Diffuse cortical necrosis",
+        "B": "Chronic pyelonephritis",
+        "C": "Papillary necrosis",
+        "D": "Acute Nephrolithiasis"
+      },
+      "answer": "C",
+      "source_dataset": "medqa",
+      "source_question_id": "0465"
+    },
+    "medqa::0216": {
+      "question": "A 48-year-old woman with chronic tension headaches comes to the physician because of several episodes of bilateral flank pain and reddish urine within the past month. Current medications include aspirin, which she takes almost daily for headaches. Her temperature is 37.4°C (99.3°F) and her blood pressure is 150/90 mm Hg. Physical examination shows costovertebral tenderness to percussion bilaterally. Laboratory studies show a hemoglobin concentration of 10.2 g/dL and serum creatinine concentration of 2.4 mg/dL. Urine studies show:\nUrine\nProtein\n3+\nRBC > 16/hpf\nWBC 2/hpf\nThere are no casts or dysmorphic RBCs visualized on microscopic analysis of the urine. Which of the following is the most likely underlying cause of this patient's hematuria?\"",
+      "options": {
+        "A": "Tubular lumen obstruction by protein casts",
+        "B": "Necrotizing inflammation of the renal glomeruli",
+        "C": "Bacterial infection of the renal parenchyma",
+        "D": "Vasoconstriction of the medullary vessels"
+      },
+      "answer": "D",
+      "source_dataset": "medqa",
+      "source_question_id": "0216"
+    },
+    "medqa::1153": {
+      "question": "A 68-year-old man presents to his primary care physician with complaints of increased fatigue and back pain for the past year. His symptoms are progressively getting worse over the past few months despite adequate rest and trial of over the counter analgesics. His back pain is constant and non-radiating in nature. He denies any trauma to his back. His past medical history is insignificant. On examination, there is mild tenderness over the lumbar region in the midline with an absence of paraspinal muscle tenderness. Straight leg raise test is negative. His skin and conjunctiva appear pale. The physician orders basic blood work. His results are provided below.\nComplete blood count\nRBC 4.9 million cells/µL\nHemoglobin 9.8 g/dL\nHematocrit 41%\nTotal leukocyte count 6,800 cells/µL\nNeutrophils 70%\nLymphocyte 26%\nMonocytes 3%\nEosinophil 1%\nBasophils 0%\nPlatelets 230,000 cells/µL\nBasic Metabolic Panel\nSodium 136 mEq/L\nPotassium 5.1 mEq/L\nChloride 101 mEq/L\nBicarbonate 24 mEq/L\nAlbumin 3.6 mg/ dL\nUrea nitrogen 31 mg/dL\nCreatinine 2.7 mg/dL\nUric Acid 6.7 mg/dL\nCalcium 12.1 mg/dL\nGlucose 105 mg/dL\nUrinalysis shows proteinuria without any RBCs or pus cells. The patient’s proteinuria best fits in which of the following category?",
+      "options": {
+        "A": "Overflow proteinuria",
+        "B": "Transient (functional) proteinuria",
+        "C": "Orthostatic proteinuria",
+        "D": "Isolated proteinuria"
+      },
+      "answer": "A",
+      "source_dataset": "medqa",
+      "source_question_id": "1153"
+    },
+    "medqa::1094": {
+      "question": "A 25-year-old female with Hodgkin's lymphoma presents with a several day history of edema. Lab studies show:\n\nSerum Na+: 140 mmol/L\nSerum K+: 3.5 mmol/L\nSerum albumin: 1.9 g/dL\nTotal serum bilirubin: 1.0 mg/dL\nSerum creatinine: 1.2 mg/dL\n\nUrinalysis shows 4+ proteinuria and fatty casts. What is the most likely diagnosis?",
+      "options": {
+        "A": "Focal segmental glomerulosclerosis",
+        "B": "Membranous nephropathy",
+        "C": "Minimal change disease",
+        "D": "Amyloidosis"
+      },
+      "answer": "C",
+      "source_dataset": "medqa",
+      "source_question_id": "1094"
+    },
+    "medqa::0067": {
+      "question": "A 3-week-old male newborn is brought to the hospital because of poor weight gain since birth. He was born at 38 weeks' gestation via normal vaginal delivery. He weighed 3005 g (6 lb, 10 oz) at birth and currently weighs 2835 g (6 lb, 4 oz). He has been latching on and breastfeeding well since birth. His mother has a history of Graves' disease and underwent near-total thyroidectomy in the second trimester of her pregnancy after her symptoms could not be controlled with antithyroid drugs. She is currently receiving L-thyroxine therapy. The patient's temperature is 38.9°C (102°F), pulse is 176/min, and respirations are 42/min. He appears irritable. Examination shows a diaphoretic infant with a paucity of subcutaneous fat. There is swelling of the neck at the midline. Which of the following is the most likely cause?",
+      "options": {
+        "A": "Transplacental passage of thyroid peroxidase antibodies",
+        "B": "Transplacental passage of TSH receptor antibodies",
+        "C": "Transplacental viral infection",
+        "D": "Opiate use in the mother"
+      },
+      "answer": "B",
+      "source_dataset": "medqa",
+      "source_question_id": "0067"
+    },
+    "medqa::0361": {
+      "question": "A 6-day-old male newborn is brought to the physician because he has become increasingly irritable and restless over the past 2 days. During this period, he has had 12 bowel movements. He feeds 10 to 12 times a day. He was born at 38 weeks' gestation and weighed 1800 g (3 lb 15 oz); he currently weighs 1700 g (3 lb 12 oz). His mother has Graves' disease and received propylthiouracil during the last trimester of pregnancy. She has a history of intravenous heroin use. His temperature is 36.9°C (98.4°F), pulse is 180/min, and respirations are 50/min. Examination shows mild diaphoresis and a firm 2-cm midline neck swelling. The lungs are clear to auscultation. Which of the following is the most appropriate next step in management?",
+      "options": {
+        "A": "Methimazole and propranolol therapy",
+        "B": "Potassium iodide therapy",
+        "C": "Naloxone therapy",
+        "D": "Calcium gluconate therapy"
+      },
+      "answer": "A",
+      "source_dataset": "medqa",
+      "source_question_id": "0361"
+    },
+    "medqa::0089": {
+      "question": "A 26-year-old G1P0 woman presents to her primary care physician’s office with feelings of anxiety and trouble with sleep. She finds it difficult initiating sleep, occasionally has palpitations, and feels fatigued. She denies having similar symptoms in the past or starting any new medications or illicit drugs. She is currently 10 weeks pregnant and is closely followed by her obstetrician. Her temperature is 98.6°F (37°C), blood pressure is 125/70 mmHg, pulse is 105/min, and respirations are 18/min. On physical exam, the patient is mildly diaphoretic. The skin is warm and the thyroid gland is diffusely enlarged with thyroid bruits. Laboratory studies are significant for a thyroid-stimulating hormone level of 0.01 µU/mL (normal is 0.5-5.0 µU/mL) and an elevated free thyroxine (FT4) that is inappropriate for her pregnancy. Which of the following is the best treatment option for this patient?",
+      "options": {
+        "A": "Methimazole",
+        "B": "Propylthiouracil",
+        "C": "Radioiodine therapy",
+        "D": "Thyroidectomy"
+      },
+      "answer": "B",
+      "source_dataset": "medqa",
+      "source_question_id": "0089"
+    },
+    "medqa::0512": {
+      "question": "A 35-year-old woman presents to her primary care provider concerned that she may be pregnant. She has a history of regular menstruation every 4 weeks that lasts about 4 days with mild to moderate bleeding, but she missed her last period 2 weeks ago. A home pregnancy test was positive. She has a 6-year history of hyperthyroidism that is well-controlled with daily methimazole. She is currently asymptomatic and has no complaints or concerns. A blood specimen is taken and confirms the diagnosis. Additionally, her thyroid-stimulating hormone (TSH) is 2.0 μU/mL. Which of the following is the next best step in the management of this patient?",
+      "options": {
+        "A": "Continue methimazole",
+        "B": "Discontinue methimazole, start propylthiouracil",
+        "C": "Add glucocorticoids",
+        "D": "Refer for radioiodine therapy"
+      },
+      "answer": "B",
+      "source_dataset": "medqa",
+      "source_question_id": "0512"
+    },
+    "medqa::0137": {
+      "question": "A 36-year-old woman comes to the clinic because of tearing and a foreign body sensation in her eyes bilaterally, which has gradually worsened over the last several weeks. She also notes having occasional palpitations, nervousness, sweating, and heat intolerance. Her past medical history is unremarkable. She reports a 20-pack-year smoking history and is currently a daily smoker. Physical examination shows an anxious, trembling woman. She has eyelid retraction bilaterally, with an inability to fully close her eyes. Her extraocular motility is limited on upgaze. There is no thyromegaly, and no thyroid nodules are noted. Laboratory studies reveal a thyroid-stimulating hormone level of 0.1 μU/mL and total T4 of 42 μg/dL. Thyroid-stimulating immunoglobulin is positive. CT scan of the orbits shows proptosis and marked enlargement of the extraocular muscle with sparing of the tendons. Which of the following would most likely transiently worsen this patient’s eye symptoms?",
+      "options": {
+        "A": "External orbital radiation",
+        "B": "Selenium supplementation",
+        "C": "Systemic corticosteroids",
+        "D": "Treatment with radioactive iodine"
+      },
+      "answer": "D",
+      "source_dataset": "medqa",
+      "source_question_id": "0137"
+    },
+    "medqa::1061": {
+      "question": "A 37-year-old woman presents to the emergency department with confusion, anxiety, sweating, and episodes of vomiting. She is accompanied by her sister who says that her symptoms developed acutely and is unsure about what caused it. She is currently on methimazole, which she last took approximately 1 week ago. Approximately 5 days ago she developed an upper respiratory infection managed with bed rest and ibuprofen. Her temperature is 105°F (40.6°C), blood pressure is 95/68 mmHg, pulse is 145/min, and respirations are 23/min. On physical examination, the patient has altered mentation and is agitated and diaphoretic. The patient also has a goiter, exophthalmos, warm skin, and a hand tremor. She is started on intravenous fluids. Which of the following is the best treatment option for this patient?",
+      "options": {
+        "A": "Antibiotics",
+        "B": "Carotid massage",
+        "C": "Clonazepam",
+        "D": "Propranolol"
+      },
+      "answer": "D",
+      "source_dataset": "medqa",
+      "source_question_id": "1061"
+    },
+    "medqa::0103": {
+      "question": "A 75-year-old woman is brought by a patrolman to the emergency department because of altered mental status. She was found wandering next to the highway. The patient was unable to answer questions and collapsed in transit. Her vitals are: temperature, 33.0°C (91.4°F); pulse, 40/min; respirations,12/min; blood pressure, 80/50 mm Hg; and oxygen saturation, 85% on room air. Physical examination shows decorticate posturing, incomprehensible speech, eyes opening to pain, dry hair, coarse and waxy skin, and non-pitting edema around the face and all extremities. Electrocardiogram shows sinus bradycardia. Laboratory studies show:\nCalcium 9.0 mg/dL\nHematocrit (female) 34%\nPotassium 4.0 mEq/L\nSodium 120 mEq/L\nTSH 110.0 µU/mL\nThyroxine (T4) 1.2 µg/dL\nTriiodothyronine (T3) 70 ng/dL\nWhich of the following is the most likely diagnosis in this patient?",
+      "options": {
+        "A": "Myxedema coma",
+        "B": "Pheochromocytoma crisis",
+        "C": "Septic shock",
+        "D": "Tertiary hyperparathyroidism"
+      },
+      "answer": "A",
+      "source_dataset": "medqa",
+      "source_question_id": "0103"
+    },
+    "medqa::0124": {
+      "question": "A obstetrician is working in a developing country to help promote maternal health and fetal well being. While there, he delivers a baby who he suspects has congenital hypothyroidism, most likely caused by inadequate maternal iodine intake. Which of the following signs and symptoms would NOT be expected to be observed in this child?",
+      "options": {
+        "A": "Hypotonia",
+        "B": "Diarrhea",
+        "C": "Umbilical hernia",
+        "D": "Macroglossia"
+      },
+      "answer": "B",
+      "source_dataset": "medqa",
+      "source_question_id": "0124"
+    },
+    "medqa::0229": {
+      "question": "Three days after admission to the intensive care unit for septic shock and bacteremia from a urinary tract infection, a 34-year-old woman has persistent hypotension. Her blood cultures are positive for Escherichia coli, for which she has been receiving appropriate antibiotics since admission. She has no history of any serious illness. She does not use illicit drugs. Current medications include norepinephrine, ceftriaxone, and acetaminophen. She appears well. Her temperature is 37.5°C (99.5°F), heart rate is 96/min, and blood pressure is 85/55 mm Hg. Examination of the back shows costovertebral tenderness bilaterally. Examination of the thyroid gland shows no abnormalities. Laboratory studies show:\n  Hospital day 1 Hospital day 3\nLeukocyte count 18,500/mm3 10,300/mm3\nHemoglobin 14.1 mg/dL 13.4 mg/dL\nSerum\nCreatinine 1.4 mg/dL 0.9 mg/dL\nFasting glucose 95 mg/dL 100 mg/dL\nTSH   1.8 µU/mL\nT3, free   0.1 ng/dL\nT4, free   0.9 ng/dL\nRepeat blood cultures are negative. A chest X-ray shows no abnormalities. Which of the following is the most appropriate treatment?",
+      "options": {
+        "A": "Bromocriptine",
+        "B": "Levothyroxine",
+        "C": "Removing toxic drugs",
+        "D": "Treating the underlying illness"
+      },
+      "answer": "D",
+      "source_dataset": "medqa",
+      "source_question_id": "0229"
+    },
+    "medqa::0396": {
+      "question": "A 25-year-old woman comes to the office complaining of pelvic pain and feeling “off” for the past few weeks. She has not had any changes in diet or lifestyle but reports weight loss despite an increase in appetite. In addition, she has been experiencing chest palpitations, increased frequency of diarrhea, and heat intolerance. Physical exam of her thyroid is unremarkable but her TSH was found to be 0.21 mIU/L. A complex structure in her right ovary was detected on ultrasound. Her symptoms can be explained by which of the following?",
+      "options": {
+        "A": "Meigs syndrome",
+        "B": "Jod-Basedow phenomenon",
+        "C": "Dermoid cyst",
+        "D": "Struma ovarii"
+      },
+      "answer": "D",
+      "source_dataset": "medqa",
+      "source_question_id": "0396"
+    },
+    "medqa-derived::A01": {
+      "question": "A 58-year-old woman is evaluated for persistent fatigue and progressive difficulty walking in the dark. She has autoimmune thyroid disease and intermittently takes ibuprofen for arthritis. Hemoglobin is 8.8 g/dL, MCV 84 fL, RDW 25%, ferritin 6 ng/mL, and transferrin saturation 5%. A smear contains both hypochromic microcytes and macro-ovalocytes, with occasional hypersegmented neutrophils. Examination shows reduced vibration sense and proprioception in both feet. Serum vitamin B12 is 230 pg/mL (reference 200-900), folate is normal, and creatinine is 0.8 mg/dL. After four weeks of supervised iron replacement, hemoglobin increases to 10.1 g/dL, MCV rises to 101 fL, and the sensory findings persist. Which additional finding would best support the mechanism that was obscured by the initial average cell volume?",
+      "options": {
+        "A": "An elevated serum methylmalonic acid concentration",
+        "B": "A normal methylmalonic acid concentration with an isolated elevation of homocysteine",
+        "C": "A strongly positive direct antiglobulin test for IgG",
+        "D": "An elevated hepcidin concentration with preserved marrow iron stores"
+      },
+      "answer": "A",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::A01"
+    },
+    "medqa-derived::A02": {
+      "question": "A 61-year-old woman with active rheumatoid arthritis has worsening exertional fatigue. Her medications include methotrexate with folate supplementation and frequent naproxen. Six months ago, hemoglobin was 10.7 g/dL, MCV 82 fL, ferritin 310 ng/mL, and transferrin saturation 17%. Hemoglobin is now 8.4 g/dL, MCV 72 fL, RDW 21%, reticulocytes 0.6%, ferritin 72 ng/mL, and transferrin saturation 5%. C-reactive protein remains markedly elevated. The soluble transferrin receptor is above this laboratory's reference range and the transferrin-receptor/ferritin index is elevated. There is no biochemical evidence of hemolysis. She has recently developed intermittent black stools. Which explanation best accounts for the change in her anemia?",
+      "options": {
+        "A": "Inflammatory iron sequestration alone, with unchanged total-body iron stores",
+        "B": "Absolute iron deficiency from blood loss superimposed on inflammatory iron restriction",
+        "C": "Methotrexate-induced isolated folate deficiency",
+        "D": "A new immune-mediated peripheral hemolytic process"
+      },
+      "answer": "B",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::A02"
+    },
+    "medqa-derived::A03": {
+      "question": "A 15-year-old boy with chronic nonimmune hemolytic anemia usually has hemoglobin near 10.5 g/dL and a reticulocyte count of 8-10%. Previous testing showed spherocytes, reduced eosin-5-maleimide binding, and a negative direct antiglobulin test. He takes folic acid regularly. One week after a febrile illness that also affected younger children in his household, he develops marked pallor and tachycardia. Hemoglobin is 5.6 g/dL, MCV 86 fL, reticulocytes 0.1%, leukocytes 5,900/mm3, and platelets 245,000/mm3. Bilirubin is lower than during his usual hemolytic exacerbations. B12 and folate concentrations are adequate, and there has been no bleeding. Which process best explains this acute deterioration?",
+      "options": {
+        "A": "An acceleration of splenic destruction with an appropriately increased erythropoietic response",
+        "B": "A folate-deficient megaloblastic crisis caused by chronically increased erythrocyte turnover",
+        "C": "Transient infection-mediated arrest of erythroid precursor production",
+        "D": "New IgG-mediated destruction of mature erythrocytes"
+      },
+      "answer": "C",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::A03"
+    },
+    "medqa-derived::A04": {
+      "question": "A 47-year-old woman with an autoimmune connective-tissue disease develops jaundice and fatigue over three weeks. Hemoglobin is 7.7 g/dL, MCV 98 fL, reticulocytes 11%, indirect bilirubin 3.4 mg/dL, and haptoglobin is undetectable. The smear shows numerous small dense erythrocytes without central pallor. She has no childhood anemia, no family history of early gallstones or splenectomy, and no recent transfusion. The direct antiglobulin test is strongly positive for IgG but negative for C3. Which mechanism most directly produces the observed erythrocyte shape in this patient?",
+      "options": {
+        "A": "Partial removal of IgG-coated erythrocyte membrane by splenic macrophages",
+        "B": "Oxidant precipitation of hemoglobin followed by splenic removal of inclusions",
+        "C": "Inherited defective linkage between the membrane skeleton and lipid bilayer",
+        "D": "Intravascular terminal-complement lysis triggered primarily by cold-reactive IgM"
+      },
+      "answer": "A",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::A04"
+    },
+    "medqa-derived::A05": {
+      "question": "A 56-year-old man is admitted with severe fatigue, mild confusion, and numbness of both feet. Hemoglobin is 5.9 g/dL, MCV 91 fL, RDW 29%, platelets 68,000/mm3, and leukocytes 2,900/mm3. The smear contains schistocytes, macro-ovalocytes, and hypersegmented neutrophils. LDH is 7,800 U/L, haptoglobin is undetectable, and indirect bilirubin is 1.8 mg/dL. Reticulocytes are 0.7%, corresponding to a reticulocyte production index below 0.3. Creatinine is 0.9 mg/dL, coagulation studies are normal, and he has received no transfusions. B12 is 95 pg/mL, methylmalonic acid is markedly elevated, and ferritin is 8 ng/mL. Which mechanism best accounts for the apparent hemolysis and the disproportionately weak reticulocyte response?",
+      "options": {
+        "A": "Platelet-rich microvascular thrombosis with a preserved compensatory marrow response",
+        "B": "An isolated episode of occult blood loss with intact erythroid maturation",
+        "C": "Ineffective megaloblastic erythropoiesis with intramedullary destruction of developing cells",
+        "D": "Isolated splenic sequestration caused by an inherited erythrocyte membrane defect"
+      },
+      "answer": "C",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::A05"
+    },
+    "medqa-derived::A06": {
+      "question": "A 19-year-old man with an established pathogenic ANK1 variant undergoes splenectomy for symptomatic chronic hemolysis. Before surgery, hemoglobin is 8.9 g/dL, reticulocytes 12%, and indirect bilirubin 3.1 mg/dL. Six months later, without transfusion, hemoglobin is 13.2 g/dL, reticulocytes 2.6%, and indirect bilirubin 0.8 mg/dL. The smear still contains spherocytes and now shows occasional Howell-Jolly bodies. The direct antiglobulin test remains negative. Which interpretation best reconciles the clinical improvement with the persistent erythrocyte morphology?",
+      "options": {
+        "A": "The original disorder was antibody-mediated, and splenectomy eliminated production of the pathogenic antibody",
+        "B": "Persistence of spherocytes establishes ongoing severe intravascular hemolysis despite the improved biochemical markers",
+        "C": "Splenectomy restores the missing erythrocyte membrane protein, so the remaining abnormal cells must be transfused donor cells",
+        "D": "Removal of the principal site of sequestration prolongs survival despite persistence of the intrinsic membrane defect"
+      },
+      "answer": "D",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::A06"
+    },
+    "medqa-derived::A07": {
+      "question": "A 64-year-old man has eight months of fatigue, distal numbness, and progressive gait instability. Hemoglobin is 8.9 g/dL, MCV 95 fL, RDW 19%, and absolute neutrophil count 800/mm3. Platelets are normal. Ferritin is 280 ng/mL and transferrin saturation 28%. B12, methylmalonic acid, and folate are normal. An eight-week supervised iron course has not improved the anemia. Bone marrow examination shows vacuolated erythroid and granulocytic precursors with scattered ring sideroblasts, no excess blasts, and a normal karyotype. He uses large amounts of a zinc-containing denture adhesive and takes additional zinc supplements. Which mechanism best explains the combined hematologic and neurologic abnormalities?",
+      "options": {
+        "A": "Enterocyte metallothionein induction that preferentially retains copper, reducing systemic copper availability",
+        "B": "Autoimmune loss of intrinsic factor with impaired cobalamin absorption",
+        "C": "Failure to replace iron losses from chronic gastrointestinal bleeding",
+        "D": "Inflammation-induced hepcidin elevation as the sole cause of restricted iron delivery"
+      },
+      "answer": "A",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::A07"
+    },
+    "medqa-derived::R01": {
+      "question": "A 24-year-old man has persistent edema and 8.2 g of urinary protein per day. Serum albumin is 1.6 g/dL and creatinine was previously 0.9 mg/dL. A prior kidney biopsy showed diffuse podocyte foot-process effacement without immune deposits. He now develops abrupt left flank pain, visible hematuria, and a rise in creatinine to 1.7 mg/dL. Urine contains predominantly isomorphic erythrocytes without erythrocyte casts. Doppler and contrast imaging demonstrate a new left renal-vein thrombus. He has no previous thrombosis, no family history of thrombosis, and no malignancy. Which acquired change most directly links his pre-existing renal disease to the new complication?",
+      "options": {
+        "A": "Loss of circulating fibrinogen leading to impaired fibrin formation",
+        "B": "New antibodies directed against glomerular basement membrane collagen",
+        "C": "Immune-complex activation of glomerular complement as the sole cause of the hematuria",
+        "D": "Urinary loss of antithrombin contributing to reduced endogenous anticoagulant activity"
+      },
+      "answer": "D",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::R01"
+    },
+    "medqa-derived::R02": {
+      "question": "A 17-year-old boy developed edema, cola-colored urine, erythrocyte casts, and low serum C3 two weeks after pharyngitis. An antistreptolysin O titer was elevated, and he initially improved with supportive care. Fourteen weeks later, microscopic hematuria and a urine protein/creatinine ratio of 1.8 g/g persist. C3 remains markedly low, whereas C4 is normal. Kidney biopsy shows dominant C3 staining with only trace immunoglobulin. Electron microscopy reveals ribbon-like, highly electron-dense intramembranous deposits. A circulating antibody is found that stabilizes an alternative-pathway convertase. Which effect best explains the persistent complement abnormality?",
+      "options": {
+        "A": "Stabilization of C4b2a as the primary sustained event",
+        "B": "Prolongation of C3bBb activity with continuing alternative-pathway C3 consumption",
+        "C": "Direct antibody binding to the alpha-3 chain of type IV collagen",
+        "D": "Selective loss of basement-membrane charge without complement activation"
+      },
+      "answer": "B",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::R02"
+    },
+    "medqa-derived::R03": {
+      "question": "A 34-year-old woman with Graves disease has taken propylthiouracil for 20 months. She develops purpuric lesions, dyspnea, and hemoptysis. Creatinine has risen from 0.8 to 2.9 mg/dL, and urine contains dysmorphic erythrocytes and erythrocyte casts. Bronchoalveolar lavage becomes progressively bloodier. Anti-myeloperoxidase antibodies are strongly positive; anti-GBM antibodies and antinuclear antibodies are negative. C3 and C4 are normal. Kidney biopsy shows focal necrosis and cellular crescents, with little or no immunoglobulin or complement staining on immunofluorescence. Which mechanism best fits this combination of exposure, serology, and pathology?",
+      "options": {
+        "A": "Persistent stabilization of the alternative-pathway C3 convertase",
+        "B": "Drug-associated neutrophil-directed autoimmunity causing pauci-immune small-vessel injury",
+        "C": "Antibodies binding continuously along glomerular and alveolar basement membranes",
+        "D": "Analgesic-mediated medullary ischemia with sloughing of renal papillae"
+      },
+      "answer": "B",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::R03"
+    },
+    "medqa-derived::R04": {
+      "question": "A 23-year-old man has had three episodes of visible hematuria during the past year. Each begins within 24 hours of sore throat or nasal congestion and resolves over several days. He has taken ibuprofen during each respiratory illness. Between episodes, urine still contains dysmorphic erythrocytes and occasional erythrocyte casts. Current urine protein/creatinine ratio is 0.9 g/g, serum albumin 4.0 g/dL, and creatinine 1.1 mg/dL. C3 and C4 have remained normal on repeated measurements. There is no hearing loss, purpura, or abdominal pain. Which kidney-biopsy finding would best account for the recurrent pattern?",
+      "options": {
+        "A": "Coagulative necrosis of renal papillae without glomerular immune deposits",
+        "B": "Dominant mesangial IgA deposition, often accompanied by C3",
+        "C": "Strong linear IgG staining along glomerular basement membranes",
+        "D": "Dominant intramembranous C3 deposits with minimal immunoglobulin"
+      },
+      "answer": "B",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::R04"
+    },
+    "medqa-derived::R05": {
+      "question": "A 69-year-old man with progressive back pain and fatigue has hemoglobin 9.4 g/dL, creatinine 2.3 mg/dL, calcium 11.8 mg/dL, and serum albumin 3.5 g/dL. Skeletal imaging shows several lytic lesions. An adequately collected 24-hour urine sample contains 3.6 g of total protein, but only 0.18 g is albumin. The routine urine dipstick shows trace protein, while a sulfosalicylic acid precipitation test is strongly positive. Urine microscopy shows no dysmorphic erythrocytes or erythrocyte casts. Which explanation best reconciles the quantitative protein measurement with the weak dipstick result?",
+      "options": {
+        "A": "Filtered monoclonal light chains exceed proximal reabsorptive capacity, while the dipstick preferentially detects albumin",
+        "B": "Transient orthostatic proteinuria with otherwise normal protein composition",
+        "C": "Selective glomerular albumin leakage due to isolated podocyte injury",
+        "D": "A dipstick false negative caused solely by severe hypoalbuminemia"
+      },
+      "answer": "A",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::R05"
+    },
+    "medqa-derived::R06": {
+      "question": "A 67-year-old woman with a small lambda-restricted plasma-cell clone develops progressive edema and orthostatic dizziness. Creatinine is 1.8 mg/dL and serum albumin is 1.9 g/dL. Her 24-hour urine contains 6.4 g of protein, of which 5.7 g is albumin. Urine dipstick is 4+ positive, without erythrocyte casts. Kidney biopsy shows extracellular material expanding the mesangium and capillary walls. Electron microscopy reveals randomly arranged, nonbranching fibrils measuring approximately 9-11 nm. Which additional pathologic result would most strongly support the mechanism of her renal disease?",
+      "options": {
+        "A": "Predominantly distal tubular fractured light-chain casts without glomerular deposits",
+        "B": "Diffuse podocyte effacement as the only abnormality, without extracellular deposits",
+        "C": "Congo-red-positive glomerular deposits with apple-green birefringence and light-chain-derived fibril typing",
+        "D": "Granular IgG and C3 deposits containing large subepithelial immune-complex humps"
+      },
+      "answer": "C",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::R06"
+    },
+    "medqa-derived::R07": {
+      "question": "A 42-year-old woman began taking naproxen daily six weeks ago for chronic shoulder pain. She now has edema, a 7-kg weight gain, and reduced urine output. Creatinine has increased from 0.8 to 3.2 mg/dL, serum albumin is 1.8 g/dL, and 24-hour urine contains 7.9 g of protein, predominantly albumin. Urine has 3-5 leukocytes per high-power field but no erythrocyte casts. She has no fever, rash, peripheral eosinophilia, flank colic, or gross hematuria. Complement concentrations are normal. Ultrasonography excludes obstruction. Which combination of biopsy abnormalities would best explain the renal presentation?",
+      "options": {
+        "A": "Isolated mesangial IgA deposits with no tubulointerstitial or podocyte injury",
+        "B": "Linear IgG deposition with widespread glomerular crescents",
+        "C": "Interstitial inflammatory-cell infiltration together with diffuse podocyte foot-process effacement",
+        "D": "Necrotic sloughed papillae with otherwise intact glomerular filtration structures"
+      },
+      "answer": "C",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::R07"
+    },
+    "medqa-derived::T01": {
+      "question": "A term infant is born to a woman with Graves disease who required propylthiouracil during the third trimester. Maternal TSH-receptor antibodies were markedly elevated late in pregnancy. Cord free T4 is within the neonatal laboratory's reference interval, and the infant initially feeds normally. On day 8 he develops persistent tachycardia, sweating, frequent stools, and poor weight gain. Repeat testing shows suppressed TSH and free T4 above the age-specific reference interval; infant TSH-receptor antibodies are positive. He receives methimazole and symptomatic therapy. Which relationship best explains both the initially reassuring hormone measurement and the subsequent development of thyrotoxicosis?",
+      "options": {
+        "A": "A normal cord free T4 rules out antibody-related disease, so the later findings require a new neonatal autoimmune disorder",
+        "B": "Transplacental antithyroid drug activity wanes before the stimulatory effect of maternally transferred IgG disappears",
+        "C": "Maternal IgM initially suppresses the fetal thyroid and then crosses the placenta after delivery",
+        "D": "Maternal levothyroxine causes a delayed and permanently self-sustaining neonatal hormone excess"
+      },
+      "answer": "B",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::T01"
+    },
+    "medqa-derived::T02": {
+      "question": "An 8-month-old boy has required continuous antithyroid treatment since the first weeks of life. During two carefully monitored dose reductions, free T4 rises again despite persistently suppressed TSH. The thyroid is diffusely enlarged. TSH-receptor antibodies were undetectable in cord blood and remain undetectable in both infant and mother on repeated testing. His mother has no thyroid disease. His father and paternal aunt both developed hyperthyroidism in early childhood without orbitopathy or detectable TSH-receptor antibodies. The child has no cafe-au-lait lesions or skeletal abnormalities. Which mechanism best accounts for this course?",
+      "options": {
+        "A": "Transient escape from an iodine-induced block of neonatal thyroid synthesis",
+        "B": "A germline inactivating variant of the TSH receptor causing reduced receptor signaling",
+        "C": "Prolonged stimulation by maternally transferred receptor antibodies",
+        "D": "A germline activating variant of the TSH receptor producing constitutive thyroid stimulation"
+      },
+      "answer": "D",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::T02"
+    },
+    "medqa-derived::T03": {
+      "question": "A 29-year-old woman at 11 weeks of gestation has Graves disease. She was switched from methimazole to propylthiouracil five weeks ago. She now presents with fever of 39.2 degrees C, a painful sore throat, and several oral ulcers. Heart rate is 106/min, blood pressure 114/72 mm Hg, and she is alert. Free T4 is only mildly above the pregnancy-specific reference interval, and liver tests are normal. Leukocyte count is 900/mm3 with an absolute neutrophil count of 70/mm3. She has not received chemotherapy or another marrow-toxic medication. Which immediate strategy is most appropriate?",
+      "options": {
+        "A": "Administer radioactive iodine now to eliminate the need for medication during pregnancy",
+        "B": "Immediately substitute methimazole because ongoing pregnancy makes uninterrupted thionamide therapy mandatory",
+        "C": "Continue propylthiouracil while repeating the blood count in one week",
+        "D": "Stop propylthiouracil and begin urgent evaluation and empiric antimicrobial management for febrile agranulocytosis"
+      },
+      "answer": "D",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::T03"
+    },
+    "medqa-derived::T04": {
+      "question": "A 32-year-old woman develops palpitations and heat intolerance eight weeks after delivery. She is breastfeeding and has never used thyroid medication. TSH is suppressed and free T4 is elevated. Thyroid-peroxidase antibodies are positive, TSH-receptor antibodies are negative, and Doppler ultrasonography shows low thyroid blood flow. There is no thyroid bruit or orbitopathy. Without antithyroid medication, the palpitations resolve. Ten weeks later she develops constipation and fatigue, with free T4 below the reference interval and TSH 16 mIU/L. Which explanation best accounts for why methimazole would not have targeted the primary abnormality during the initial phase?",
+      "options": {
+        "A": "The initial hormone excess resulted predominantly from release of stored hormone from injured follicles rather than increased synthesis",
+        "B": "The initial excess was produced solely by accelerated peripheral T4-to-T3 conversion with no thyroid injury",
+        "C": "The initial excess was sustained by receptor-antibody-driven synthesis that is intrinsically resistant to methimazole",
+        "D": "Persistently elevated placental hCG remained the dominant stimulus throughout both postpartum phases"
+      },
+      "answer": "A",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::T04"
+    },
+    "medqa-derived::T05": {
+      "question": "A 54-year-old man with previous surgery and radiotherapy for a pituitary macroadenoma is brought in with hypothermia and confusion after a respiratory infection. He stopped attending endocrine follow-up two years ago and takes no hormone replacement. Temperature is 34.0 degrees C, pulse 46/min, and blood pressure 78/46 mm Hg. Sodium is 121 mEq/L, glucose 48 mg/dL, free T4 0.22 ng/dL (reference 0.8-1.8), and TSH 1.4 mIU/L (reference 0.4-4.5). An 08:00 cortisol sample obtained before treatment is 1.6 micrograms/dL, with a low ACTH concentration. Airway support, cautious fluids, dextrose, and infection evaluation have begun. Which hormone-treatment sequence most appropriately addresses the immediate risk?",
+      "options": {
+        "A": "Withhold both hormones because a reference-range TSH establishes nonthyroidal illness",
+        "B": "Give levothyroxine alone and reassess the cortisol deficiency after thyroid indices normalize",
+        "C": "Give intravenous hydrocortisone before or with initiation of intravenous levothyroxine",
+        "D": "Give fludrocortisone alone because the low sodium proves isolated mineralocorticoid deficiency"
+      },
+      "answer": "C",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::T05"
+    },
+    "medqa-derived::T06": {
+      "question": "A 38-year-old woman has persistent palpitations, weight loss, and intermittent right pelvic discomfort. TSH is below 0.01 mIU/L and free T4 remains elevated on repeated testing over four months. TSH-receptor antibodies are negative. She is not pregnant or postpartum and has had no recent iodinated contrast, amiodarone, or prescribed thyroid hormone. She does use an over-the-counter product marketed for thyroid support. Serum thyroglobulin is elevated, with negative thyroglobulin antibodies. Neck ultrasonography shows a small, otherwise unremarkable thyroid, and 24-hour cervical radioiodine uptake is 0.4%. Pelvic ultrasonography reveals a 6-cm complex right adnexal mass. Which additional finding would most specifically establish an endogenous source of her persistent hormone excess?",
+      "options": {
+        "A": "Low thyroid blood flow on Doppler imaging of the neck",
+        "B": "A positive thyroid-peroxidase antibody result by itself",
+        "C": "Suppression of pituitary TSH during symptomatic episodes",
+        "D": "Focal radionuclide uptake within the adnexal mass on whole-body scintigraphy"
+      },
+      "answer": "D",
+      "source_dataset": "moreagent_medqa_style_authored_extension",
+      "source_question_id": "medqa-derived::T06"
+    }
+  }
+}

@@ -35,4 +35,4 @@ bash scripts/run_medqa.sh test
 bash scripts/test_memory.sh
 ```
 
-上述回归使用替身模型，验证角色契约、协议、真实SQLite/IPC、证据、预算和恢复等机制，不代表真实医学准确率或性能收益。`test-cuda.py`和`test-searx.py`是历史手动探针，不属于默认离线回归入口。
+上述回归使用替身模型，验证角色契约、协议、真实SQLite/IPC、证据、预算和恢复等机制，不代表真实医学准确率或性能收益。旧CUDA/SearXNG手动探针已清理；必要的部署诊断命令见packaging文档。

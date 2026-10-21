@@ -358,6 +358,9 @@ class DurableCalls:
             "SELECT coalesce(sum(seconds),0) FROM calls WHERE condition=? AND position=? AND state='complete'",
             (condition, position)).fetchone()[0]
 
+    def prompts_for(self, mode):
+        return self.agents.prompts_for(mode) if hasattr(self.agents,'prompts_for') else self.prompts
+
     def replay_pending(self):
         return bool(self.store.db.execute("SELECT 1 FROM calls WHERE condition=? AND position=? AND ordinal>?",
                                          (self.condition, self.position, self.ordinal)).fetchone())
@@ -386,7 +389,7 @@ class DurableCalls:
 
     def _call(self, role, payload, mode, **budget):
         self.ordinal += 1
-        fingerprint = hashlib.sha256(encode([role, mode, self.prompts[role], payload]).encode()).hexdigest()
+        fingerprint = hashlib.sha256(encode([role, mode, self.prompts_for(mode)[role], payload]).encode()).hexdigest()
         key = self.condition, self.position, self.ordinal
         row = self.store.db.execute("SELECT * FROM calls WHERE condition=? AND position=? AND ordinal=? "
                                     "ORDER BY attempt DESC LIMIT 1", key).fetchone()

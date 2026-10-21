@@ -1,0 +1,23 @@
+{
+  "original_question_options_gold_preserved": true,
+  "original_order_preserved_as_prefix": true,
+  "count": 50,
+  "unique_ids": 50,
+  "new_reuse_edges_only_to_earlier_tasks": true,
+  "new_items_have_at_least_two_original_anchors": true,
+  "new_items_have_three_explained_distractors": true,
+  "public_fields": [
+    "question_id",
+    "question",
+    "options"
+  ],
+  "new_answer_balance": {
+    "A": 5,
+    "B": 5,
+    "C": 5,
+    "D": 5
+  },
+  "difficulty_measured": false,
+  "independent_clinical_review": "pending",
+  "paid_model_calls": 0
+}

@@ -17,6 +17,20 @@ def terms(text):
     return set(re.findall(r"[a-zA-Z]{3,}", text.casefold()))
 
 
+def quote_ranges(text, quotes, context_chars=120):
+    """Exact source offsets for every selected quote, merging overlap only."""
+    ranges = []
+    for quote in quotes:
+        position = text.find(quote)
+        if quote and position >= 0:
+            ranges.append((max(0,position-context_chars),min(len(text),position+len(quote)+context_chars)))
+    merged = []
+    for start,end in sorted(ranges):
+        if merged and start <= merged[-1][1]:merged[-1] = (merged[-1][0],max(merged[-1][1],end))
+        else:merged.append((start,end))
+    return merged
+
+
 class EvidenceProcessor:
     def __init__(self, *, enabled=True, span_chars=1800, max_chars=12000, max_documents=8):
         if min(span_chars, max_chars, max_documents) <= 0:
@@ -24,7 +38,7 @@ class EvidenceProcessor:
         self.enabled, self.span_chars = enabled, span_chars
         self.max_chars, self.max_documents = max_chars, max_documents
 
-    def process(self, documents, *, query, targets=None, protected=None, expanded=()):
+    def process(self, documents, *, query, targets=None, protected=None, expanded=(), excerpt_only=None):
         start = time.monotonic()
         targets, protected = targets or {}, protected or {}
         views, visible, omitted, records, groups, candidates = [], {}, [], [], {}, {}
@@ -35,15 +49,20 @@ class EvidenceProcessor:
             ident, text = doc["id"], doc["text"]
             if doc["sha256"] != sha(text):
                 raise ValueError("不可变证据校验失败")
-            group = groups.get(doc["sha256"]) if self.enabled else None
             candidates[ident] = sorted(set(targets.get(ident, [])))
+            limit = len(text) if not self.enabled or ident in expanded else self.span_chars
+            ranges = (quote_ranges(text,excerpt_only[ident])
+                      if self.enabled and ident not in expanded and (excerpt_only or {}).get(ident) else [])
+            ranges = ranges or self._ranges(text, query, limit, protected.get(ident, []))
+            # Equal raw content does not imply equal selected memory fragments.
+            # Preserve distinct views; merge aliases only for identical ranges.
+            group_key = (doc['sha256'],tuple(ranges)) if excerpt_only else doc['sha256']
+            group = groups.get(group_key) if self.enabled else None
             if group is not None:
                 group.setdefault("aliases", []).append(ident)
                 visible[ident] = deepcopy(visible[group["id"]])
                 records.append({"source_id": ident, "action": "exact_duplicate", "canonical": group["id"]})
                 continue
-            limit = len(text) if not self.enabled or ident in expanded else self.span_chars
-            ranges = self._ranges(text, query, limit, protected.get(ident, []))
             cost = sum(end - begin for begin, end in ranges) + len(SEPARATOR) * max(0, len(ranges) - 1)
             if len(views) >= self.max_documents or cost > remaining:
                 omitted.append(ident)
@@ -59,7 +78,7 @@ class EvidenceProcessor:
                 view["has_more"] = True
             views.append(view)
             visible[ident] = deepcopy(spans)
-            groups[doc["sha256"]] = view
+            groups[group_key] = view
             remaining -= cost
             records.append({"source_id": ident, "action": "full" if not view.get("has_more") else "extract",
                             "raw_sha256": doc["sha256"], "ranges": ranges})

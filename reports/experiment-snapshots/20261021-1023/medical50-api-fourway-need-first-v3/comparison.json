@@ -1,0 +1,9 @@
+{
+  "matched_complete": false,
+  "token_comparison_valid": false,
+  "observed_cost_complete": false,
+  "latency_comparison_valid": false,
+  "resolved_model_consistent": true,
+  "runtime_healthy": false,
+  "note": "未知/估算 token 不计算 token 节省率；缺失用量不是零成本。"
+}

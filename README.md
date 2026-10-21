@@ -1,40 +1,36 @@
 # Moreagent / StruckFlow
 
-面向多智能体协作的通信、非文本状态交换与共享记忆实验原型。当前主线以三类模型角色协作处理医学选择题，检索真实教材证据，并在连续任务中积累、核验和复用历史记忆。
+面向多智能体协作的通信、非文本状态交换与共享记忆实验原型。Planner规划知识需求，Investigator检索缺口，Reasoner核验原文与条件并回答；三个角色使用同一模型服务和不同提示词。
 
-当前评测数据固定为 **MedQA 三组各 10 题，共 30 题**：贫血、肾脏、甲状腺。比较纯文本/结构化输入 × 记忆关闭/开启四条件，共 120 次任务执行。生成模型通过 DeepSeek API 调用；检索、重排、embedding 和记忆存储在本地执行。
+当前任务流为 **原始MedQA 30题＋原创MedQA风格扩展20题，共50题**。四条件为自然语言/结构化通信×记忆关闭/开启，每条件50题，共200次任务。生成通过DeepSeek API，教材检索、重排、embedding与SQLite在本地执行。
 
-## 系统做什么
+## 数据与结果
 
-| 部分 | 实现 |
-| --- | --- |
-| 多 Agent 运行时 | Planner 规划需求；Investigator 制定查询和工具计划；Verifier/Reasoner 核验原文并回答。三个角色使用同一模型服务和不同提示词。 |
-| 通信与调度 | G2CP 的 Control / Semantic / Precise 承载、能力描述、路由与预算；相同角色载荷分别编码为可读文本或紧凑 JSON。 |
-| 非文本状态 | 运行时与独立记忆服务通过 Pipe 传输 float32 向量字节，接收端恢复后用于余弦检索。 |
-| 共享记忆 | SQLite 保存证据、检索经验和任务过程，含来源角色、时间、主题、摘要和来源版本；后续任务按 ID 回读。 |
-| 评测与恢复 | 分别统计答案、证据、协议结果、真实 API usage、通信量、向量负载、工具次数、耗时和复用链；SQLite 检查点支持中断恢复。 |
+- [完整50题](experiments/datasets/medical-related-50-v2/questions.md) · [新增20题](experiments/datasets/medical-related-50-v2/extensions.md) · [数据来源、连续性与局限](experiments/datasets/medical-related-50-v2/README.md)
+- [实验结果索引](reports/README.md) · [2026-10-21固定快照](reports/experiment-snapshots/20261021-1023/README.md)：含逐题轨迹、账本和记忆库压缩快照；未完成批次明确标注，不拼接成全量成绩。
+- [两批完整30题对照](reports/medical30-acp-workspace-comparison.md)：Workspace组合方案的structured无记忆总Token为134798，Text无记忆178089，观察下降24.31%；四条件均30/30正确。structured开启记忆为151409，较关闭记忆增加12.32%，未证明记忆净收益。
+- [记忆审计](reports/medical30-memory-audit.md) · [50题实验前复核](reports/medical50-preflight-review.md)：缺陷、修正和验证边界均保留。
 
-检索器和记忆服务是程序工具，不计入三个模型 Agent。工具使用 Textbooks 的 BM25 索引与 MedCPT 重排，不把模型生成的补充知识当作教材证据。
+最新50题批次仍在执行，GitHub结果是标明采集时间的部分快照，不能视为200任务全部完成。完整历史批次、停止批次和负结果均保留；本机原始实验目录不删除、不覆盖。
 
-## 当前任务与实验
+原30题保持题干、选项、答案及顺序；新增为贫血7题、肾脏7题、甲状腺6题。新增题为本项目合成病例，非官方MedQA新增题，未经过独立医学审题或难度标定。连续性体现知识复用、条件变化和延迟回读，各题仍可独立求解；不声称同一患者病程或硬前置依赖。答案与人工复用提示不进入Agent输入或初始记忆。
 
-| 顺序 | 任务组 | 题数 |
-| --- | --- | ---: |
-| 1 | 贫血分类、检验解释与条件变化 | 10 |
-| 2 | 蛋白尿、血尿来源与肾脏机制鉴别 | 10 |
-| 3 | 甲状腺功能、母婴条件与用药边界 | 10 |
+## 系统实现
 
-[完整题目](experiments/datasets/medical-related-30-v1/questions.md) · [数据说明](experiments/datasets/medical-related-30-v1/README.md) · [API 实验配置](configs/medical-related-30-v1/README.md)
+| 部分 | 实际职责 |
+|---|---|
+| 多Agent运行时 | Planner→Investigator→Reasoner顺序执行；Reasoner可提出具体缺口并返回Investigator。 |
+| 通信与调度 | Text自然语言交接，structured采用ACP-1二进制位置参数、能力协商、对象引用与函数派发。模型工具/结果接口仍采用JSON。 |
+| 共享工作状态 | 任务、选项、需求、证据和执行状态统一保存，structured按角色构造必要视图，减少重复字段。 |
+| 非文本状态 | float32向量通过进程间Pipe交换，由记忆服务实际消费以检索相似片段；没有隐藏状态/KV注入。 |
+| 共享记忆 | 先规划再按需求召回；同源只回读一次、不同片段分别保留；知识与任务来源分离、最终复用按原文区间归因。 |
+| 评测与恢复 | 答案、证据、协议独立统计；真实API usage、通信、向量、工具与复用链；SQLite账本保存响应和待提交记忆。 |
 
-这是知识关联的连续任务流：组内保留顺序，开启记忆时跨题积累，并允许后题复用前题成果。各题仍可独立求解，不声称是同一患者的连续病程或严格前置依赖工作流。30 题均曾出现在旧 71 题实验中，是固定评测子集，不是全新未见测试集。标准答案与候选复用注释不进入 Agent 输入或初始记忆。
+检索与记忆服务是程序工具，不额外算作模型Agent。Textbooks使用BM25与MedCPT；来源匹配和模型自检不能代替独立医学判断。ACP-1是本项目协议，不是论文G²CP完整复现；structured收益还包含角色视图，不能只归因于数字编码。
 
-四条件使用相同题序、模型、提示词、工具与预算。各条件使用独立数据库；记忆开启的条件从空库开始，沿 30 题在线积累，组间不清空。详见 [实验设计与指标](docs/EXPERIMENTS.md)。
+## 安装与执行
 
-当前 30 题 API 实验结果写入本机 `experiments/results/medical30-api-fourway-20261020-v2/`，该目录不提交到 Git。全量结束前不发布最终收益结论。旧 71 题结果作为[历史参考](reports/medical71-reference/README.md)保留，其中记忆增加了成本，不能宣称已经证明普遍加速。
-
-## 安装与运行
-
-要求 Python 3.11+、可用的兼容模型 API，以及预先准备的教材、BM25 索引、MedCPT 与 embedding 权重。Python 依赖见 [requirements.txt](LangChain/requirements.txt)。
+要求Python 3.11+，依赖见[requirements.txt](LangChain/requirements.txt)。还需预先准备教材、BM25索引、MedCPT、Qwen3-Embedding及相应Java/检索环境，见[环境准备](docs/SETUP.md)。
 
 ```bash
 python3 -m venv .venv
@@ -43,52 +39,45 @@ cp LangChain/.env.example LangChain/.env
 export STRUCKFLOW_PYTHON="$PWD/.venv/bin/python"
 ```
 
-在 `LangChain/.env` 填写实际 API 配置。当前实验配置显式使用 `deepseek-flash`、`https://api.deepseek.com` 与 `DEEPSEEK_API_KEY`。模型名、端点和请求上限以实际配置和响应记录为准。密钥不提交到 Git。
-
-教材检索使用独立 Python/Java 环境及已构建索引；仅安装上述 Python 包不会自动下载教材或构建 BM25。目录要求及可覆盖参数见 [环境准备](docs/SETUP.md)。
+在LangChain/.env填写DEEPSEEK_API_KEY，密钥不提交。当前配置为deepseek-flash，实际响应模型、参数和用量记录在manifest及账本中。
 
 ```bash
-# 静态检查，不调用生成 API；新实验选择尚不存在的输出目录。
-bash scripts/run_medqa.sh audit \
-  --config configs/medical-related-30-v1/compare-api.json --all \
-  --output experiments/results/medical30-api-new
-
-# 四条件全量，会调用 API。
-bash scripts/run_medqa.sh compare \
-  --config configs/medical-related-30-v1/compare-api.json --all \
-  --output experiments/results/medical30-api-new
-
-# 中断后沿原参数、题序和数据库恢复。
-bash scripts/run_medqa.sh compare --resume \
-  --output experiments/results/medical30-api-new
-
-# 离线回归，使用替身模型，不产生生成 API 费用。
+# 不调用生成API的检查
 bash scripts/run_medqa.sh test
 bash scripts/test_memory.sh
+bash scripts/run_medqa.sh audit \
+  --config configs/medical-related-50-v2/compare-api-need-first.json --all
+
+# 完整四条件，会调用API；新批次必须使用尚不存在的结果目录
+bash scripts/run_medqa.sh compare \
+  --config configs/medical-related-50-v2/compare-api-need-first.json \
+  --all --output experiments/results/medical50-new-run
+
+# 只读进度与自动汇总，不另调API
+python -B scripts/monitor_medqa50.py experiments/results/medical50-new-run
+
+# 中断恢复须使用原源码、参数和数据库；未知usage会阻止普通续跑
+bash scripts/run_medqa.sh compare --resume \
+  --output experiments/results/medical50-new-run
 ```
 
-数据包已经包含 30 题与加载器文件，不需要下载整个原题库才能执行这套子集。重建数据包时才需要本地原始 `MedRGAG/benchmark.json`；脚本校验来源指纹并保留原文、选项及标准答案。
+关闭终端时需要nohup或tmux保持进程；API断连仍可能触发保护停止。不要为续跑删除原记忆库、篡改未知用量或将失败题强行标成成功。
 
 ## 仓库结构
 
 ```text
-LangChain/agents/             模型角色与提示词
-LangChain/medqa/              当前运行时、检索、证据、记忆、评测与检查点
-LangChain/protocol/           公共协议承载
-LangChain/memory/             embedding 和存储基础组件
-LangChain/test/               离线单元及集成测试
-configs/medical-related-30-v1/ 当前 API 四条件配置
-experiments/datasets/         固定 30 题及重建脚本
-reports/                     可提交的精简历史报告
-scripts/                     运行、审计、汇总和可选本地模型工具
-web/                         原通用聊天界面
-packaging/                   原通用 Web 的部署工具
+LangChain/agents/             三角色与提示词
+LangChain/medqa/              协议、状态、检索、证据、评测与检查点
+LangChain/memory/             embedding与持久化基础组件
+LangChain/test/               核心离线回归
+configs/medical-related-50-v2/ 当前50题API配置
+configs/medical-related-30-v1/ 历史及对照配置
+experiments/datasets/         原30题与扩展50题、来源及构建脚本
+reports/                     实验汇总、负结果与可下载的固定快照
+scripts/                     运行、汇总、审计、快照与恢复工具
+web/、packaging/              原通用界面与部署工具
 ```
 
-`web/` 仍连接原通用工作流，尚未接入当前 30 题三 Agent 实验。`packaging/` 的 Web 部署记录也不等于当前评测路径已经完成目标操作系统验收。
+原通用Web尚未接入当前50题实验。模型权重、密钥、虚拟环境和实时数据库不纳入Git；公开的压缩结果快照位于reports，不依赖运行中目录。已清理被正式实现替代的示例与手动探针，保留必要回归测试和全部本机数据/结果。
 
-[系统设计](docs/ARCHITECTURE.md) · [实验设计](docs/EXPERIMENTS.md) · [中断恢复](docs/medqa-resume.md) · [清理与提交范围](docs/REPOSITORY.md)
-
-## 结果边界
-
-文本与结构化对比是相同角色输入的表示对照，两者输出均采用 JSON 决策契约。向量 IPC 没有向聊天模型注入隐藏状态，也不自动减少模型读取证据的 Token。来源哈希和引句匹配不能代替语义正确性；记忆命中、读取、实际引用、答对与净收益分别报告。
+[系统设计](docs/ARCHITECTURE.md) · [通信实现](docs/COMMUNICATION_IMPLEMENTATION.md) · [共享状态](docs/SHARED_WORKSPACE.md) · [需求驱动记忆](docs/NEED_FIRST_MEMORY.md) · [实验设计](docs/EXPERIMENTS.md) · [仓库清理](docs/REPOSITORY.md)

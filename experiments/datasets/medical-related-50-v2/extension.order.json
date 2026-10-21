@@ -1,0 +1,26 @@
+{
+  "dataset_sha256": "11fd9f547fef5db2dd430f9aa864b14643b85b5fbfcd074be0c0afebfb7e2a92",
+  "ids": [
+    "medqa-derived::A01",
+    "medqa-derived::A02",
+    "medqa-derived::A03",
+    "medqa-derived::A04",
+    "medqa-derived::A05",
+    "medqa-derived::A06",
+    "medqa-derived::A07",
+    "medqa-derived::R01",
+    "medqa-derived::R02",
+    "medqa-derived::R03",
+    "medqa-derived::R04",
+    "medqa-derived::R05",
+    "medqa-derived::R06",
+    "medqa-derived::R07",
+    "medqa-derived::T01",
+    "medqa-derived::T02",
+    "medqa-derived::T03",
+    "medqa-derived::T04",
+    "medqa-derived::T05",
+    "medqa-derived::T06"
+  ],
+  "warning": "Not a warm-memory experiment by itself; use full 50 or an explicitly frozen matched warmup database."
+}

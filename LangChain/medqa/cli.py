@@ -73,6 +73,12 @@ def make_parser():
                    help="decoupled分别输出答案/证据/协议结果，审计问题不触发完整重答")
     p.add_argument("--context-profile", choices=["compact", "full"], default="compact",
                    help="两者保留最小JSON形状；compact省去重复输入字段列表，full提供完整字段说明")
+    p.add_argument('--workspace-policy', choices=['legacy', 'role_views_v1'], default='legacy',
+                   help='role_views_v1仅在structured条件启用共享任务状态与按角色展开；Text基线不变')
+    p.add_argument('--workflow', choices=['legacy','need_first'], default='legacy',
+                   help='need_first先规划，再按需求召回记忆、核验覆盖、仅检索缺口；两个通信模式共用')
+    p.add_argument('--max-investigation-rounds', type=int, default=3,
+                   help='need_first调查轮数保护上限1至3，通常仍是三次模型调用')
     p.add_argument("--task-group", default="medqa", help="关联任务组/记忆适用域，四条件必须相同")
     p.add_argument("--memory", choices=["on", "off"], default="on")
     p.add_argument("--memory-write", choices=["on", "off"], default="on", help="off时仍可读取历史记忆，但不保存当前题的新记忆")
@@ -82,8 +88,8 @@ def make_parser():
     p.add_argument("--memory-namespace", help="积累和评估必须使用相同命名空间；未指定时沿用条件名称")
     p.add_argument("--memory-threshold", type=float, default=.65)
     p.add_argument('--memory-selection',choices=['legacy','needs'],default='legacy',
-                   help='needs先粗召回限长预览，再按现有Planner需求选最多3条；legacy保留Top-3路径')
-    p.add_argument('--memory-recall-limit',type=int,default=10,help='needs路径粗召回条数（3至10），最终回读仍至多3条')
+                   help='needs启用需求选择；need_first按至多3个来源/9条记忆保留片段；legacy流程保留旧路径')
+    p.add_argument('--memory-recall-limit',type=int,default=10,help='每次需求召回条数（3至10）；need_first另按唯一来源控制回读')
     p.add_argument("--max-calls", type=int, default=8, help="每题模型请求保护上限3至64；所有角色/纠错共用")
     p.add_argument("--max-searches", type=int, default=6, help="动态查询的失控保护上限，不预分配阶段配额")
     p.add_argument("--max-reads", type=int, default=4)
@@ -202,6 +208,7 @@ def source_hashes():
              PROJECT / "LangChain/agents/medqa_compact_prompts.py",
              PROJECT / "LangChain/agents/medqa_baseline_prompts.py",
              PROJECT / "LangChain/agents/medqa_memory_prompts.py",
+             PROJECT / "LangChain/agents/medqa_need_first_prompts.py",
              PROJECT / "LangChain/memory/advanced.py", PROJECT / "LangChain/memory/embedding.py",
              PROJECT / "LangChain/protocol/g2cp.py"]
     return {str(f.relative_to(PROJECT)): hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
@@ -221,7 +228,9 @@ def summarize(results):
     n = len(results)
     metrics = [r["metrics"] for r in results]
     used = [r for r in results if r["metrics"]["memory_used"] > 0]
-    candidates = sum(m.get("memory_candidates_by_kind", {}).get("evidence", m["memory_candidates"]) for m in metrics)
+    candidates = sum(m.get('memory_candidate_sources',0) if r.get('workflow')=='need_first' else
+                     m.get("memory_candidates_by_kind", {}).get("evidence", m["memory_candidates"])
+                     for r,m in zip(results,metrics))
     source_checks = sum(m.get('memory_source_check_attempts',m["document_reads"]) for m in metrics)
     missing = sum(max(m.get("usage_missing_calls", 0), m.get("checkpoint_unknown_calls", 0)) for m in metrics)
     sources = sorted({source for m in metrics for source in m["usage_sources"]})
@@ -230,7 +239,20 @@ def summarize(results):
                    for k in KINDS} for stage in STAGES}
     presented=sum(funnel['presented'].values())
     delivered=funnel['delivered']
+    need_first=any(r.get('workflow')=='need_first' for r in results)
+    needs=sum(m.get('knowledge_needs',0) for m in metrics)
     return {"questions_completed": n,
+            "workflows":sorted({r.get('workflow','legacy') for r in results}),
+            "communication_versions": sorted({r.get('communication_version','legacy_format_only') for r in results}),
+            "workspace_versions": sorted({r.get('workspace_version') for r in results if r.get('workspace_version')}),
+            "workspace_metrics": {key:sum(m.get(key,0) for m in metrics) for key in (
+                'workspace_views','workspace_input_bytes_before','workspace_input_bytes_after',
+                'workspace_brief_views','workspace_patch_count')},
+            "handoff_metrics": {key:sum(m.get(key,0) for m in metrics) for key in (
+                'acp_request_bytes','acp_result_bytes','acp_handshake_bytes','acp_object_registration_bytes',
+                'acp_frames','acp_operations','acp_batches','acp_dispatch_seconds','acp_overhead_seconds','acp_handler_seconds',
+                'acp_evidence_ref_reads','acp_memory_ref_reads','state_handle_reads','state_handle_bytes',
+                'natural_handoff_chars','natural_handoff_rendered')},
             "status_counts": dict(Counter(r["status"] for r in results)),
             "answer_completion_rate": sum(r.get("answer") is not None for r in results) / n if n else None,
             "protocol_status_counts": dict(Counter(r.get("protocol_result", {}).get("status", "legacy") for r in results)),
@@ -289,8 +311,12 @@ def summarize(results):
             "memory_rpc_requests":sum(m['state_transfers'] for m in metrics),
             "embedding_seconds":sum(m.get('embedding_seconds',0.) for m in metrics),
             "memory_funnel":funnel,
-            "memory_planner_acceptance_rate":sum(funnel['planner_accepted'].values())/presented if presented else None,
-            "memory_selection_rate":sum(funnel['selected'].values())/presented if presented else None,
+            "memory_planner_acceptance_rate":sum(funnel['planner_accepted'].values())/presented if presented and not need_first else None,
+            "memory_selection_rate":sum(funnel['selected'].values())/presented if presented and not need_first else None,
+            "memory_investigator_acceptance_rate":sum(funnel['investigator_accepted'].values())/presented if presented and need_first else None,
+            "memory_need_coverage_rate":sum(m.get('memory_covered_needs',0) for m in metrics)/needs if needs else None,
+            "memory_need_support_rate":sum(m.get('memory_supported_needs',0) for m in metrics)/needs if needs else None,
+            "memory_zero_search_supported_rate":sum(m.get('memory_only_supported_tasks',0) for m in metrics)/n if n else None,
             "memory_evidence_citation_rate":funnel['cited']['evidence']/delivered['evidence'] if delivered['evidence'] else None,
             "memory_strategy_execution_rate":funnel['executed']['strategy']/delivered['strategy'] if delivered['strategy'] else None,
             "reused_question_rate": len(used) / n if n else None,
@@ -300,7 +326,13 @@ def summarize(results):
             "memory_source_valid_rate": sum(m["memory_source_valid"] for m in metrics) / source_checks if source_checks else None,
             "memory_source_check_coverage": source_checks / candidates if candidates else None,
             "memory_source_check_attempts": source_checks,
-            "memory_presented": sum(len(e.get("candidate_ids", [])) for r in results for e in r["events"] if e.get("tool") == "memory_prefetch"),
+            "memory_presented": presented,
+            "memory_coarse_candidate_occurrences": sum(len(e.get("candidate_ids", [])) for r in results for e in r["events"] if e.get("tool") == "memory_prefetch"),
+            **{key:sum(m.get(key,0) for m in metrics) for key in
+               ('investigation_rounds','queries_skipped_covered','memory_only_supported_tasks',
+                'memory_evidence_presented','memory_covered_needs','needs_review_errors','knowledge_needs','memory_supported_needs')},
+            **{key:sum(m.get(key,0) for m in metrics) for key in
+               ('memory_candidate_sources','memory_fragment_valid','memory_source_cache_hits')},
             "mean_seconds": statistics.mean(m["elapsed_seconds"] for m in metrics) if n else None,
             **{key: sum(m[key] for m in metrics) for key in
                ("model_calls", "messages", "communication_chars", "prompt_tokens", "completion_tokens", "total_tokens",
@@ -379,7 +411,8 @@ def create_model(args):
     load_env_file()
     model,base,key,timeout = model_connection(args)
     chat = CompatibleChat(model=model, base_url=base, api_key=key, max_tokens=args.max_output_tokens,timeout_seconds=timeout)
-    return ChatRoles(chat, args.context_profile, args.output_policy,args.memory_selection), {"model": model, "temperature": 0, "max_output_tokens": args.max_output_tokens,
+    return ChatRoles(chat, args.context_profile, args.output_policy,args.memory_selection,
+                     workspace_policy=getattr(args,'workspace_policy','legacy'), workflow=getattr(args,'workflow','legacy')), {"model": model, "temperature": 0, "max_output_tokens": args.max_output_tokens,
                             "request_limit_field": "max_tokens",
                             "endpoint_sha256": hashlib.sha256(base.rstrip("/").encode()).hexdigest(),
                             "thinking_disabled": chat.deepseek or chat.qwen3_nonthinking,"timeout_seconds":timeout,
@@ -509,9 +542,12 @@ def execute_batch(args, data, textbooks, agents, out, questions, conditions, che
                                   max_stalled_rounds=args.max_stalled_rounds, max_contract_repairs=args.max_contract_repairs,
                                   evidence_processor=args.evidence_processor == "on", evidence_span_chars=args.evidence_span_chars,
                                   journal=tools, output_policy=args.output_policy, memory_policy=args.memory_policy,
-                                  memory_selection=args.memory_selection,memory_recall_limit=args.memory_recall_limit)
-                dump(out / (condition + "-handshake.json"), runtime.handshake())
+                                  memory_selection=args.memory_selection,memory_recall_limit=args.memory_recall_limit,
+                                  workspace_policy=getattr(args,'workspace_policy','legacy'),
+                                  workflow=getattr(args,'workflow','legacy'),
+                                  max_investigation_rounds=getattr(args,'max_investigation_rounds',3))
                 result = runtime.run(question, trace_id=row["trace"])
+                dump(out / (condition + "-handshake.json"), runtime.handshake())
                 if calls.fatal_error:
                     raise calls.fatal_error
                 if tools.fatal_error:
@@ -550,6 +586,12 @@ def main():
     p, args = parse_args()
     if args.retry_unknown_calls and not args.resume:
         p.error("--retry-unknown-calls 必须与 --resume 同时使用")
+    if args.workspace_policy == 'role_views_v1' and args.output_policy != 'decoupled':
+        p.error('role_views_v1需要--output-policy decoupled')
+    if args.workflow == 'need_first' and (args.output_policy!='decoupled' or args.memory_policy!='basic' or args.memory_selection!='needs'):
+        p.error('need_first需要decoupled输出、basic记忆与needs选择')
+    if not 1 <= args.max_investigation_rounds <= 3:
+        p.error('--max-investigation-rounds需为1至3')
     if args.memory_source and args.command == "run" and args.memory == "off":
         p.error("关闭记忆的run不应加载积累库")
     if args.memory_source and args.memory_write != "off":
@@ -630,6 +672,10 @@ def main():
             if args.output and args.output.exists():
                 issues.append("结果目录已存在")
             result = {"runtime_protocol": protocol_for(args.output_policy), "answer_policy": answer_policy_for(args.output_policy),
+                      "communication_version": "moreagent.handoff/1",
+                      "workspace_policy":args.workspace_policy,
+                      "workflow":args.workflow,"max_investigation_rounds":args.max_investigation_rounds,
+                      "communication_paths": {"text":"natural_language_without_acp", "structured":"ACP-1_binary_dispatch"},
                       "output_policy": args.output_policy,
                       "questions": len(questions), "dataset_sha256": data.sha256,
                       "condition_matrix": ["text_off", "structured_off", "text_on", "structured_on"],
@@ -688,16 +734,26 @@ def main():
                                      "question_ids": [q.id for q in questions],
                                      "sequence_sha256": hashlib.sha256(json.dumps([q.id for q in questions]).encode()).hexdigest(),
                                      "gold_visible_to_agents": False, "memory_strategy": "exact_cosine",
-                                     "memory_embedding_strategy": ("task_group + memory_type + topic + summary + conditions + source_excerpts_or_queries"
+                                     "memory_embedding_strategy": ("task_group + evidence + need_goal + title + exact_source_excerpts" if args.workflow=='need_first' else
+                                         "task_group + memory_type + topic + summary + conditions + source_excerpts_or_queries"
                                          if args.memory_policy == "basic" else "task_group + task_topic + historical_conditions + title + exact_support_quotes"),
-                                     "architecture": "program_prefetch → Planner → Investigator → tools → VerifierReasoner → program_memory_update",
+                                     "architecture": ("Planner → need_memory_recall/read → Investigator_coverage → gap_tools → Reasoner_need_review → optional_Investigator → need_memory_update"
+                                         if args.workflow=='need_first' else "program_prefetch → Planner → Investigator → tools → VerifierReasoner → program_memory_update"),
                                      "retrieval_policy": {"type": "adaptive", "search_fuse": args.max_searches,
                                          "stalled_fuse": args.max_stalled_rounds, "document_reads": args.max_reads,
                                          "model_calls": args.max_calls},
                                      "evidence_processor": args.evidence_processor,
                                      "development_question_ids": sorted(DEVELOPMENT_IDS),
                                      "contains_development_questions": any(q.id in DEVELOPMENT_IDS for q in questions),
-                                     "text_baseline": "相同角色JSON输出；交接输入改为可读文本，同字段同证据，非全历史透传。"}
+                                     "communication_version": "moreagent.handoff/1",
+                                     "text_baseline": "自然语言角色交接，不经过ACP解析与派发；本角色工具和结果接口仍为JSON。",
+                                     "structured_treatment": "ACP-1二进制位置参数、任务引用、能力协商、批次映射和向量句柄消费；原工具逻辑保留。",
+                                     "workspace_policy":args.workspace_policy,
+                                     "workflow":args.workflow,"max_investigation_rounds":args.max_investigation_rounds,
+                                     "workspace_treatment": ("structured条件启用应用层共享状态、校验后的角色变更和按角色输入视图；"
+                                         "Text保持原自然语言交接。收益属于通信与上下文组合方案，不能单独归因于二进制编码。"
+                                         if args.workspace_policy=='role_views_v1' else "disabled"),
+                                     "measurement_boundary": "API usage与ACP消息字节分开统计；对象登记、握手和自然语言交接成本均保留。"}
         conditions = [(args.mode, args.memory)] if args.command == "run" else [
             ("text", "off"), ("structured", "off"), ("text", "on"), ("structured", "on")]
         if args.command == "compare":

@@ -50,6 +50,10 @@ def normalize_unit(unit, trace):
 
 def embedding_text(unit):
     content = unit['content']
+    if content.get('index_schema') == 'need-memory-v1':
+        # The retrieval key is a knowledge relation, not a second copy of the case.
+        return '\n'.join([content['task_group'], unit['kind'], unit['topic'],
+                          content.get('title',''), *content.get('excerpts',[])])
     parts = [content['task_group'], unit['kind'], unit['topic'], unit['summary']]
     parts.extend(content.get('conditions', []))
     if unit['kind'] == 'evidence':
@@ -115,4 +119,41 @@ def build_units(question, state, result, evidence, history, metrics, *, actionab
                    'source_ids':sorted(evidence),'outcome':result.get('status','unknown'),
                    'gaps':gaps, 'tool_counts':{'searches':metrics['retrieval_count'],'source_reads':metrics['document_reads']},
                    'conclusion_status':'No medical conclusion or answer letter promoted from this record.'}})
+    return units
+
+
+def build_need_units(question, state, result, evidence, history, metrics):
+    """Promote source-backed needs only; keep raw episodes in the task journal.
+
+    Source matching and applicability are checked by the same Reasoner, not an
+    independent judge. Stored conditions describe the originating case only.
+    """
+    if not state.get('need_review_current') or not result.get('evidence_result',{}).get('need_memory_eligible'):
+        return []
+    tasks = {t['id']:t for t in state.get('knowledge_tasks',[])}
+    conditions = {c['id']:c['text'] for c in state.get('key_conditions',[])}
+    valid = {(c['evidence_id'],c['quote']) for c in result.get('evidence_result',{}).get('citations',[])
+             if c.get('source_verified') and c.get('visible')}
+    units = []
+    for review in state.get('need_reviews',[]):
+        task = tasks.get(review.get('task_id'))
+        if not task or review.get('verdict')!='supported' or review.get('condition_verdict')!='matched':
+            continue
+        grouped = {}
+        for quote in review.get('support_quotes',[]):
+            pair = (quote.get('evidence_id'),quote.get('quote'))
+            if pair in valid and pair[0] in evidence:
+                grouped.setdefault(pair[0],[]).append(pair[1])
+        for ident, quotes in list(grouped.items())[:2]:
+            doc = evidence[ident]; excerpts = list(dict.fromkeys(quotes))[:3]
+            units.append({'kind':'evidence','source_agent':'VerifierReasoner','topic':task['goal'][:600],
+                'summary':'\n'.join(excerpts)[:600], 'document':deepcopy(doc), 'content':{
+                    'corpus_version':state['corpus_version'],'task_group':state['task_group'],
+                    'origin_question_id':question.id,'index_schema':'need-memory-v1',
+                    'need_goal':task['goal'],'needs':[task['goal']],
+                    'conditions':[conditions[i] for i in task.get('condition_ids',[]) if i in conditions],
+                    'conditions_role':'origin_context_only; recheck_for_each_task',
+                    'verification':'same_agent_need_review; not_independent_verification',
+                    'model_reported_support':'supported',
+                    **{k:doc[k] for k in ('id','title','sha256')}, 'excerpts':excerpts}})
     return units

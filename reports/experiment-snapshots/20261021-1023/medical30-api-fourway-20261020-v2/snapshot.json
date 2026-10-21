@@ -1,0 +1,44 @@
+{
+  "run_name": "medical30-api-fourway-20261020-v2",
+  "captured_at": "2026-10-21T10:22:49.894706+08:00",
+  "expected_per_condition": 30,
+  "completed": {
+    "text_off": 0,
+    "structured_off": 26,
+    "text_on": 30,
+    "structured_on": 0
+  },
+  "matched_complete": false,
+  "saved_response_count": 167,
+  "call_states": {
+    "complete": 167,
+    "pending": 1
+  },
+  "task_states": [
+    [
+      "structured_off",
+      "complete",
+      26
+    ],
+    [
+      "text_on",
+      "complete",
+      30
+    ]
+  ],
+  "known_saved_response_tokens": 315071,
+  "unknown_request_records": 1,
+  "databases": {
+    "checkpoint.sqlite3": {
+      "sha256_uncompressed": "fc3f2e9e39aaba887fa056dc0a956fcf4c43c57ea5051ad182e33766f79f6aa4",
+      "captured_at": "2026-10-21T10:22:49.894706+08:00"
+    },
+    "text_on.sqlite3": {
+      "sha256_uncompressed": "e05ffd0280a9ebabefd3a0cd894131ece3991678c43984f6570fc0b50e7e8c00",
+      "captured_at": "2026-10-21T10:22:51.483718+08:00"
+    }
+  },
+  "purpose": "audit_snapshot; not a coordinated cross-database resume bundle",
+  "source_run_untouched": true,
+  "api_calls_during_export": 0
+}

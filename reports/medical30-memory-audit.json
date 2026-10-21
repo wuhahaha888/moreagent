@@ -1,0 +1,292 @@
+{
+  "records": {
+    "ACP-1 / text_on": {
+      "summary": {
+        "experiment": "ACP-1",
+        "condition": "text_on",
+        "tasks": 30,
+        "candidate_hit_tasks": 26,
+        "recalled_entries": 226,
+        "planner_presented_entries": 76,
+        "planner_selected_entries": 34,
+        "tasks_selected_any": 19,
+        "selected_evidence_entries": 21,
+        "resolved_and_delivered_evidence_entries": 21,
+        "cited_source_memory_entries": 8,
+        "tasks_with_final_memory_source_refs": 6,
+        "strategy_executed_entries": 3,
+        "tasks_with_executed_strategy": 3,
+        "reused_without_search_tasks": 0,
+        "search_off": 39,
+        "search_on": 44,
+        "tokens_off": 176178,
+        "tokens_on": 203837,
+        "net_token_saving": -0.15699463043058715
+      },
+      "raw_funnel": {
+        "recalled": {
+          "evidence": 97,
+          "strategy": 66,
+          "episode": 63
+        },
+        "presented": {
+          "evidence": 28,
+          "strategy": 31,
+          "episode": 17
+        },
+        "planner_accepted": {
+          "evidence": 21,
+          "strategy": 8,
+          "episode": 5
+        },
+        "selected": {
+          "evidence": 21,
+          "strategy": 8,
+          "episode": 5
+        },
+        "resolved": {
+          "evidence": 21,
+          "strategy": 8,
+          "episode": 5
+        },
+        "delivered": {
+          "evidence": 21,
+          "strategy": 8,
+          "episode": 5
+        },
+        "executed": {
+          "evidence": 0,
+          "strategy": 3,
+          "episode": 0
+        },
+        "cited": {
+          "evidence": 8,
+          "strategy": 0,
+          "episode": 0
+        }
+      },
+      "reported_memory_presented": 226,
+      "correct_planner_presented": 76,
+      "unresolved_entries_marked_delivered": [],
+      "strict_source_reference_fraction": 0.38095238095238093
+    },
+    "ACP-1 / structured_on": {
+      "summary": {
+        "experiment": "ACP-1",
+        "condition": "structured_on",
+        "tasks": 30,
+        "candidate_hit_tasks": 26,
+        "recalled_entries": 227,
+        "planner_presented_entries": 74,
+        "planner_selected_entries": 26,
+        "tasks_selected_any": 15,
+        "selected_evidence_entries": 20,
+        "resolved_and_delivered_evidence_entries": 20,
+        "cited_source_memory_entries": 12,
+        "tasks_with_final_memory_source_refs": 9,
+        "strategy_executed_entries": 2,
+        "tasks_with_executed_strategy": 2,
+        "reused_without_search_tasks": 0,
+        "search_off": 40,
+        "search_on": 40,
+        "tokens_off": 160210,
+        "tokens_on": 176643,
+        "net_token_saving": -0.10257162474252546
+      },
+      "raw_funnel": {
+        "recalled": {
+          "evidence": 95,
+          "strategy": 72,
+          "episode": 60
+        },
+        "presented": {
+          "evidence": 34,
+          "strategy": 25,
+          "episode": 15
+        },
+        "planner_accepted": {
+          "evidence": 20,
+          "strategy": 2,
+          "episode": 4
+        },
+        "selected": {
+          "evidence": 20,
+          "strategy": 2,
+          "episode": 4
+        },
+        "resolved": {
+          "evidence": 20,
+          "strategy": 2,
+          "episode": 4
+        },
+        "delivered": {
+          "evidence": 20,
+          "strategy": 2,
+          "episode": 4
+        },
+        "executed": {
+          "evidence": 0,
+          "strategy": 2,
+          "episode": 0
+        },
+        "cited": {
+          "evidence": 12,
+          "strategy": 0,
+          "episode": 0
+        }
+      },
+      "reported_memory_presented": 227,
+      "correct_planner_presented": 74,
+      "unresolved_entries_marked_delivered": [],
+      "strict_source_reference_fraction": 0.6
+    },
+    "Workspace＋ACP / text_on": {
+      "summary": {
+        "experiment": "Workspace＋ACP",
+        "condition": "text_on",
+        "tasks": 30,
+        "candidate_hit_tasks": 27,
+        "recalled_entries": 228,
+        "planner_presented_entries": 74,
+        "planner_selected_entries": 35,
+        "tasks_selected_any": 22,
+        "selected_evidence_entries": 25,
+        "resolved_and_delivered_evidence_entries": 25,
+        "cited_source_memory_entries": 8,
+        "tasks_with_final_memory_source_refs": 6,
+        "strategy_executed_entries": 1,
+        "tasks_with_executed_strategy": 1,
+        "reused_without_search_tasks": 0,
+        "search_off": 42,
+        "search_on": 42,
+        "tokens_off": 178089,
+        "tokens_on": 201058,
+        "net_token_saving": -0.12897483842348478
+      },
+      "raw_funnel": {
+        "recalled": {
+          "evidence": 100,
+          "strategy": 62,
+          "episode": 66
+        },
+        "presented": {
+          "evidence": 32,
+          "strategy": 26,
+          "episode": 16
+        },
+        "planner_accepted": {
+          "evidence": 25,
+          "strategy": 3,
+          "episode": 7
+        },
+        "selected": {
+          "evidence": 25,
+          "strategy": 3,
+          "episode": 7
+        },
+        "resolved": {
+          "evidence": 25,
+          "strategy": 3,
+          "episode": 7
+        },
+        "delivered": {
+          "evidence": 25,
+          "strategy": 3,
+          "episode": 7
+        },
+        "executed": {
+          "evidence": 0,
+          "strategy": 1,
+          "episode": 0
+        },
+        "cited": {
+          "evidence": 8,
+          "strategy": 0,
+          "episode": 0
+        }
+      },
+      "reported_memory_presented": 228,
+      "correct_planner_presented": 74,
+      "unresolved_entries_marked_delivered": [],
+      "strict_source_reference_fraction": 0.32
+    },
+    "Workspace＋ACP / structured_on": {
+      "summary": {
+        "experiment": "Workspace＋ACP",
+        "condition": "structured_on",
+        "tasks": 30,
+        "candidate_hit_tasks": 27,
+        "recalled_entries": 224,
+        "planner_presented_entries": 73,
+        "planner_selected_entries": 21,
+        "tasks_selected_any": 12,
+        "selected_evidence_entries": 15,
+        "resolved_and_delivered_evidence_entries": 15,
+        "cited_source_memory_entries": 8,
+        "tasks_with_final_memory_source_refs": 6,
+        "strategy_executed_entries": 3,
+        "tasks_with_executed_strategy": 3,
+        "reused_without_search_tasks": 0,
+        "search_off": 33,
+        "search_on": 38,
+        "tokens_off": 134798,
+        "tokens_on": 151409,
+        "net_token_saving": -0.12322883128829809
+      },
+      "raw_funnel": {
+        "recalled": {
+          "evidence": 86,
+          "strategy": 71,
+          "episode": 67
+        },
+        "presented": {
+          "evidence": 27,
+          "strategy": 28,
+          "episode": 18
+        },
+        "planner_accepted": {
+          "evidence": 15,
+          "strategy": 3,
+          "episode": 3
+        },
+        "selected": {
+          "evidence": 15,
+          "strategy": 3,
+          "episode": 3
+        },
+        "resolved": {
+          "evidence": 15,
+          "strategy": 3,
+          "episode": 3
+        },
+        "delivered": {
+          "evidence": 16,
+          "strategy": 3,
+          "episode": 3
+        },
+        "executed": {
+          "evidence": 0,
+          "strategy": 3,
+          "episode": 0
+        },
+        "cited": {
+          "evidence": 8,
+          "strategy": 0,
+          "episode": 0
+        }
+      },
+      "reported_memory_presented": 224,
+      "correct_planner_presented": 73,
+      "unresolved_entries_marked_delivered": [
+        {
+          "question_id": "medqa::1094",
+          "ids": [
+            "mem-5cfa2434845f478199a292bb5a0e9b6d"
+          ]
+        }
+      ],
+      "strict_source_reference_fraction": 0.5333333333333333
+    }
+  },
+  "boundary": "Counts deduplicate memory IDs within each task, then sum over tasks. Source references are not proof of applicable knowledge or causal savings. No API calls; raw reports unchanged."
+}
